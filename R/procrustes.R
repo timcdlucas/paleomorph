@@ -27,11 +27,6 @@ scorea <- function(arr, m, n){
 
 
 
-dist <- function(v1,v2){
-  return(sqrt((v1-v2)%*%(v1-v2)))
-}
-
-
 
 
 #' Returns the sum of squares of the distances between "a1" and "a2".
@@ -62,52 +57,52 @@ deltaa <- function(olda, newa, m, n){
 
 
 
-rpdecompose <- function(m){
-  
-  
-}
+#rpdecompose <- function(m){
+#  
+#  
+#}
 
-pcrstep[a_,m_,n_] 
-pcrstep = function(na,m,n){
-  for(count in seq(1000)){
-    na2 = na
-    for(i in seq(2,m)){
-      ta = matrix(0,nrow=n,ncol=3)
-      for(j in seq(m)){
-        if(i != j){
-          ta = ta + na[j,,] 
-        }
-        c = t(na[i,,]) %*% ta
-        r = rpdecompose
-      }
-    }
-    
-  }
-  
-}
+#pcrstep[a_,m_,n_] 
+#pcrstep = function(na,m,n){
+#  for(count in seq(1000)){
+#    na2 = na
+#    for(i in seq(2,m)){
+#      ta = matrix(0,nrow=n,ncol=3)
+#      for(j in seq(m)){
+#        if(i != j){
+#          ta = ta + na[j,,] 
+#        }
+#        c = t(na[i,,]) %*% ta
+#        r = rpdecompose
+#      }
+#    }
+#    
+#  }
+#  
+#}
 
 
 
-pctstep <- function(a, m, n){
-  for(i in seq(2, m)){
-    for(j in seq(m)){
-      if (i != j) {
-        for(k in seq(n)){
-          if (sum(a[i, k, ]) != 0 && sum(a[j, k, ]) != 0) {
-            c[i - 1, i - 1] <- c[i - 1, i - 1] + 1
-            if (j > 1) {
-              c[i - 1, j - 1] <- c[i - 1, j - 1] - 1
-            }
+#pctstep <- function(a, m, n){
+#  for(i in seq(2, m)){
+#    for(j in seq(m)){
+#      if (i != j) {
+#        for(k in seq(n)){
+#          if (sum(a[i, k, ]) != 0 && sum(a[j, k, ]) != 0) {
+#            c[i - 1, i - 1] <- c[i - 1, i - 1] + 1
+#            if (j > 1) {
+#              c[i - 1, j - 1] <- c[i - 1, j - 1] - 1
+#            }
 
-            bx[i - 1] <- bx[i - 1] + a[i, k, 1] - a[j, k, 1]
-            by[i - 1] <- by[i - 1] + a[i, k, 2] - a[j, k, 2]
-            bz[i - 1] <- bz[i - 1] + a[i, k, 3] - a[j, k, 3]
-          }          
-        }
-      }
-    }
-  }
-}
+#            bx[i - 1] <- bx[i - 1] + a[i, k, 1] - a[j, k, 1]
+#            by[i - 1] <- by[i - 1] + a[i, k, 2] - a[j, k, 2]
+#            bz[i - 1] <- bz[i - 1] + a[i, k, 3] - a[j, k, 3]
+#          }          
+#        }
+#      }
+#    }
+#  }
+#}
 
 
 
