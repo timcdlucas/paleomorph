@@ -8,23 +8,22 @@
 #'@return The sum of squares distance
 
 scorea <- function(arr, m, n){
+  stopifnot(is.numeric(arr), !is.na(arr), is.numeric(m), is.numeric(n))
   sumw <- 0
-  for(i in seq(m)){
-    for(j in seq(i, m)){
-      for(k in seq(n)){
-        nzi <- length(arr[i, k, ][arr[i, k, ] == 0] == TRUE)
-        nzj <- length(arr[j, k, ][arr[j, k, ] == 0] == TRUE)
-        nzsum <- nzi + nzj
-        if(nzsum == 0){
+  # For each specimen (except last)
+  for(i in 1:(m - 1)){
+    # For the other specimens that haven't yet been compared
+    for(j in (i + 1):m){
+
+      # For each landmark
+      for(k in 1:k){
           w <- arr[i, k, ] - arr[j, k, ]
           sumw <- sumw + w %*% w
-        }
       }
     }
   }
   return(drop(sumw))
 }
-
 
 dist <- function(v1,v2){
   return(sqrt((v1-v2)%*%(v1-v2)))
