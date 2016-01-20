@@ -1,21 +1,28 @@
 
+#' Returns the sum of squares of distances that we're trying to minimize.
+#' 
+#'@param mat An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param m No of specimens
+#'@param n No of landmarks
+#'
+#'@return The sum of squares distance
 
-scorea <- function(mat,m,n){
+scorea <- function(arr, m, n){
   sumw <- 0
   for(i in seq(m)){
-    for(j in seq(i,m)){
+    for(j in seq(i, m)){
       for(k in seq(n)){
-        nzi <- length(mat[i,k,][mat[i,k,] == 0] == TRUE)
-        nzj <- length(mat[j,k,][mat[j,k,] == 0] == TRUE)
+        nzi <- length(arr[i, k, ][arr[i, k, ] == 0] == TRUE)
+        nzj <- length(arr[j, k, ][arr[j, k, ] == 0] == TRUE)
         nzsum <- nzi + nzj
         if(nzsum == 0){
-          w <- mat[i,k,] - mat[j,k,]
+          w <- arr[i, k, ] - arr[j, k, ]
           sumw <- sumw + w %*% w
         }
       }
     }
   }
-  return(sumw)
+  return(drop(sumw))
 }
 
 
