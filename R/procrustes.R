@@ -55,14 +55,38 @@ deltaa <- function(olda, newa, m, n){
 }
 
 
+#' Replaces missing data points with c(0, 0, 0)
+#'
+#' Given an M x N x 3 array, returns an M x N x 3 array with no missing data.
+#'   M is the number of specimens and N is the number of landmarks.
+#'
+#'@param a An M x N x 3 array.
+#'
+#'@return An M x N x 3 array with no missing data. 
+
+zapa <- function(a){
+  stopifnot(is.numeric(a))
+  for(i in 1:dim(a)[1]){
+    for(j in 1:dim(a)[2]){
+      if(any(is.na(a[i, j, ]))){
+        a[i, j, ] <- c(0, 0, 0)
+      }
+    }
+  }
+  return(a)
+}
 
 
-#rpdecompose <- function(m){
-#  
-#  
-#}
 
-#pcrstep[a_,m_,n_] 
+#' Returns the sum of squares of the distances between "a1" and "a2".
+#' 
+#'
+#'@param na An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param m No of specimens
+#'@param n No of landmarks
+#'
+#'@return An M x N x 3 array 
+
 #pcrstep = function(na,m,n){
 #  for(count in seq(1000)){
 #    na2 = na
