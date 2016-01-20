@@ -8,11 +8,10 @@ Maintainer: Tim Lucas <timcdlucas@gmail.com>
 Description: 
 License: 
 Imports:
-    
 Suggests:
     knitr,
     testthat
 VignetteBuilder: knitr
 LazyData: true
-URL: https://github.com/timcdlucas/riskr
+URL: https://bitbucket.org/timcdlucas/procrustespkg
 RoxygenNote: 5.0.1
