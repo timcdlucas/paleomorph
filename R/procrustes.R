@@ -16,7 +16,7 @@ scorea <- function(arr, m, n){
     for(j in (i + 1):m){
 
       # For each landmark
-      for(k in 1:k){
+      for(k in 1:n){
           w <- arr[i, k, ] - arr[j, k, ]
           sumw <- sumw + w %*% w
       }

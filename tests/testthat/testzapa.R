@@ -1,6 +1,6 @@
 context('Test zapa')
 
-test_that('zapa works with missing data'), {
+test_that('zapa works with missing data', {
 
   # 1 missing value
   a <- array( rep(1:4, 3), dim = c(2, 2, 3))
