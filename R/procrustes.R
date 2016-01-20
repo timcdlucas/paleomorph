@@ -25,22 +25,41 @@ scorea <- function(arr, m, n){
   return(drop(sumw))
 }
 
+
+
 dist <- function(v1,v2){
   return(sqrt((v1-v2)%*%(v1-v2)))
 }
 
 
-deltaa = function(a,na,m,n){
-  delta = 0
+
+
+#' Returns the sum of squares of the distances between "a1" and "a2".
+#' 
+#' For each landmark on each sample, find distance between location given
+#'   in a1 and a2. 
+#' Used to see when a1 and a2 are very similar. e.g. deltaa(olda, newa, 10, 20) < 10e-7
+#'
+#'@param olda An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param newa An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param m No of specimens
+#'@param n No of landmarks
+#'
+#'@return The sum of squares distances (length 1 numeric) between all landmarks on all speciments.
+
+
+deltaa <- function(olda, newa, m, n){
+  stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), is.numeric(n), dim(newa) == c(m, n, 3))
+  delta <- 0
   for(i in seq(m)){
     for(j in seq(n)){
-      if (sum(a[i,j,]) != 0 && sum(na[i,j,]) != 0){
-        delta = delta + dist(a[i,j,],na[i,j,])
-      }
+      delta <- delta + stats::dist(rbind(olda[i, j, ], newa[i, j, ]))
     }
   }
-  return(delta)
+  return(as.vector(delta))
 }
+
+
 
 
 rpdecompose <- function(m){
