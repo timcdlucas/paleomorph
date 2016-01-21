@@ -125,23 +125,94 @@ unzapa <- function(a, b){
 }
 
 
-#pcrstep = function(na,m,n){
-#  for(count in seq(1000)){
-#    na2 = na
-#    for(i in seq(2,m)){
-#      ta = matrix(0,nrow=n,ncol=3)
-#      for(j in seq(m)){
+
+#' Puts missing data back in to a specimen x landmark array
+#'
+#' Given an M x N x 3 array, and a template defining which data were
+#'   missing, returns an M x N x 3 array with NAs for missing data.
+#'   M is the number of specimens and N is the number of landmarks.
+#'
+#'@param a An M x N x 3 array.
+#'@param b An M x N logical matrix with TRUEs where the data were missing.
+#'
+#'@return An M x N x 3 array 
+
+
+#pcrstep <- function(na, maxiter = 1000){
+
+#  stopifnot(is.numeric(na))
+#  done <- FALSE
+
+#  # remove missing data
+#  na <- zapa(na)
+
+#  for(count in 1:maxiter){
+#    # Make copy
+#    na2 <- na
+#    if(count %% 50 == 0) message(paste('Iteration: ', count))
+
+#    for(i in 2:nrow(na)){
+#      # Compute ta, the temporary matrix that will be used
+#	    # in this iteration
+#      ta <- matrix(0, nrow = ncol(na), ncol = 3)
+#      for(j in 1:nrow(na)){
 #        if(i != j){
 #          ta = ta + na[j,,] 
 #        }
 #        c = t(na[i,,]) %*% ta
+
+#        # Not sure
 #        r = rpdecompose
 #      }
 #    }
-#    
+#  
 #  }
 #  
 #}
+
+
+(*
+ * returns new "a"
+ *)
+pcrstep[a_,m_,n_] := Module[ {na, na2, count, ta, i, j, k, c, r},
+
+    na = zapa[a,m,n];	(* no missing data in sight now *)
+
+    done = False;
+    For[count = 1, count <= 1000, count++,
+
+	na2 = na;   (* save *)
+	If[Mod[count, 50] == 0, Print["rstep: reached ", count, "th iteration"]];
+
+	For[i = 2, i <= m, i++,
+
+	    (*
+	     * Compute ta, the temporary matrix that will be used
+	     * in this iteration
+	     *)
+	    ta = Table[0.0, {j,1,n}, {k,1,3}];
+	    For[j = 1, j <= m, j++,
+		If[ i != j, ta += na[[j]] ];
+	    ];
+
+	    (*
+	     * Compute na[[i]]^T (ta)
+	     * The rotation which best approximates this matrix will be
+	     * applied to na[[i]]
+	     *)
+	    c = Transpose[na[[i]]] . ta;
+	    r = rpdecompose[c][[1]];
+	    na[[i]] = lrotate[na[[i]], r];
+	];
+
+	If[deltaa[na,na2,m,n] < 10^(-7), Break[]];
+    ];
+
+    na = unzapa[na,a,m,n];
+    Print["rstep: score=", scorea[na,m,n], " delta=", deltaa[a,na,m,n], " iterations=", count];
+    Return[na];
+];
+
 
 
 
