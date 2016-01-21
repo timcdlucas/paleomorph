@@ -125,15 +125,6 @@ unzapa <- function(a, b){
 }
 
 
-#' Returns the sum of squares of the distances between "a1" and "a2".
-#' 
-#'
-#'@param na An M x N x 3 array. M = no of specimens, N = no of landmarks.
-#'@param m No of specimens
-#'@param n No of landmarks
-#'
-#'@return An M x N x 3 array 
-
 #pcrstep = function(na,m,n){
 #  for(count in seq(1000)){
 #    na2 = na
