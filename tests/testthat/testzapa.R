@@ -70,3 +70,53 @@ test_that('zapa works when no data is missing', {
   expect_false(any(is.na(a1)))
 
 })
+
+
+
+test_that('unzapa works with missing values', {
+
+  a <- array( rep(1:4, 3), dim = c(2, 2, 3))
+  b <- a[, , 1] < 3
+
+  a1 <- unzapa(a, b)
+  
+  # expect NAs at all 3D dimensions for (1,1) and (2, 1)
+  expect_true(all(is.na(a1[1:2, 1, ])))
+  # expect no NAs at 3D dimensions for (1, 2) and (2, 2)
+  expect_false(any(is.na(a1[1:2, 2, ])))
+
+
+})
+
+test_that('unzapa works with no missing values', {
+
+
+  a <- array( rep(1:4, 3), dim = c(2, 2, 3))
+  b <- matrix(FALSE, nrow = 2, ncol = 2)
+
+  a2 <- unzapa(a, b)
+  
+  # expect no NAs
+  expect_false(any(is.na(a2)))
+
+  # a2 and a should be the same. i.e. unzapa shouldn't change a
+  expect_equal(a, a2)
+
+})
+
+
+
+test_that("unzapa gives a warning when a and b don't match properly. And no warning when they do.", {
+
+
+  a <- array( rep(1:4, 3), dim = c(2, 2, 3))
+  b <- a[, , 1] < 3
+
+  expect_warning(unzapa(a, b), "Non-zeros in positions marked as missing. \nAre you sure they're missing?")
+
+  a2 <- array( rep(0:3, 3), dim = c(2, 2, 3))
+  b2 <- a2[, , 1] == 0
+
+  expect_warning(unzapa(a2, b2), NA)
+
+})
