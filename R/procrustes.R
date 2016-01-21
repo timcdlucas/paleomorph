@@ -80,47 +80,19 @@ zapa <- function(a){
 
 #' Puts missing data back in to a specimen x landmark array
 #'
-#' Given an M x N x 3 array, and a template defining which data were
-#'   missing, returns an M x N x 3 array with NAs for missing data.
-#'   M is the number of specimens and N is the number of landmarks.
+#' Given an M x N x 3 array with no missing data and a template
+#'   M x N x 3 array with missing data, replace the missing data
+#'   in the first array.
 #'
 #'@param a An M x N x 3 array.
-#'@param b An M x N logical matrix with TRUEs where the data were missing.
+#'@param b An M x N x 3 array to use a template. 
 #'
 #'@return An M x N x 3 array with NAs for missing data. 
 
 unzapa <- function(a, b){
 
-  # Check that the template b and the array a match.
-  matches <- TRUE
-  for(i in 1:nrow(b)){
-    for(j in 1:ncol(b)){
-      if(any(a[i, j, ] != 0) & b[i, j]){
-        # If there are any non zeroes where we think the data is missing, 
-        #   set flag to false and break out of loop.
-        matches <- FALSE
-        break()
-      }
-      # If there are mismatches, break out of outer loop as well.
-      if(!matches) break()
-    }
-  }  
-  # Give a warning if there are mismatches.
-  if(!matches){
-    warning("Non-zeros in positions marked as missing. \nAre you sure they're missing?")
-  }
+  a[is.na(b)] <- NA
 
-  # loop over specimens.
-  for(i in 1:nrow(b)){
-    # loop over landmarks
-    for(j in 1:ncol(b)){
-      # For every specimen, landmark position in b, if it's true (i.e. marking missing)
-      #   set all three dimension in a as NA.
-      if(b[i, j]){
-        a[i, j, ] <- c(NA, NA, NA)
-      }
-    }
-  }
   return(a)
 }
 
@@ -138,37 +110,56 @@ unzapa <- function(a, b){
 #'@return An M x N x 3 array 
 
 
-#pcrstep <- function(na, maxiter = 1000){
+pcrstep <- function(a, maxiter = 1000, tolerance = 10e7){
 
-#  stopifnot(is.numeric(na))
-#  done <- FALSE
+  stopifnot(is.numeric(na))
+  done <- FALSE
 
-#  # remove missing data
-#  na <- zapa(na)
+  # remove missing data
+  na <- zapa(na)
 
-#  for(count in 1:maxiter){
-#    # Make copy
-#    na2 <- na
-#    if(count %% 50 == 0) message(paste('Iteration: ', count))
+  for(count in 1:maxiter){
+    # Make copy
+    na2 <- na
+    if(count %% 50 == 0) message(paste('Iteration: ', count))
 
-#    for(i in 2:nrow(na)){
-#      # Compute ta, the temporary matrix that will be used
-#	    # in this iteration
-#      ta <- matrix(0, nrow = ncol(na), ncol = 3)
-#      for(j in 1:nrow(na)){
-#        if(i != j){
-#          ta = ta + na[j,,] 
-#        }
-#        c = t(na[i,,]) %*% ta
+    for(i in 2:dim(na)[1]){
+      # Compute ta, the temporary matrix that will be used
+	    # in this iteration
+      ta <- matrix(0, nrow = dim(na)[2], ncol = 3)
+      for(j in 1:dim(na)[1]){
+        if(i != j){
+          ta = ta + na[j, , ] 
+        }
 
-#        # Not sure
-#        r = rpdecompose
-#      }
-#    }
-#  
-#  }
-#  
-#}
+ 	    
+	      # Compute na[i,,]^T (ta)
+	      # The rotation which best approximates this matrix will be
+	      # applied to na[i,,]
+        c <- t(na[i, , ]) %*% ta
+
+        # Take rotation part from Singular value decomposition
+        r <- rp_decompose(c)$R
+        # Apply rotation to na[i,,].
+        na <- lrotate(na[i, , ], r)
+      }
+      # Test to see if approximation is good enough.
+      #   Break out of loop if it is.
+      if(deltaa(na2, na, dim(na2)[1], dim(na2)[2]) < tolerance) break()
+        
+    }     
+
+  na <- unzapa(
+  
+    na = unzapa[na,a,m,n];
+    Print["rstep: score=", scorea[na,m,n], " delta=", deltaa[a,na,m,n], " iterations=", count];
+    Return[na];      
+      
+  }
+  
+}
+  
+
 
 
 (*

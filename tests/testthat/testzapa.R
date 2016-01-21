@@ -76,14 +76,15 @@ test_that('zapa works when no data is missing', {
 test_that('unzapa works with missing values', {
 
   a <- array( rep(1:4, 3), dim = c(2, 2, 3))
-  b <- a[, , 1] < 3
+  b <- a
+  b[1, 1, 1] <- NA
 
   a1 <- unzapa(a, b)
   
-  # expect NAs at all 3D dimensions for (1,1) and (2, 1)
-  expect_true(all(is.na(a1[1:2, 1, ])))
-  # expect no NAs at 3D dimensions for (1, 2) and (2, 2)
-  expect_false(any(is.na(a1[1:2, 2, ])))
+  # expect NAs at (1,1,1)
+  expect_true(is.na(a1[1, 1, 1]))
+  # expect no NAs other than that one
+  expect_true(sum(is.na(a1)) == 1)
 
 
 })
@@ -92,7 +93,7 @@ test_that('unzapa works with no missing values', {
 
 
   a <- array( rep(1:4, 3), dim = c(2, 2, 3))
-  b <- matrix(FALSE, nrow = 2, ncol = 2)
+  b <- a + 5
 
   a2 <- unzapa(a, b)
   
