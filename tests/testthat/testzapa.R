@@ -107,17 +107,3 @@ test_that('unzapa works with no missing values', {
 
 
 
-test_that("unzapa gives a warning when a and b don't match properly. And no warning when they do.", {
-
-
-  a <- array( rep(1:4, 3), dim = c(2, 2, 3))
-  b <- a[, , 1] < 3
-
-  expect_warning(unzapa(a, b), "Non-zeros in positions marked as missing. \nAre you sure they're missing?")
-
-  a2 <- array( rep(0:3, 3), dim = c(2, 2, 3))
-  b2 <- a2[, , 1] == 0
-
-  expect_warning(unzapa(a2, b2), NA)
-
-})
