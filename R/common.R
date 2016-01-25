@@ -82,5 +82,26 @@ lcentroid <- function(A){
 
 
 
+#'lcentroid2: like lcentroid but tolerates missing data
+#'
+#'@param A An n x 3 matrix
+#'
+#'@return A matrix of the same dimensions as A
+#'@rdname lshift
+
+lcentroid2 <- function(A){
+  stopifnot(is.numeric(A), dim(A)[2] == 3, is.matrix(A))
+  
+  # Find mean for each spatial dimension after removing rows that have an NA.
+  A2 <- apply(A[complete.cases(A), ], 2, mean)
+  return(A2)
+}
+
+(*
+ * lcentroid2 - like lcentroid[], but tolerates missing data
+ * lscale     - like lshift[], but multiplicative not additive
+ * lscalec    - li
+ * lnorm      - returns total square length, tolerates missing data
+ *)
 
 
