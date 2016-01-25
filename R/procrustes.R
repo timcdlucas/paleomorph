@@ -218,64 +218,15 @@ pctstep <- function(a){
     }
   }
 
+	v <- t(rbind(solve(c, bx), solve(c, by), solve(c, bz)))
 
-
-
+  na <- a
+  for(i in 2:dim(na)[1]){
+    na[i, , ] <- lshift(a[i, , ], -v[i - 1, ])
+  }
+  message("tstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), ", delta = ", deltaa(na, a, dim(na)[1], dim(na)[2]))
+  return(na)
 }
-
-
-pctstep[a_,m_,n_] := Module[ {i, j, k, c, bx, by, bz, v, na},
-
-    (*
-     * The linear algebra here is a little tricky.
-     * We have M equations in M unknowns, but one equation is redundant
-     * and the solution space is invariant under a common translation.
-     *
-     * For now, we deal with this by throwing away the first equation
-     * and forcing the first unknown to equal 0.
-     * A more robust solution might be: retain all M equations and solve by
-     * least squares, and force the sum of the unknowns to 0.
-     *)
-
-    c  = Table[0.0, {i,1,m-1}, {j,1,m-1}];
-    bx = Table[0.0, {i,1,m-1}];
-    by = Table[0.0, {i,1,m-1}];
-    bz = Table[0.0, {i,1,m-1}];
-
-    For[i = 2, i <= m, i++,
-	For[j = 1, j <= m, j++,
-	    If[i == j, Continue[]];
-	    For[k = 1, k <= n, k++,
-		If[StringQ[a[[i,k]]] || StringQ[a[[j,k]]], Continue[]];
-		c[[i-1,i-1]] += 1.0;
-		If[j > 1, c[[i-1,j-1]] -= 1.0];
-		bx[[i-1]] += a[[i,k,1]] - a[[j,k,1]];
-		by[[i-1]] += a[[i,k,2]] - a[[j,k,2]];
-		bz[[i-1]] += a[[i,k,3]] - a[[j,k,3]];
-	    ];
-	];
-    ];
-
-    (* FIXME: emit warning here if matrix is badly conditioned *)
-
-    (*
-     * FIXME: this could be made more efficient by using
-     * LUDecomposition[] and LUBackSubstitution[] instead of LinearSolve[]
-     *)
-    v = Transpose[ {LinearSolve[c, bx],
-		    LinearSolve[c, by],
-		    LinearSolve[c, bz]
-		 }];
-
-    na = Table[
-	    If[i==1, a[[1]], lshift[a[[i]], -v[[i-1]]]],
-	    {i,1,m}
-    ];
-    Print["tstep: score=", scorea[na,m,n], " delta=", deltaa[a,na,m,n]];
-    Return[na];
-];
-
-
 
 
 
