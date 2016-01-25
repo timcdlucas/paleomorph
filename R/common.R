@@ -97,11 +97,25 @@ lcentroid2 <- function(A){
   return(A2)
 }
 
-(*
- * lcentroid2 - like lcentroid[], but tolerates missing data
- * lscale     - like lshift[], but multiplicative not additive
- * lscalec    - li
- * lnorm      - returns total square length, tolerates missing data
- *)
+
+
+
+#'lnorm: returns total square length, tolerates missing data
+#'
+#'@param A An n x 3 matrix
+#'
+#'@return A scalar of total square length.
+#'@rdname lshift
+
+lnorm <- function(A){
+  stopifnot(is.numeric(A), dim(A)[2] == 3, is.matrix(A))
+  # rm missing data rows
+  # Square each row
+  # sum
+    
+  A2 <- sum(apply(A[complete.cases(A), ], 2, function(x) x %*% x))
+  return(A2)
+}
+
 
 

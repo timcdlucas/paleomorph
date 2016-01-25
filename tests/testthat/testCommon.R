@@ -154,5 +154,31 @@ test_that('lshift works.', {
 
 
 
+test_that('lnorm works.', {
+
+  A <- matrix(1:6, nrow = 2, byrow = TRUE)
+
+  a2 <- lnorm(A)
+
+  expect_equal(a2, sum((1:6)^2))
+
+})
+
+
+
+test_that('lnorm works with missing data.', {
+
+  A <- matrix(1:6, nrow = 2, byrow = TRUE)
+  A <- rbind(A, c(NA, 2, 2))
+
+  a2 <- lnorm(A)
+
+  expect_equal(a2, sum((1:6)^2))
+
+})
+
+
+
+
 
 

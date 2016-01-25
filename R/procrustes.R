@@ -177,7 +177,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
 
 pctstep <- function(a){
 
-
+  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
 
 #     * The linear algebra here is a little tricky.
 #     * We have M equations in M unknowns, but one equation is redundant
@@ -227,6 +227,68 @@ pctstep <- function(a){
   message("tstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), ", delta = ", deltaa(na, a, dim(na)[1], dim(na)[2]))
   return(na)
 }
+
+
+
+
+
+
+#' Resize all shapes until optimally aligned.
+#'
+#' Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
+#'   this will find the optimal resizing for all shapes so that they are as
+#'   aligned as possible.
+#'
+#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'
+#'@return An M x N x 3 array of aligned shapes
+
+#pcsstep <- function(a){
+
+#  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
+
+
+
+
+
+#pcsstep[a_,m_,n_] := Module[ {na, d, v, i, j, k},
+
+#    na = Table[
+#	   lscale[ a[[i]],
+#		   1/Sqrt[ lnorm[ lshift[ a[[i]], -lcentroid2[a[[i]]] ] ] ]
+#	 ], {i,1,m}
+#    ];
+
+#    (*
+#     * Compute D, the matrix whose largest eigenvalue will give the scalings
+#     *)
+#    d = Table[0.0, {i,1,m}, {j,1,m}];
+#    For [i = 1, i <= m, i++,
+#	For [j = 1, j <= m, j++,
+#	    If [i == j, Continue[]];
+#	    For [k = 1, k <= n, k++,
+#		If [StringQ[na[[i,k]]] || StringQ[na[[j,k]]], Continue[]];
+#		d[[i,i]] -= na[[i,k]] . na[[i,k]];
+#		d[[i,j]] += na[[i,k]] . na[[j,k]];
+#	    ];
+#	];
+#    ];
+#    debugd = d;
+
+#    (*
+#     * The actual scaling is done here
+#     *)
+#    v = largestev[d];
+#    debugv = v;
+#    For[i = 1, i <= Length[v], i++,
+#	If[v[[i]] > 0.0001, Continue[]];
+#	Print["fatal error: procrustes scaling is negative!"];
+#	Abort[];
+#    ];
+#    na = Table[lscale[na[[i]], v[[i]]], {i,1,m}];
+#    Print["sstep: score=", scorea[na,m,n], " delta=", deltaa[a,na,m,n]];
+#    Return[na];
+#];
 
 
 
