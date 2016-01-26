@@ -151,7 +151,7 @@ unzapa <- function(a, b){
 #'@return An M x N x 3 array of aligned shapes
 
 
-pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
+pcrstep <- function(a, maxiter = 10000, tolerance = 10e-7){
 
   stopifnot(is.numeric(a))
 
@@ -319,7 +319,7 @@ pcsstep <- function(a){
 
   # Do the stuff that was in largestev function
   v <- eigen(d)$vectors[, 1]
-  if(all(v < 0)){
+  if(max(abs(v)) < 0){
     v <- -v
   }
 
@@ -334,6 +334,7 @@ pcsstep <- function(a){
   }
   
   message(paste("sstep: score =", scorea(na, m, n), ", delta =", deltaa(a, na, m, n)))
+  return(na)
 }
 
 
@@ -364,7 +365,7 @@ pcistep <- function(a, scale = TRUE){
   na <- array(NA, dim = dim(a))
   # Shift centroid to origin
   for(i in 1:dim(a)[1]){
-    na[i, , ] <- lshift(a[1, , ], -lcentroid2(a[1, , ]))
+    na[i, , ] <- lshift(a[i, , ], -lcentroid2(a[i, , ]))
   }
   
   # Scale size of each specimen to 1/sqrt(m)
