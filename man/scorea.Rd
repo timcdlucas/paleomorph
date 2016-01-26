@@ -7,11 +7,11 @@
 scorea(arr, m, n)
 }
 \arguments{
+\item{arr}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
+
 \item{m}{No of specimens}
 
 \item{n}{No of landmarks}
-
-\item{mat}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
 }
 \value{
 The sum of squares distance
