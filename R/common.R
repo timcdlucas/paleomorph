@@ -139,7 +139,3 @@ lscale <- function(A, v){
   return(t(A2))
 }
 
-lscale[L_,v_] := Module[ {i},
-    Table[If[StringQ[L[[i]]], L[[i]], v L[[i]]], {i,1,Length[L]}]
-];
-

@@ -1,7 +1,47 @@
 
+#' Run procrustese analysis to align 3D shapes. 
+#' 
+#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param scale Logical indicating whether the size of the objects should be scales
+#'  as well as rotated and translated.
+#'@param maxiter Maximum number of iterations to attempt
+#'@param tolerance Difference between two iterations that will cause the search to stop. 
+#'
+#'@return A new (M x N x 3) array, where each 3d vector has been transformed
+#'  in a per-specimen way.  The transformation is chosen to maximize,
+#'  in the least-squares sense, the distances between specimens.
+
+procrustese <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
+  stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)
+
+  na <- pcistep(a, scale)
+
+  for(iter in 1:maxiter){
+    # Save a copy of the array
+    na2 <- na 
+
+    # Do an iteration of procrustese
+    na <- pctstep(na)
+    na <- pcrstep(na)
+    if(scale) na <- pcsstep(na)
+
+    # Check progress
+    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2]) < tolerance) break()
+  }
+
+  # If it didn't converge give a warning
+  if(iter == maxiter){
+    warning('After ', maxiter, ' iterations the solution has not converged.')
+    warning('Delta = ', round(deltaa(na2, na, dim(na2)[1], dim(na2)[2]), 4), ', tolerance = ', tolerance)
+  }
+
+  return(na)
+}
+
+
 #' Returns the sum of squares of distances that we're trying to minimize.
 #' 
-#'@param mat An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param arr An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@param m No of specimens
 #'@param n No of landmarks
 #'
@@ -243,52 +283,101 @@ pctstep <- function(a){
 #'
 #'@return An M x N x 3 array of aligned shapes
 
-#pcsstep <- function(a){
+pcsstep <- function(a){
 
-#  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
+  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
+
+  # m numer of specimens, n number of landmarks
+  m <- dim(a)[1]
+  n <- dim(a)[2]
+
+  na <- array(NA, dim = dim(a))
+
+  for(i in 1:m){
+    na[i, , ] <- lscale(a[i, , ], 1/sqrt(lnorm(lshift(a[i, , ], -lcentroid2(a[i, , ])))))
+  }
+
+  # Compute D, the matrix whose largest eigenvalue will give the scalings
+  d <- matrix(0, nrow = m, ncol = m)
+  # For each element of d (i.e. m x m)
+  for(i in 1:m){
+    for(j in 1:m){
+      # ignore the diagonal
+      if(j != i){
+        # Loop through landmarks 
+        for(k in 1:n){
+          # ignore if the landmark in either specimens has missing data.
+          if(!anyNA(na[i, k, ]) && !anyNA(na[j, k, ])){
+            d[i, i] <- d[i, i] - (na[i, k, ] %*% na[i, k, ])
+            d[i, j] <- d[i, j] + (na[i, k, ] %*% na[j, k, ])
+          } 
+        }
+      }  
+    }
+  }
+
+
+  # Do the stuff that was in largestev function
+  v <- eigen(d)$vectors[, 1]
+  if(all(v < 0)){
+    v <- -v
+  }
+
+  # The actual scaling is done here
+  # Check that scaling isn't negative  
+  if(any(v < 0.0001)){
+    stop('Procrustes scaling is negative!')
+  }
+
+  for(i in 1:m){
+    na[i, , ] <- lscale(na[i, , ], v[i])
+  }
+  
+  message(paste("sstep: score =", scorea(na, m, n), ", delta =", deltaa(a, na, m, n)))
+}
 
 
 
 
 
-#pcsstep[a_,m_,n_] := Module[ {na, d, v, i, j, k},
+#' Resize all shapes until optimally aligned.
+#'
+#'Shifts each centroid to the origin.  This is not guaranteed
+#'  to decrease the value of the objective function, so it makes
+#'  no sense in later iterations; we just do it initially to get
+#'  a head start on the convergence.
+#'
+#'  We also normalize the centroid size of each specimen to 1/Sqrt[m],
+#'  so that the "total size" constraint is satisfied and scorea[] will
+#'  become meaningful.
+#'
+#' Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
+#'   this will find the optimal resizing for all shapes so that they are as
+#'   aligned as possible.
+#'
+#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param scale Logical indicating whether the size of the objects should be scaled.
+#'
+#'@return An M x N x 3 array of aligned shapes
 
-#    na = Table[
-#	   lscale[ a[[i]],
-#		   1/Sqrt[ lnorm[ lshift[ a[[i]], -lcentroid2[a[[i]]] ] ] ]
-#	 ], {i,1,m}
-#    ];
+pcistep <- function(a, scale = TRUE){
+  na <- array(NA, dim = dim(a))
+  # Shift centroid to origin
+  for(i in 1:dim(a)[1]){
+    na[i, , ] <- lshift(a[1, , ], -lcentroid2(a[1, , ]))
+  }
+  
+  # Scale size of each specimen to 1/sqrt(m)
+  for(i in 1:dim(a)[1]){
+    na[i, , ] <- lscale(na[i, , ],  1/sqrt(dim(a)[1] * lnorm(na[i, , ])))
+  }
 
-#    (*
-#     * Compute D, the matrix whose largest eigenvalue will give the scalings
-#     *)
-#    d = Table[0.0, {i,1,m}, {j,1,m}];
-#    For [i = 1, i <= m, i++,
-#	For [j = 1, j <= m, j++,
-#	    If [i == j, Continue[]];
-#	    For [k = 1, k <= n, k++,
-#		If [StringQ[na[[i,k]]] || StringQ[na[[j,k]]], Continue[]];
-#		d[[i,i]] -= na[[i,k]] . na[[i,k]];
-#		d[[i,j]] += na[[i,k]] . na[[j,k]];
-#	    ];
-#	];
-#    ];
-#    debugd = d;
+  message("istep: score = ", scorea(na, dim(a)[1], dim(a)[2]))
+  return(na)
+}
 
-#    (*
-#     * The actual scaling is done here
-#     *)
-#    v = largestev[d];
-#    debugv = v;
-#    For[i = 1, i <= Length[v], i++,
-#	If[v[[i]] > 0.0001, Continue[]];
-#	Print["fatal error: procrustes scaling is negative!"];
-#	Abort[];
-#    ];
-#    na = Table[lscale[na[[i]], v[[i]]], {i,1,m}];
-#    Print["sstep: score=", scorea[na,m,n], " delta=", deltaa[a,na,m,n]];
-#    Return[na];
-#];
+
+
 
 
 
