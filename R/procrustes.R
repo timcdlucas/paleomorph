@@ -151,7 +151,7 @@ unzapa <- function(a, b){
 #'@return An M x N x 3 array of aligned shapes
 
 
-pcrstep <- function(a, maxiter = 10000, tolerance = 10e-7){
+pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
 
   stopifnot(is.numeric(a))
 
