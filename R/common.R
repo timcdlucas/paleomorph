@@ -119,3 +119,27 @@ lnorm <- function(A){
 
 
 
+
+#'lscale: like lshift[], but multiplicative not additive
+#'
+#'@param A An n x 3 matrix
+#'@param v Length 3 scaling vector
+#'
+#'@return A scalar of total square length.
+#'@rdname lshift 
+
+lscale <- function(A, v){
+  A2 <- apply(A, 1, function(x)
+          if(any(is.na(x))){
+            x
+          } else {
+            x * v
+          }
+        )
+  return(t(A2))
+}
+
+lscale[L_,v_] := Module[ {i},
+    Table[If[StringQ[L[[i]]], L[[i]], v L[[i]]], {i,1,Length[L]}]
+];
+

@@ -180,5 +180,47 @@ test_that('lnorm works with missing data.', {
 
 
 
+test_that('lscale works.', {
+
+  A <- matrix(1:6, nrow = 2, byrow = TRUE)
+
+  l <- c(1, 1, 2)
+  
+  newA <- lscale(A, l)
+  
+  expect_equal(newA[, 1:2], A[, 1:2])
+  expect_equal(newA[, 3], A[, 3]*2)
+
+  # Check works with positive numbers
+  
+
+
+  # Check works with all ones
+  l <- c(1, 1, 1)
+  newA2 <- lscale(A, l)
+
+  expect_equal(A, newA2)
+
+
+  # Check works with all zeros
+  l <- c(0, 0, 0)
+  newA3 <- lscale(A, l)
+
+  expect_equal(newA3, matrix(0, nrow = 2, ncol = 3))
+
+
+
+
+  # Check works with missing data
+  A <- rbind(A, c(NA, 2, 3))
+  l <- c(0, 0, 0)
+  newA4 <- lscale(A, l)
+
+  expect_equal(A[3, ], newA4[3, ])
+  expect_equal(newA4[1:2, ], matrix(0, nrow = 2, ncol = 3))
+
+})
+
+
 
 
