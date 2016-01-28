@@ -1,0 +1,46 @@
+context('Test the pci initialisation step')
+
+
+
+test_that('pci centers shapes',{
+
+  cube1 <- rbind(c(1, 1, 1), c(1, -1, 1), c(-1, -1, 1), c(-1, 1, 1), c(1, 1, -1), c(1, -1, -1), c(-1, -1, -1), c(-1, 1, -1))
+  cube2 <- rbind(c(2, 2, 2), c(2, 0, 2), c(0, 0, 2), c(0, 2, 2), c(2, 2, 0), c(2, 0, 0), c(0, 0, 0), c(0, 2, 0))
+  expect_true(all(cube2 - cube1 == 1))
+
+  A <- abind(cube1, cube2, along = 3)
+  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
+  A <- aperm(A, perm = c(3, 1, 2))
+
+  A <- pcistep(A)
+
+  expect_equal(A[1, , ], A[2, ,])
+
+  expect_equal(lcentroid(A[1, , ]), c(0, 0, 0))
+  expect_equal(lcentroid(A[2, , ]), c(0, 0, 0))
+
+
+})
+
+
+test_that('pci centers shapes with missing data',{
+
+  cube1 <- rbind(c(1, 1, 1), c(1, -1, 1), c(-1, -1, 1), c(-1, 1, 1), c(1, 1, -1), c(1, -1, -1), c(-1, -1, -1), c(-1, 1, -1))
+  cube2 <- rbind(c(2, 2, 2), c(2, 0, 2), c(0, 0, 2), c(NA, NA, NA), c(2, 2, 0), c(2, 0, 0), c(0, 0, 0), c(0, 2, 0))
+
+  A <- abind(cube1, cube2, along = 3)
+  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
+  A <- aperm(A, perm = c(3, 1, 2))
+
+  A <- pcistep(A)
+
+  expect_equal(lcentroid(A[1, , ]), c(0, 0, 0))
+  expect_equal(lcentroid(A[2, , ]), c(0, 0, 0))
+
+
+})
+
+
+
+
+
