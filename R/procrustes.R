@@ -169,7 +169,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
       # Compute ta, the temporary matrix that will be used
 	    # in this iteration
       ta <- matrix(0, nrow = dim(na)[2], ncol = 3)
-      
+
       # Essentially calculate mean of other shapes
       for(j in 1:dim(na)[1]){
         if(i != j){ 
@@ -180,7 +180,9 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
       # Compute na[i,,]^T (ta)
       # The rotation which best approximates this matrix will be
       # applied to na[i,,]
-      c <- t(na[i, , ]) %*% ta
+      c <- base::crossprod(ta, na[i, , ])
+      # Same but slower. Highlights difference to comments in Anjalis code.
+      # c <- t(ta) %*% na[i,,]
 
       # Take rotation part from Singular value decomposition
       r <- rp_decompose(c)$R
@@ -189,7 +191,8 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
       
     }    
 
-    #print(deltaa(na2, na, dim(na2)[1], dim(na2)[2]))
+    
+    # print(deltaa(na2, na, dim(na2)[1], dim(na2)[2]))
     # Does new rotations only change the matrix a tiny bit?
     if(deltaa(na2, na, dim(na2)[1], dim(na2)[2]) < tolerance) break()
   }

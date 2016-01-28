@@ -50,7 +50,7 @@ test_that('pcr step works in 3D by rotating. 2 shapes', {
 
   set.seed(1)
   # Make a shape, then rotate it, then pcr it bake
-  sh1 <- matrix(sample(1:24), ncol =3)
+  sh1 <- matrix(sample(1:48), ncol =3)
 
   x <- runif(1, 0, 2*pi)
   y <- runif(1, 0, 2*pi)
@@ -67,7 +67,7 @@ test_that('pcr step works in 3D by rotating. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcrstep(A, maxiter = 10000)
+  A <- pcrstep(A, maxiter = 1000)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -76,6 +76,28 @@ test_that('pcr step works in 3D by rotating. 2 shapes', {
 })
 
 
+test_that('pcr step works in 3D with noise. 2 shapes', {
+
+  set.seed(2)
+  # Make a shape, then rotate it, then pcr it bake
+  sh1 <- matrix(sample(1:48), ncol =3)
+  sh2 <- matrix(sample(1:48), ncol =3)
+
+  A <- abind(sh1, sh2, along = 3)
+  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
+  A <- aperm(A, perm = c(3, 1, 2))
+
+  B <- pcrstep(A, maxiter = 1000)
+  
+  expect_true(scorea(A, 2, 48 / 3) > scorea(B,  2, 48 / 3))
+
+})
+
+
+# library(rgl)
+#plot3d(A[1,,1], A[1,,2], A[1,,3], size = 6)
+#plot3d(A[2,,1], A[2,,2], A[2,,3], add = TRUE, col = 'Red', size = 6)
+
 
 #plot(A[1,,1] ~ A[1,,2], ylim = c(-sqrt(2), sqrt(2)),  xlim=c(-sqrt(2), sqrt(2)), type = 'b')
 # lines(A[2,,1] ~ A[2,,2], col = 'red', type = 'b')
@@ -83,3 +105,8 @@ test_that('pcr step works in 3D by rotating. 2 shapes', {
 
 #plot(B[1,,1] ~ B[1,,2], ylim = c(-sqrt(2), sqrt(2)),  xlim=c(-sqrt(2), sqrt(2)), type = 'b')
 # lines(B[2,,1] ~ B[2,,2], col = 'red', type = 'b')
+
+
+
+plot(A[1,,1] ~ A[1,,2], ylim = c(-25, 25),  xlim=c(-25, 25), type = 'b')
+ lines(A[2,,1] ~ A[2,,2], col = 'red', type = 'b')
