@@ -311,7 +311,7 @@ pcsstep <- function(a){
           if(!anyNA(na[i, k, ]) && !anyNA(na[j, k, ])){
             d[i, i] <- d[i, i] - (na[i, k, ] %*% na[i, k, ])
             d[i, j] <- d[i, j] + (na[i, k, ] %*% na[j, k, ])
-          } 
+          }
         }
       }  
     }
