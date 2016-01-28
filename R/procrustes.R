@@ -170,12 +170,12 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
 	    # in this iteration
       ta <- matrix(0, nrow = dim(na)[2], ncol = 3)
       
-      # For each specimen
+      # Essentially calculate mean of other shapes
       for(j in 1:dim(na)[1]){
-        if(i != j){
+        if(i != j){ 
           ta <- ta + na[j, , ] 
         }
-      }
+      } 
     
       # Compute na[i,,]^T (ta)
       # The rotation which best approximates this matrix will be
@@ -189,6 +189,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
       
     }    
 
+    #print(deltaa(na2, na, dim(na2)[1], dim(na2)[2]))
     # Does new rotations only change the matrix a tiny bit?
     if(deltaa(na2, na, dim(na2)[1], dim(na2)[2]) < tolerance) break()
   }
@@ -341,8 +342,6 @@ pcsstep <- function(a){
 
 
 
-#' Resize all shapes until optimally aligned.
-#'
 #'Shifts each centroid to the origin.  This is not guaranteed
 #'  to decrease the value of the objective function, so it makes
 #'  no sense in later iterations; we just do it initially to get

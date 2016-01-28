@@ -17,7 +17,7 @@ rp_decompose <- function(m){
   if(nrow(m) != ncol(m)) stop('m must be a square matrix')
 
   sv <- svd(m)
-  R <- t(sv$v) %*% sv$u
+  R <- sv$v %*% t(sv$u)
   rpdecompose <- list(R = R, P = t(R) %*% m)
   return(rpdecompose)
 }
