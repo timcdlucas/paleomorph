@@ -365,6 +365,8 @@ pcsstep <- function(a){
 
 pcistep <- function(a, scale = TRUE){
 
+  na <- a
+
   # Shift centroid to origin
   for(i in 1:dim(na)[1]){
     na[i, , ] <- lshift(na[i, , ], -lcentroid2(na[i, , ]))
@@ -378,7 +380,7 @@ pcistep <- function(a, scale = TRUE){
   }
 
 
-  message("istep: score = ", scorea(na, dim(na)[1], dim(na)[2]))
+  message("istep: score = ", scorea(zapa(na), dim(na)[1], dim(na)[2]))
 
   return(na)
 }

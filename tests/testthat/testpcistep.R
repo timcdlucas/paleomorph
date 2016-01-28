@@ -12,7 +12,7 @@ test_that('pci centers shapes',{
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcistep(A)
+  A <- pcistep(A, scale = FALSE)
 
   expect_equal(A[1, , ], A[2, ,])
 

@@ -108,5 +108,5 @@ test_that('pcr step works in 3D with noise. 2 shapes', {
 
 
 
-plot(A[1,,1] ~ A[1,,2], ylim = c(-25, 25),  xlim=c(-25, 25), type = 'b')
- lines(A[2,,1] ~ A[2,,2], col = 'red', type = 'b')
+#plot(A[1,,1] ~ A[1,,2], ylim = c(-25, 25),  xlim=c(-25, 25), type = 'b')
+# lines(A[2,,1] ~ A[2,,2], col = 'red', type = 'b')
