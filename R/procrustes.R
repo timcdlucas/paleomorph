@@ -323,7 +323,7 @@ pcsstep <- function(a){
 
   # Do the stuff that was in largestev function
   v <- eigen(d)$vectors[, 1]
-  if(max(abs(v)) < 0){
+  if(v[which.max(abs(v))] < 0){
     v <- -v
   }
 
