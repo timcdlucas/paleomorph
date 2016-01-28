@@ -4,7 +4,7 @@
 \alias{pcrstep}
 \title{Rotate all shapes until optimally aligned.}
 \usage{
-pcrstep(a, maxiter = 10000, tolerance = 1e-06)
+pcrstep(a, maxiter = 1000, tolerance = 1e-06)
 }
 \arguments{
 \item{a}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}

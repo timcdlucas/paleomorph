@@ -2,7 +2,10 @@
 % Please edit documentation in R/procrustes.R
 \name{pcistep}
 \alias{pcistep}
-\title{Resize all shapes until optimally aligned.}
+\title{Shifts each centroid to the origin.  This is not guaranteed
+ to decrease the value of the objective function, so it makes
+ no sense in later iterations; we just do it initially to get
+ a head start on the convergence.}
 \usage{
 pcistep(a, scale = TRUE)
 }
@@ -15,16 +18,11 @@ pcistep(a, scale = TRUE)
 An M x N x 3 array of aligned shapes
 }
 \description{
-Shifts each centroid to the origin.  This is not guaranteed
- to decrease the value of the objective function, so it makes
- no sense in later iterations; we just do it initially to get
- a head start on the convergence.
-}
-\details{
 We also normalize the centroid size of each specimen to 1/Sqrt[m],
  so that the "total size" constraint is satisfied and scorea[] will
  become meaningful.
-
+}
+\details{
 Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
   this will find the optimal resizing for all shapes so that they are as
   aligned as possible.
