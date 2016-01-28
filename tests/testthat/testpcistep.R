@@ -34,8 +34,16 @@ test_that('pci centers shapes with missing data',{
 
   A <- pcistep(A)
 
-  expect_equal(lcentroid(A[1, , ]), c(0, 0, 0))
-  expect_equal(lcentroid(A[2, , ]), c(0, 0, 0))
+  expect_equal(lcentroid2(A[1, , ]), c(0, 0, 0))
+  expect_equal(lcentroid2(A[2, , ]), c(0, 0, 0))
+
+
+})
+
+
+test_that('pci deals with scale properly', {
+
+
 
 
 })

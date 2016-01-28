@@ -364,18 +364,22 @@ pcsstep <- function(a){
 #'@return An M x N x 3 array of aligned shapes
 
 pcistep <- function(a, scale = TRUE){
-  na <- array(NA, dim = dim(a))
+
   # Shift centroid to origin
-  for(i in 1:dim(a)[1]){
-    na[i, , ] <- lshift(a[i, , ], -lcentroid2(a[i, , ]))
+  for(i in 1:dim(na)[1]){
+    na[i, , ] <- lshift(na[i, , ], -lcentroid2(na[i, , ]))
   }
   
   # Scale size of each specimen to 1/sqrt(m)
-  for(i in 1:dim(a)[1]){
-    na[i, , ] <- lscale(na[i, , ],  1/sqrt(dim(a)[1] * lnorm(na[i, , ])))
+  if(scale){
+    for(i in 1:dim(na)[1]){
+      na[i, , ] <- lscale(na[i, , ],  1/sqrt(dim(na)[1] * lnorm(na[i, , ])))
+    }
   }
 
-  message("istep: score = ", scorea(na, dim(a)[1], dim(a)[2]))
+
+  message("istep: score = ", scorea(na, dim(na)[1], dim(na)[2]))
+
   return(na)
 }
 
