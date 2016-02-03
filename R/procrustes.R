@@ -6,12 +6,13 @@
 #'  as well as rotated and translated.
 #'@param maxiter Maximum number of iterations to attempt
 #'@param tolerance Difference between two iterations that will cause the search to stop. 
+#'@export
 #'
 #'@return A new (M x N x 3) array, where each 3d vector has been transformed
 #'  in a per-specimen way.  The transformation is chosen to maximize,
 #'  in the least-squares sense, the distances between specimens.
 
-procrustese <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
+procrustes <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
   stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)
 
   na <- pcistep(a, scale)
