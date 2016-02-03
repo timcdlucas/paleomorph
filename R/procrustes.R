@@ -49,7 +49,7 @@ procrustes <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
 #'@return The sum of squares distance
 
 scorea <- function(arr, m, n){
-  stopifnot(is.numeric(arr), !is.na(arr), is.numeric(m), is.numeric(n))
+  stopifnot(is.numeric(arr), is.numeric(m), is.numeric(n))
   sumw <- 0
   # For each specimen (except last)
   for(i in 1:(m - 1)){
@@ -58,8 +58,10 @@ scorea <- function(arr, m, n){
 
       # For each landmark
       for(k in 1:n){
-          w <- arr[i, k, ] - arr[j, k, ]
-          sumw <- sumw + w %*% w
+          if(anyNA(arr[i, k, ]) & anyNA(arr[j, k, ])){
+            w <- arr[i, k, ] - arr[j, k, ]
+            sumw <- sumw + w %*% w
+          }
       }
     }
   }
@@ -87,6 +89,8 @@ scorea <- function(arr, m, n){
 deltaa <- function(olda, newa, m, n){
   stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), is.numeric(n), dim(newa) == c(m, n, 3))
   delta <- 0
+  olda <- zapa(olda)
+  newa <- zapa(newa)
   for(i in seq(m)){
     for(j in seq(n)){
       delta <- delta + stats::dist(rbind(olda[i, j, ], newa[i, j, ]))
