@@ -32,9 +32,11 @@
 #'@return 3D covariance matrix
 
 dotcvm <- function(M){
-  N <- NA
-
-
+  # Calculate covariance between each pairs of columns.
+  N <- outer(1:dim(M)[2], 1:dim(M)[2], dotcvmentryVector, M = M)
+  e <- min(eigen(N)$values)
+  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
+  return(N)
 }
 
 
@@ -56,7 +58,6 @@ dotcvmentry <- function(M, col1, col2){
   # For each specimen
   for(i in 1:dim(M)[1]){
     if(!anyNA(M[, c(col1, col2), ])){
-      print(i)
       n <- n + 1
       s1 <- s1 + M[i, col1, ]
       s2 <- s2 + M[i, col1, ]
@@ -73,41 +74,14 @@ dotcvmentry <- function(M, col1, col2){
   # for each specimen
   for(i in 1:dim(M)[1]){
     if(!anyNA(M[, c(col1, col2), ])){
-      p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - sw))
+      p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - s2))
     }
   }
 
   return(p/(n - 1))
 }
 
-dotcvmentry[M_, col1_, col2_] := Module[ {i,n,s1,s2,p},
-   n = 0;
-   s1 = {0,0,0};
-   s2 = {0,0,0};
-   For[i = 1, i <= Dimensions[M][[1]], i++,
-      If[ !StringQ[M[[i,col1]]] && !StringQ[M[[i,col2]]],
-         n++;
-         s1 = s1 + M[[i,col1]];
-         s2 = s2 + M[[i,col2]];
-      ]
-   ];
-   If[n<=1,
-      Print["there is too much missing data to covary columns ", col1, " and ", col2];
-      Abort[];
-   ];
-   s1 = s1/n;
-   s2 = s2/n;
-
-   p = 0;
-   For[i = 1, i <= Dimensions[M][[1]], i++,
-      If[ !StringQ[M[[i,col1]]] && !StringQ[M[[i,col2]]],
-         p = p + (M[[i,col1]] - s1) . (M[[i,col2]] - s2);
-      ];
-   ];
-   p/(n-1)
-];
-
-
+dotcvmentryVector <- Vectorize(dotcvmentry, vectorize.args=list('col1', 'col2'))
 
 
 
