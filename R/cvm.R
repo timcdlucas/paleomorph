@@ -53,7 +53,8 @@ dotcvmentry <- function(M, col1, col2){
   s1 <- c(0, 0, 0)
   s2 <- c(0, 0, 0)
 
-  for(i in 1:dim(M)[2]){
+  # For each specimen
+  for(i in 1:dim(M)[1]){
     if(!anyNA(M[, c(col1, col2), ])){
       print(i)
       n <- n + 1
@@ -62,15 +63,17 @@ dotcvmentry <- function(M, col1, col2){
     }
   }
 
-  if(n < 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
+  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
 
   s1 <- s1/n
   s2 <- s2/n
 
   p <- 0
+
+  # for each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2)])){
-      p <- p + crossprod((M[i, col1, ] - s1), (M[i, colw, ] - sw))
+    if(!anyNA(M[, c(col1, col2), ])){
+      p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - sw))
     }
   }
 
