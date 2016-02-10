@@ -67,7 +67,7 @@ dotcvmentry <- Vectorize(function(M, col1, col2){
     }
   }
 
-  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
+  if(n <= 1) stop(paste("There is too much missing data to covary columns", col1, "and", col2))
 
   s1 <- s1/n
   s2 <- s2/n
@@ -136,12 +136,8 @@ cvm <- function(M){
 
 #' Calculate 3D correlation matrix 
 #' 
-#' Each row of M should correspond to one _specimen _.  Each column of
-#' M should correspond to one _landmark _.  In the 1D case, each element
-#' of M should be either a number or a string such as "?" which indicates
-#' missing data.  In the 3D case, each element of M should be either
-#' a 3-component vector or a string such as "?" which indicates missing
-#' data.
+#' Calculates the congruence coefficient for 2 or 3 dimensional landmarks
+#'   to give a M x M correlation matrix.
 #'
 #'@param M An M x N x D array. M = no of specimens, N = no of landmarks, D = 2 or 3 dimensions
 #'@export
@@ -149,9 +145,19 @@ cvm <- function(M){
 #'@return Correlation matrix
 
 
+
+
 dotcorr <- function(M){
   # Calculate covariance between each pairs of columns.
-  N <- outer(1:dim(M)[2], 1:dim(M)[2], dotcorrentry, M = M)
+  N <- matrix(NA, nrow = dim(M)[2], ncol = dim(M)[2])
+  for(i in 1:dim(M)[2]){
+    for(j in i:dim(M)[2]){
+      N[i, j] <- dotcorrentry(M, i, j)
+    }
+  }
+  
+  N[lower.tri(N)] <- t(N)[lower.tri(N)]
+  
   e <- min(eigen(N)$values)
   if(e < 0) warning(paste('CVM has negative eigenvalue', e))
   return(N)
@@ -178,7 +184,7 @@ dotcorr <- function(M){
 
 
 # Check columns have enough data and then calculate correlation between columns
-dotcorrentry <- Vectorize(function(M, col1, col2){
+dotcorrentry <- function(M, col1, col2){
   n <- 0
   s1 <- c(0, 0, 0)
   s2 <- c(0, 0, 0)
@@ -214,7 +220,13 @@ dotcorrentry <- Vectorize(function(M, col1, col2){
   	
 
   return(p/sqrt(sumi * sumj))
-}, vectorize.args=list('col1', 'col2'))
+}
+
+
+
+
+
+
 
 
 
