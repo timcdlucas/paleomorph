@@ -104,7 +104,7 @@ cvmentry <- Vectorize(function(M, col1, col2){
     }
   }
 
-  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
+  if(n <= 1) stop(paste("There is too much missing data to covary columns", col1, "and", col2))
 
   s1 <- s1/n
   s2 <- s2/n
