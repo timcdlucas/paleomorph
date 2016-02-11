@@ -1,25 +1,9 @@
-  
-#' Calculate 1D covariance matrix 
-#' 
-#' Each row of M should correspond to one _specimen _.  Each column of
-#' M should correspond to one _landmark _.  In the 1D case, each element
-#' of M should be either a number or a string such as "?" which indicates
-#' missing data.  In the 3D case, each element of M should be either
-#' a 3-component vector or a string such as "?" which indicates missing
-#' data.
-#'
-#'@param M An M x N matrix. M = no of specimens, N = no of landmarks.
-#'@export
-#'
-#'@return 1D covariance matrix
-
-
 
 
 
 #' Calculate 3D covariance matrix 
 #' 
-#' Each row of M should correspond to one _specimen _.  Each column of
+#' Each row of M should correspond to one specimen .  Each column of
 #' M should correspond to one _landmark _.  In the 1D case, each element
 #' of M should be either a number or a string such as "?" which indicates
 #' missing data.  In the 3D case, each element of M should be either
@@ -29,16 +13,23 @@
 #'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@export
 #'
-#'@return 3D covariance matrix
+#'@return N x N covariance matrix
 
 dotcvm <- function(M){
-  # Calculate covariance between each pairs of columns.
-  N <- outer(1:dim(M)[2], 1:dim(M)[2], dotcvmentry, M = M)
+ # Calculate covariance between each pairs of columns.
+  N <- matrix(NA, nrow = dim(M)[2], ncol = dim(M)[2])
+  for(i in 1:dim(M)[2]){
+    for(j in i:dim(M)[2]){
+      N[i, j] <- dotcorrentry(M, i, j)
+    }
+  }
+  
+  N[lower.tri(N)] <- t(N)[lower.tri(N)]
+  
   e <- min(eigen(N)$values)
   if(e < 0) warning(paste('CVM has negative eigenvalue', e))
   return(N)
 }
-
 
 
 #' Calculate 3D covariance between two landmarks across specimens 
@@ -53,7 +44,7 @@ dotcvm <- function(M){
 
 
 # Check columns have enough data and then calculate covariance between columns
-dotcvmentry <- Vectorize(function(M, col1, col2){
+dotcvmentry <- function(M, col1, col2){
   n <- 0
   s1 <- c(0, 0, 0)
   s2 <- c(0, 0, 0)
@@ -82,8 +73,7 @@ dotcvmentry <- Vectorize(function(M, col1, col2){
   }
 
   return(p/(n - 1))
-}, vectorize.args=list('col1', 'col2'))
-
+}
 
 
 
@@ -118,7 +108,7 @@ cvmentry <- Vectorize(function(M, col1, col2){
     }
   }
 
-  return(p/(n - 1))
+  return(p / (n - 1))
 
 }, vectorize.args=list('col1', 'col2'))
 
@@ -143,8 +133,6 @@ cvm <- function(M){
 #'@export
 #'
 #'@return Correlation matrix
-
-
 
 
 dotcorr <- function(M){
@@ -211,15 +199,13 @@ dotcorrentry <- function(M, col1, col2){
   for(i in 1:dim(M)[1]){
     if(!anyNA(M[, c(col1, col2), ])){
       p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - s2))
-	sumi <- sumi + crossprod((M[i, col1, ]), (M[i, col1, ]))
-	sumj <- sumj + crossprod((M[i, col2, ]), (M[i, col2, ]))
+	    sumi <- sumi + crossprod((M[i, col1, ]), (M[i, col1, ]))
+	    sumj <- sumj + crossprod((M[i, col2, ]), (M[i, col2, ]))
 
     }
   }
 
-  	
-
-  return(p/sqrt(sumi * sumj))
+  return(p / sqrt(sumi * sumj))
 }
 
 
