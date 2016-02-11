@@ -14,7 +14,7 @@ dotcorrentry(M, col1, col2)
 \item{col2}{Integer of second column}
 }
 \value{
-3D covariance matrix
+Length 1 numeric giving the congruence correlation
 }
 \description{
 Calculates the congruence coefficient for 2 or 3 dimensional landmarks

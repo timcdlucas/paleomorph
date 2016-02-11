@@ -172,7 +172,7 @@ dotcorr <- function(M){
 #'@param col1 Integer of first column 
 #'@param col2 Integer of second column 
 #'
-#'@return 3D covariance matrix
+#'@return Length 1 numeric giving the congruence correlation
 
 
 
