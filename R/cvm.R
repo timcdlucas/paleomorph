@@ -3,17 +3,12 @@
 
 #' Calculate 3D covariance matrix 
 #' 
-#' Each row of M should correspond to one specimen .  Each column of
-#' M should correspond to one _landmark _.  In the 1D case, each element
-#' of M should be either a number or a string such as "?" which indicates
-#' missing data.  In the 3D case, each element of M should be either
-#' a 3-component vector or a string such as "?" which indicates missing
-#' data.
 #'
 #'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@export
 #'
 #'@return N x N covariance matrix
+#'@name dotcvmd
 
 dotcvm <- function(M){
  # Calculate covariance between each pairs of columns.
@@ -36,10 +31,11 @@ dotcvm <- function(M){
 #' 
 #'
 #'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
-#'@col1 Integer of first column 
-#'@col2 Integer of second column 
+#'@param col1 Integer of first column 
+#'@param col2 Integer of second column 
 #'
-#'@return 3D covariance matrix
+#'@return Covariance value
+#'@name dotcvmentry
 
 
 
@@ -80,6 +76,24 @@ dotcvmentry <- function(M, col1, col2){
 
 
 
+#' Calculate 1D covariance between two landmarks across specimens 
+#' 
+#'
+#'@param M An M x N matrix. M = no of specimens, N = no of landmarks.
+#'
+#'@return 1D covariance matrix
+
+
+
+cvm <- function(M){
+  # Calculate covariance between each pairs of columns.
+  N <- outer(1:dim(M)[2], 1:dim(M)[2], cvmentry, M = M)
+  e <- min(eigen(N)$values)
+  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
+  return(N)
+}
+
+
 cvmentry <- Vectorize(function(M, col1, col2){
   n <- 0
   s1 <- 0
@@ -112,15 +126,6 @@ cvmentry <- Vectorize(function(M, col1, col2){
 
 }, vectorize.args=list('col1', 'col2'))
 
-
-
-cvm <- function(M){
-  # Calculate covariance between each pairs of columns.
-  N <- outer(1:dim(M)[2], 1:dim(M)[2], cvmentry, M = M)
-  e <- min(eigen(N)$values)
-  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
-  return(N)
-}
 
 
 
@@ -164,8 +169,8 @@ dotcorr <- function(M){
 #' Calculates the congruence coefficient for 2 or 3 dimensional landmarks
 #'
 #'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
-#'@col1 Integer of first column 
-#'@col2 Integer of second column 
+#'@param col1 Integer of first column 
+#'@param col2 Integer of second column 
 #'
 #'@return 3D covariance matrix
 
