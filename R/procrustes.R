@@ -111,16 +111,11 @@ deltaa <- function(olda, newa, m, n){
 
 zapa <- function(a){
   stopifnot(is.numeric(a))
-  for(i in 1:dim(a)[1]){
-    for(j in 1:dim(a)[2]){
-      if(any(is.na(a[i, j, ]))){
-        a[i, j, ] <- c(0, 0, 0)
-      }
-    }
-  }
+
+  a[apply(a, c(1, 2), function(x) anyNA(x))] <- 0
+
   return(a)
 }
-
 
 
 #' Puts missing data back in to a specimen x landmark array
