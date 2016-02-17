@@ -86,18 +86,18 @@ scorea <- function(arr, m, n){
 #'@return The sum of squares distances (length 1 numeric) between all landmarks on all speciments.
 
 
+
 deltaa <- function(olda, newa, m, n){
   stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), is.numeric(n), dim(newa) == c(m, n, 3))
-  delta <- 0
   olda <- zapa(olda)
   newa <- zapa(newa)
-  for(i in seq(m)){
-    for(j in seq(n)){
-      delta <- delta + stats::dist(rbind(olda[i, j, ], newa[i, j, ]))
-    }
-  }
-  return(as.vector(delta))
+  
+  diff <- olda - newa
+  
+  sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x)))
+
 }
+
 
 
 #' Replaces missing data points with c(0, 0, 0)
