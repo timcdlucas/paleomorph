@@ -54,18 +54,15 @@ lshift <- function(A, v){
 #'@return A matrix of the same dimensions as A
 #'@rdname lshift
 
-lrotate <- function(A, m){
-  A2 <- apply(A, 1, function(x)
-          if(any(is.na(x))){
-            x
-          } else {
-            x %*% m
-          }
-        )
-  return(t(A2))  
+lrotate2 <- function(A, m){
+  A2 <- t(apply(A, 1, function(x) x %*% m))
+  
+  if(anyNA(A2){
+    A2[!complete.cases(A)] <- A[!complete.cases(A)]
+  }
+  
+  return(A2)  
 }
-
-
 
 
 #'lcentroid: computes centroid of all 3D points in matrix A (cannot have missing data)
