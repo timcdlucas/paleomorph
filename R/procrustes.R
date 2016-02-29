@@ -23,7 +23,7 @@ procrustes <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
 
     # Do an iteration of procrustese
     na <- pctstep(na)
-    na <- pcrstep(na)
+    na <- pcrstep(na, tolerance = tolerance)
     if(scale) na <- pcsstep(na)
 
     # Check progress
@@ -87,11 +87,13 @@ scorea <- function(arr, m, n){
 
 
 
-deltaa <- function(olda, newa, m, n){
+deltaa <- function(olda, newa, m, n, zap = TRUE){
   stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), is.numeric(n), dim(newa) == c(m, n, 3))
-  olda <- zapa(olda)
-  newa <- zapa(newa)
-  
+  if(zap){
+    olda <- zapa(olda)
+    newa <- zapa(newa)
+  }
+
   diff <- olda - newa
   
   sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x)))
@@ -194,13 +196,16 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
     
     # print(deltaa(na2, na, dim(na2)[1], dim(na2)[2]))
     # Does new rotations only change the matrix a tiny bit?
-    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2]) < tolerance) break()
+    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2], FALSE) < tolerance) break()
   }
-  # Replace missing values
-  na <- unzapa(na, a)
+
 
   # print some output
   message(paste("rstep: score =", scorea(na, dim(na)[1], dim(na)[2]), ", delta =", deltaa(a, na, dim(na)[1], dim(na)[2]), ", iterations = ", count))
+
+  # Replace missing values
+  na <- unzapa(na, a)
+
   return(na)
 }
   
@@ -384,6 +389,9 @@ pcistep <- function(a, scale = TRUE){
 
   return(na)
 }
+
+
+
 
 
 

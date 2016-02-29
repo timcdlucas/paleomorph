@@ -54,10 +54,10 @@ lshift <- function(A, v){
 #'@return A matrix of the same dimensions as A
 #'@rdname lshift
 
-lrotate2 <- function(A, m){
+lrotate <- function(A, m){
   A2 <- t(apply(A, 1, function(x) x %*% m))
   
-  if(anyNA(A2){
+  if(anyNA(A2)){
     A2[!complete.cases(A)] <- A[!complete.cases(A)]
   }
   
