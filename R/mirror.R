@@ -46,37 +46,49 @@ mirrorfill <- function(a, l1, l2){
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
 #'@param l2 Vector of indices for which landmarks to be. 
 #'
-#'@details \code{l1} should be an even number length containing pairs of landmarks
+#'@details \code{l2} should be an even number length containing pairs of landmarks
 #'  on either side of the specimen.
 #'@export
 
 
 mirrorfill1 <- function(s, l1, l2){
   # Check inputs
-  stopifnot(is.numeric(a), dim(a)[2] == 3, length(dim(a)) == 2)
+  stopifnot(is.numeric(s), dim(s)[2] == 3, length(dim(s)) == 2)
+  stopifnot(is.integer(l1), is.integer(l2) | is.numeric(l2) & length(l2) == 1)
+
+  if(length(l2) %% 2) stop('Number of mirrored points is odd')
 
   # Count missing data points
-  count1 <- sum(apply(a, 1, anyNA))
+  count1 <- sum(apply(s, 1, anyNA))
 
   # Initialise counter for number of landmarks replaced.
   count2 <- 0
   
+  # Find the center plane
+  mid <- midline(s, l1)
   
+  # Make a copy of the shape
+  ns <- s
 
+
+
+  for(i in 1:length(l2)){
+    if(mod(i, 2) ==1){
+
+      j <- i + 1
+    } else {
+     j <- i -1
+    }
+      print(i);print(j);
+  }
+  
 }
 
-
-
-mirrorfill1[s_,l1_,l2_] := Module[ {count1, count2, n, d, i, j, ii, jj},
 
     # counts missing data points
     count1 = validates[s];
     count2 = 0;
     {n,d} = midline[s, l1];
-    If [!VectorQ[l2, IntegerQ],
-	    Print["fatal error in mirrorfill[]: mirror list is bad"];
-	    Abort[];
-    ];
 
     ns = s;
     For [i = 1, i <= Length[l2], i++,
@@ -116,7 +128,7 @@ midline <- function(s, l1){
   stopifnot(is.numeric(s), dim(s)[2] == 3, length(dim(s)) == 2)
   stopifnot(is.integer(l1))
 
-  if(any(l1 < 1) || any(l1 > length(dim(s)[1]))){
+  if(any(l1 < 1) || any(l1 > dim(s)[1])){
     stop("Midline index is out of range")
   }
 
@@ -151,7 +163,7 @@ bestplane <- function(l){
   # Calculate how well the plane fits
   fit <- sum(sapply(1:NCOL(nl), function(i) n %*% nl[i, ]^2 ))
   message('Fit of midline plane is ', fit, ' with ', NCOL(nl), ' landmarks.')
-  return(list(n, n %*% c))
+  return(list(n = n, d = n %*% c))
 }
 
 
