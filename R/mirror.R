@@ -44,10 +44,11 @@ mirrorfill <- function(a, l1, l2){
 #'
 #'@param s An n x 3 matrix containing 3D landmark data of n landmarks.
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
-#'@param l2 Vector of indices for which landmarks to be. 
+#'@param l2 Vector of indices for which landmarks to be replace by their mirrored value.
+#'
 #'
 #'@details \code{l2} should be an even number length containing pairs of landmarks
-#'  on either side of the specimen.
+#'  on either side of the specimen. i.e. l2[1]
 #'@export
 
 
@@ -71,49 +72,37 @@ mirrorfill1 <- function(s, l1, l2){
   ns <- s
 
 
-
+  # for each element in the replacement list l2
   for(i in 1:length(l2)){
-    if(mod(i, 2) ==1){
-
+    # In list of integers a, b, c, d,
+    #   a and b are a pair and c and d are a pair
+    #   Compare each pair both ways and replace missing values with mirrored version
+    #   i.e. is a has missing data, replace a with reflection of b
+    #   but if b has missing data, replace b with reflection of a
+    #   If neither has missing data do nothing. If both have missing data, do nothing.
+    if(i %% 2 == 1){
       j <- i + 1
     } else {
      j <- i -1
     }
-      print(i);print(j);
+    # Get the indices for the landmarks    
+    ii <- l2[i]
+    jj <- l2[j]
+    if(ii < 1 || ii > dim(s)[1] || jj < 1 || jj > dim(s)[1]){
+      stop("fatal error in mirrorfill: mirror index is out of range")
+    }
+
+    # if landmark ii is complete data and jj has missing data, replace ii with mirror of jj.
+    #   (the reverse replacement is tested in a later iteration of the loop)
+    if(!anyNA(ns[ii, ]) & anyNA(ns[jj, ])){
+      ns[jj, ] <- reflect(ns[ii, ], mid$n, mid$d)
+      count2 <- count2 + 1
+    }
   }
+  print(paste("mirrorfill reconstructed ", count2, " out of ", count1, " missing landmarks"))
+  return(ns)
   
 }
-
-
-    # counts missing data points
-    count1 = validates[s];
-    count2 = 0;
-    {n,d} = midline[s, l1];
-
-    ns = s;
-    For [i = 1, i <= Length[l2], i++,
-	    j = If[Mod[i,2]==1, i+1, i-1];
-	    If [j > Length[l2],
-	      Print["fatal error in mirrorfill[]: number of mirrored points is odd"];
-	      Abort[];
-	    ];
-
-	    ii = l2[[i]];
-	    jj = l2[[j]];
-	    If [ii < 1 || ii > Length[s] || jj < 1 || jj > Length[s],
-	      Print["fatal error in mirrorfill[]: mirror index is out of range"];
-	      Abort[];
-	    ];
-	    If [ StringQ[ns[[ii]]], Continue[]];
-	    If [!StringQ[ns[[jj]]], Continue[]];
-	
-	    ns[[jj]] = reflect[ ns[[ii]], n, d ];
-	    count2++;
-    ];
-
-    Print["mirrorfill[] reconstructed ", count2, " out of ", count1, " missing landmarks"];
-    Return[ns];
-];
 
 
 

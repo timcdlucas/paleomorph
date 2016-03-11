@@ -334,7 +334,7 @@ pcsstep <- function(a){
 
   # The actual scaling is done here
   # Check that scaling isn't negative  
-  if(any(v < 0.0001)){
+  if(any(v <= 0)){
     stop('Procrustes scaling is negative!')
   }
 
