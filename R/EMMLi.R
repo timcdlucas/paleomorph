@@ -35,6 +35,21 @@
 # SOFTWARE.
 #############
 
+
+#' Evaluating modularity with maximum likelihood
+#'
+#' Calculates the AICc values of different models of modularity.
+#'
+#'@param corr Lower triangle correlation matrix. n x n square matrix for n landmarks.
+#'@param N_sample The number of samples used
+#'@param mod A data frame defining the models. The first column should contain the landmark names. Subsequent columns should define which landmarks are contained with which module. If a landmark should be ignored for a specific model, the element should be NA.
+#'@param varlist A character vector of the model names in the form c('mod$hyp1', 'mod$hyp2')
+#'@param saveAs A character string defining the filename and path for where to save output.
+#'
+#'@export
+#'@return NULL. The output is saved to the file defined in saveAs.
+
+
 EMMLi = function(corr, N_sample, mod, varlist,saveAs){
   
   varlist[length(varlist)+1] = "mod$No.modules"
