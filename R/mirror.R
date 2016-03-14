@@ -44,7 +44,7 @@ mirrorfill <- function(a, l1, l2){
 #'
 #'@param s An n x 3 matrix containing 3D landmark data of n landmarks.
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
-#'@param l2 Vector of indices for which landmarks to be replace by their mirrored value.
+#'@param l2 Vector of indices for which landmarks to be replaced by their mirrored value.
 #'
 #'
 #'@details \code{l2} should be an even number length containing pairs of landmarks
@@ -55,7 +55,7 @@ mirrorfill <- function(a, l1, l2){
 mirrorfill1 <- function(s, l1, l2){
   # Check inputs
   stopifnot(is.numeric(s), dim(s)[2] == 3, length(dim(s)) == 2)
-  stopifnot(is.integer(l1), is.integer(l2) | is.numeric(l2) & length(l2) == 1)
+  stopifnot(is.integer(l1), is.integer(l2) | is.numeric(l2))
 
   if(length(l2) %% 2) stop('Number of mirrored points is odd')
 
@@ -140,20 +140,32 @@ midline <- function(s, l1){
 #'  n.x = d is the least squares plane.
 
 bestplane <- function(l){
+  # centre the points
   c <- lcentroid(l)
   nl <- lshift(l, -c)
   
-  # Do the stuff that was in largestev function
-  n <- eigen(-t(nl) %*% nl)$vectors[, 1]
-  if(n[which.max(abs(n))] < 0){
-    n <- -n
-  }
+  eigen <- eigen(cov(nl))
+  n <- eigen$vectors[, 3]
 
   # Calculate how well the plane fits
   fit <- sum(sapply(1:NCOL(nl), function(i) n %*% nl[i, ]^2 ))
   message('Fit of midline plane is ', fit, ' with ', NCOL(nl), ' landmarks.')
   return(list(n = n, d = n %*% c))
 }
+
+
+
+
+#' Reflects p in the plane defined by n.x = d
+#' 
+#'@param p a length 3 vector (a 3D point in space)
+#'@param n Length three vector of coefficients for a plane nx = d
+#'@param d Length one vector giving coefficient d for a plane nx = d
+
+reflect <- function(p, n, d){
+   p - 2(n %*% p - d) * n/(n %*% n)
+}
+
 
 
 
