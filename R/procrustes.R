@@ -15,6 +15,15 @@
 procrustes <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
   stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)
 
+  # Check that all landmarks are either complete or all NA
+  if(any(!is.na(a[apply(a, c(1, 2), function(x) anyNA(x))]))){
+    partial <- which(apply(a, c(1, 2), function(x) anyNA(x) & !all(is.na(x))), arr.ind = TRUE)
+    colnames(partial) <- c('specimen', 'landmark')
+    message('Some landmarks are partially complete and partially missing. The landmarks are: ')
+    print(partial)
+    stop('Exiting due to partially missing landmarks.')
+  }
+  
   na <- pcistep(a, scale)
 
   for(iter in 1:maxiter){
