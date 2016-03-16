@@ -1,9 +1,9 @@
 #################################################################
 ##  EMMLi 
 ##
-##   Inputs: corr = lower triangle coeffecient matrix, 
+##   Inputs: corr = lower triangle correlation matrix, 
 ##  					mod = landmark classification, 
-##				varlist = list of classfications (mod columns), 
+##       N_sample = the number of samples used to calculate the correlation matrix
 ##				 saveAs = specify where to save the results.
 ##			  
 ##  Output: A .csv file, resembling the AIC worksheet. 
@@ -43,7 +43,6 @@
 #'@param corr Lower triangle or full correlation matrix. n x n square matrix for n landmarks.
 #'@param N_sample The number of samples used
 #'@param mod A data frame defining the models. The first column should contain the landmark names. Subsequent columns should define which landmarks are contained with which module. If a landmark should be ignored for a specific model, the element should be NA.
-#'@param varlist A character vector of the model names in the form c('mod$hyp1', 'mod$hyp2')
 #'@param saveAs A character string defining the filename and path for where to save output.
 #'
 #'@export
@@ -260,10 +259,9 @@ EMMLi = function(corr, N_sample, mod, saveAs){
   
   a = names(unlist(maxlogL))[seq(1,dim(results)[1]*2,2)]
   b = unlist(strsplit(a, split='mod\\$'))
-  b = unlist(strsplit(b, split='1'))
+  b = unlist(strsplit(b, split='1$'))
   rownames(results) = b
-  
-  #t = matrix(,nrow=8,ncol=2)
+
   
   s=1
   i = length(nm)
@@ -282,8 +280,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
   
   rholist = list()
   h=1
-  #rholist[h] = logp[1]
-  #h=1
+
   for (i in 1:(length(logp))){
     #print(i)
     for (j in 1:length(logp[[i]])){
