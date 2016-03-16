@@ -40,17 +40,24 @@
 #'
 #' Calculates the AICc values of different models of modularity.
 #'
-#'@param corr Lower triangle correlation matrix. n x n square matrix for n landmarks.
+#'@param corr Lower triangle or full correlation matrix. n x n square matrix for n landmarks.
 #'@param N_sample The number of samples used
 #'@param mod A data frame defining the models. The first column should contain the landmark names. Subsequent columns should define which landmarks are contained with which module. If a landmark should be ignored for a specific model, the element should be NA.
 #'@param varlist A character vector of the model names in the form c('mod$hyp1', 'mod$hyp2')
 #'@param saveAs A character string defining the filename and path for where to save output.
 #'
 #'@export
-#'@return NULL. The output is saved to the file defined in saveAs.
+#'@return NULL. The output is saved to the file defined by the saveAs argument.
 
 
 EMMLi = function(corr, N_sample, mod, varlist,saveAs){
+  
+  # Check inputs
+  stopifnot(is.numeric(corr), dim(corr)[1] == dim(corr)[2], is.numeric(N_sample), N_sample > 0, is.character(saveAs))
+  # Check that models are given as integers
+  if(!all(sapply(mod[, -1], function(i) i%%1==0))) stop('mod should contain a column of names and then columns of integers defining models')
+  if(dim(corr)[1] != dim(corr)[2]) stop('corr should be a square matrix.')
+  
   
   varlist[length(varlist)+1] = "mod$No.modules"
   mod$No.modules = 1
