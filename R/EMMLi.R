@@ -50,7 +50,7 @@
 #'@return NULL. The output is saved to the file defined by the saveAs argument.
 
 
-EMMLi = function(corr, N_sample, mod, varlist,saveAs){
+EMMLi = function(corr, N_sample, mod, saveAs){
   
   # Check inputs
   stopifnot(is.numeric(corr), dim(corr)[1] == dim(corr)[2], is.numeric(N_sample), N_sample > 0, is.character(saveAs))
@@ -58,9 +58,12 @@ EMMLi = function(corr, N_sample, mod, varlist,saveAs){
   if(!all(sapply(mod[, -1], function(i) i%%1==0))) stop('mod should contain a column of names and then columns of integers defining models')
   if(dim(corr)[1] != dim(corr)[2]) stop('corr should be a square matrix.')
   
-  
-  varlist[length(varlist)+1] = "mod$No.modules"
+  # Create null model
   mod$No.modules = 1
+
+  # Create varlist variable
+  varlist = paste0('mod$', names(mod)[-1])
+
   
   corr[upper.tri(corr, diag=T)] = NA
   corr_list = (as.array(corr[!is.na(corr)])) # array of coefficient matrix, NAs are removed.

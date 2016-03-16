@@ -14,10 +14,10 @@ test_that('EMMLi runs and creates output.', {
                modelB = rep(c(1,2), 3),
                modelC = rep(c(1:3), 2)) 
 
-  varList <- c('mod$modelA', 'mod$modelB', 'mod$modelC')
+  #varList <- c('mod$modelA', 'mod$modelB', 'mod$modelC')
 
 
-  EMMLi(dat, 20, mod1, varList, file)
+  EMMLi(dat, 20, mod1, file)
 
   expect_true(file.exists(file))
   
@@ -50,10 +50,10 @@ test_that('EMMLi can take mod with numbers in columns.', {
                model2 = rep(c(1,2), 3),
                model3= rep(c(1:3), 2)) 
 
-  varList <- c('mod$model1', 'mod$model2', 'mod$model3')
+  #varList <- c('mod$model1', 'mod$model2', 'mod$model3')
 
 
-  EMMLi(dat, 20, mod1, varList, file)
+  EMMLi(dat, 20, mod1, file)
 
   expect_true(file.exists(file))
   
