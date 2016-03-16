@@ -46,7 +46,7 @@ test_that('Basic procrustes works', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  B <- procrustes(A, scale = TRUE)
+  B <- procrustes(A, scale = TRUE, tolerance = 10e-9)
   
   expect_equal(B[1, , ], B[2, , ])
   expect_equal(B[2, , ], B[3, , ])

@@ -4,7 +4,7 @@
 \alias{deltaa}
 \title{Returns the sum of squares of the distances between "a1" and "a2".}
 \usage{
-deltaa(olda, newa, m, n)
+deltaa(olda, newa, m, n, scaleDelta, zap = TRUE)
 }
 \arguments{
 \item{olda}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
@@ -21,6 +21,6 @@ The sum of squares distances (length 1 numeric) between all landmarks on all spe
 \description{
 For each landmark on each sample, find distance between location given
   in a1 and a2. 
-Used to see when a1 and a2 are very similar. e.g. deltaa(olda, newa, 10, 20) < 10e-7
+Used to see when a1 and a2 are very similar. e.g. deltaa(olda, newa, 10, 20, scaleDelta = FALSE) < 10e-7
 }
 

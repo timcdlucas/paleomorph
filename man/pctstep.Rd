@@ -4,7 +4,7 @@
 \alias{pctstep}
 \title{Translate all shapes until optimally aligned.}
 \usage{
-pctstep(a)
+pctstep(a, scaleDelta)
 }
 \arguments{
 \item{a}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}

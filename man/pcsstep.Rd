@@ -4,7 +4,7 @@
 \alias{pcsstep}
 \title{Resize all shapes until optimally aligned.}
 \usage{
-pcsstep(a)
+pcsstep(a, scaleDelta)
 }
 \arguments{
 \item{a}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}

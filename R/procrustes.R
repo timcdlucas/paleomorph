@@ -6,13 +6,20 @@
 #'  as well as rotated and translated.
 #'@param maxiter Maximum number of iterations to attempt
 #'@param tolerance Difference between two iterations that will cause the search to stop. 
+#'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'@export
+#'@details
+#' A number of computations are run until the difference between two iterations is less than \code{tolerance}.
+#'   The more specimens and landmarks you have, the less each landmark is allowed to move before this tolerance
+#'   is reached. Setting \code{scaleDelta = TRUE} will make the alignment run faster but have potentially less 
+#'   well aligned results. But the alignment between a large and small array of shapes should be more comparable
+#'   with \code{scaleDelta = TRUE}.
 #'
 #'@return A new (M x N x 3) array, where each 3d vector has been transformed
 #'  in a per-specimen way.  The transformation is chosen to maximize,
 #'  in the least-squares sense, the distances between specimens.
 
-procrustes <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
+procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tolerance = 10e-6){
   stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)
 
   # Check that all landmarks are either complete or all NA
@@ -31,18 +38,18 @@ procrustes <- function(a, scale = TRUE, maxiter = 1000, tolerance = 10e-6){
     na2 <- na 
 
     # Do an iteration of procrustese
-    na <- pctstep(na)
-    na <- pcrstep(na, tolerance = tolerance)
-    if(scale) na <- pcsstep(na)
+    na <- pctstep(na, scaleDelta)
+    na <- pcrstep(na, tolerance = tolerance, scaleDelta = scaleDelta)
+    if(scale) na <- pcsstep(na, scaleDelta)
 
     # Check progress
-    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2]) < tolerance) break()
+    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2], scaleDelta) < tolerance) break()
   }
 
   # If it didn't converge give a warning
   if(iter == maxiter){
     warning('After ', maxiter, ' iterations the solution has not converged.')
-    warning('Delta = ', round(deltaa(na2, na, dim(na2)[1], dim(na2)[2]), 4), ', tolerance = ', tolerance)
+    warning('Delta = ', round(deltaa(na2, na, dim(na2)[1], dim(na2)[2], scaleDelta), 4), ', tolerance = ', tolerance)
   }
 
   return(na)
@@ -85,7 +92,7 @@ scorea <- function(arr, m, n){
 #' 
 #' For each landmark on each sample, find distance between location given
 #'   in a1 and a2. 
-#' Used to see when a1 and a2 are very similar. e.g. deltaa(olda, newa, 10, 20) < 10e-7
+#' Used to see when a1 and a2 are very similar. e.g. deltaa(olda, newa, 10, 20, scaleDelta = FALSE) < 10e-7
 #'
 #'@param olda An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@param newa An M x N x 3 array. M = no of specimens, N = no of landmarks.
@@ -96,8 +103,9 @@ scorea <- function(arr, m, n){
 
 
 
-deltaa <- function(olda, newa, m, n, zap = TRUE){
-  stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), is.numeric(n), dim(newa) == c(m, n, 3))
+deltaa <- function(olda, newa, m, n, scaleDelta, zap = TRUE){
+  stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), 
+            is.numeric(n), dim(newa) == c(m, n, 3), is.logical(scaleDelta))
   if(zap){
     olda <- zapa(olda)
     newa <- zapa(newa)
@@ -105,8 +113,12 @@ deltaa <- function(olda, newa, m, n, zap = TRUE){
 
   diff <- olda - newa
   
-  sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x)))
-
+  if(scaleDelta){
+    delta <- sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x))) / (dim(olda)[1] * dim(olda)[2])
+  } else {
+    delta <- sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x)))
+  }
+  return(delta)
 }
 
 
@@ -162,7 +174,7 @@ unzapa <- function(a, b){
 #'@return An M x N x 3 array of aligned shapes
 
 
-pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
+pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
 
   stopifnot(is.numeric(a))
 
@@ -205,12 +217,14 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
     
     # print(deltaa(na2, na, dim(na2)[1], dim(na2)[2]))
     # Does new rotations only change the matrix a tiny bit?
-    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2], FALSE) < tolerance) break()
+    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2], scaleDelta = scaleDelta, FALSE) < tolerance) break()
   }
 
 
   # print some output
-  message(paste("rstep: score =", scorea(na, dim(na)[1], dim(na)[2]), ", delta =", deltaa(a, na, dim(na)[1], dim(na)[2]), ", iterations = ", count))
+  message(paste("rstep: score =", scorea(na, dim(na)[1], dim(na)[2]), 
+    ", delta =", deltaa(a, na, dim(na)[1], dim(na)[2], scaleDelta = scaleDelta), 
+    ", iterations = ", count))
 
   # Replace missing values
   na <- unzapa(na, a)
@@ -233,7 +247,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7){
 #'@return An M x N x 3 array of aligned shapes
 
 
-pctstep <- function(a){
+pctstep <- function(a, scaleDelta){
 
   stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
 
@@ -282,7 +296,7 @@ pctstep <- function(a){
   for(i in 2:dim(na)[1]){
     na[i, , ] <- lshift(a[i, , ], -v[i - 1, ])
   }
-  message("tstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), ", delta = ", deltaa(na, a, dim(na)[1], dim(na)[2]))
+  message("tstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), ", delta = ", deltaa(na, a, dim(na)[1], dim(na)[2], scaleDelta))
   return(na)
 }
 
@@ -301,7 +315,7 @@ pctstep <- function(a){
 #'
 #'@return An M x N x 3 array of aligned shapes
 
-pcsstep <- function(a){
+pcsstep <- function(a, scaleDelta){
 
   stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
 
@@ -351,7 +365,7 @@ pcsstep <- function(a){
     na[i, , ] <- lscale(na[i, , ], v[i])
   }
   
-  message(paste("sstep: score =", scorea(na, m, n), ", delta =", deltaa(a, na, m, n)))
+  message(paste("sstep: score =", scorea(na, m, n), ", delta =", deltaa(a, na, m, n, scaleDelta)))
   return(na)
 }
 

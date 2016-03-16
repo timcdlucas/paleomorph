@@ -4,13 +4,16 @@
 \alias{procrustes}
 \title{Run procrustese analysis to align 3D shapes.}
 \usage{
-procrustes(a, scale = TRUE, maxiter = 1000, tolerance = 1e-05)
+procrustes(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000,
+  tolerance = 1e-05)
 }
 \arguments{
 \item{a}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
 
 \item{scale}{Logical indicating whether the size of the objects should be scales
 as well as rotated and translated.}
+
+\item{scaleDelta}{Logical determining whether deltaa should be scaled by the total number of landmarks.}
 
 \item{maxiter}{Maximum number of iterations to attempt}
 
@@ -23,5 +26,12 @@ A new (M x N x 3) array, where each 3d vector has been transformed
 }
 \description{
 Run procrustese analysis to align 3D shapes.
+}
+\details{
+A number of computations are run until the difference between two iterations is less than \code{tolerance}.
+  The more specimens and landmarks you have, the less each landmark is allowed to move before this tolerance
+  is reached. Setting \code{scaleDelta = TRUE} will make the alignment run faster but have potentially less 
+  well aligned results. But the alignment between a large and small array of shapes should be more comparable
+  with \code{scaleDelta = TRUE}.
 }
 
