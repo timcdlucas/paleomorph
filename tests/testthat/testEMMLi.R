@@ -14,8 +14,6 @@ test_that('EMMLi runs and creates output.', {
                modelB = rep(c(1,2), 3),
                modelC = rep(c(1:3), 2)) 
 
-  #varList <- c('mod$modelA', 'mod$modelB', 'mod$modelC')
-
 
   EMMLi(dat, 20, mod1, file)
 
@@ -27,10 +25,13 @@ test_that('EMMLi runs and creates output.', {
 
   # Bit of a mess because the csv is multiple tables.
   # So extract the top table only
-  top <- xx[1:(which(xx$dAICc == 'unintegrated') - 2), ]
+  top <- xx[1:(which(xx[, 1] == '')[1] - 2), ]
 
   expect_true(sum(top$dAICc == 0) == 1)
-
+  expect_true(all(as.character(top$dAICc) >= 0))
+  expect_true(all(as.character(top$Model_l) >= 0))
+  expect_true(all(as.character(top$Post_Pob) >= 0))
+  expect_true(all(as.character(top$AICc) >= 0))
 
   unlink(file)
 
@@ -39,7 +40,7 @@ test_that('EMMLi runs and creates output.', {
 
 test_that('EMMLi can take mod with numbers in columns.', {
 
-  set.seed(2)
+  set.seed(1)
   file <- paste0(tempdir(), 'EMMLiTest.csv')
   
   dat <- matrix(runif(36, -1, 1), ncol = 6, nrow = 6)
@@ -50,7 +51,6 @@ test_that('EMMLi can take mod with numbers in columns.', {
                model2 = rep(c(1,2), 3),
                model3= rep(c(1:3), 2)) 
 
-  #varList <- c('mod$model1', 'mod$model2', 'mod$model3')
 
 
   EMMLi(dat, 20, mod1, file)
@@ -63,7 +63,7 @@ test_that('EMMLi can take mod with numbers in columns.', {
 
   # Bit of a mess because the csv is multiple tables.
   # So extract the top table only
-  top <- xx[1:(which(xx$dAICc == 'unintegrated') - 2), ]
+  top <- xx[1:(which(xx[, 1] == '')[1] - 2), ]
 
   expect_true(sum(top$dAICc == 0) == 1)
 
