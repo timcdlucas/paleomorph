@@ -27,18 +27,6 @@ lscale(A, v)
 \item{v}{Length 3 displacement vector}
 
 \item{m}{3 x 3 rotation matrix}
-
-\item{A}{An n x 3 matrix}
-
-\item{A}{An n x 3 matrix}
-
-\item{A}{An n x 3 matrix}
-
-\item{A}{An n x 3 matrix}
-
-\item{A}{An n x 3 matrix}
-
-\item{v}{Length 3 scaling vector}
 }
 \value{
 A matrix of the same dimensions as A

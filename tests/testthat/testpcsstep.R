@@ -13,7 +13,7 @@ test_that('pcs step works in 2D with no missing data. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcsstep(A)
+  A <- pcsstep(A, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -31,7 +31,7 @@ test_that('pcs step works in 3D with no missing data. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcsstep(A)
+  A <- pcsstep(A, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -47,7 +47,7 @@ test_that('pcs step works in 3D with no missing data. 2 shapes. Smaller second s
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcsstep(A)
+  A <- pcsstep(A, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -68,7 +68,7 @@ test_that('pcs step works in 3D with no missing data. Multiple shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcsstep(A)
+  A <- pcsstep(A, scaleDelta = FALSE)
 
   
   expect_true(all.equal(A[1, , ], A[2, , ]))
@@ -92,7 +92,7 @@ test_that('pcs step works with nonmatching shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  B <- pcsstep(A)
+  B <- pcsstep(A, scaleDelta = FALSE)
   
   expect_true(scorea(B, 2, 8) < scorea(A, 2, 8) )
 
@@ -103,7 +103,7 @@ test_that('pcs step works with nonmatching shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  B <- pcsstep(A)
+  B <- pcsstep(A, scaleDelta = FALSE)
   
   expect_true(scorea(B, 2, 8) < scorea(A, 2, 8) )
 

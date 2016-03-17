@@ -10,7 +10,7 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcrstep(A)
+  A <- pcrstep(A, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -24,7 +24,7 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcrstep(A)
+  A <- pcrstep(A, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -38,7 +38,7 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcrstep(A)
+  A <- pcrstep(A, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -67,7 +67,7 @@ test_that('pcr step works in 3D by rotating. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  A <- pcrstep(A, maxiter = 1000)
+  A <- pcrstep(A, maxiter = 1000, scaleDelta = FALSE)
   
   expect_equal(A[1, , ], A[2, , ])
 
@@ -87,7 +87,7 @@ test_that('pcr step works in 3D with noise. 2 shapes', {
   # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
   A <- aperm(A, perm = c(3, 1, 2))
 
-  B <- pcrstep(A, maxiter = 1000)
+  B <- pcrstep(A, maxiter = 1000, scaleDelta = FALSE)
   
   expect_true(scorea(A, 2, 48 / 3) > scorea(B,  2, 48 / 3))
 

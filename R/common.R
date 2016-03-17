@@ -48,11 +48,14 @@ lshift <- function(A, v){
 
 #'lrotate: rotates all 3D points in matrix A by a common matrix
 #'
-#'@param A An n x 3 matrix
 #'@param m 3 x 3 rotation matrix
 #'
 #'@return A matrix of the same dimensions as A
 #'@rdname lshift
+
+# source code param documentation. As added rdname helpfiles, shouldn't duplicate.
+#param A An n x 3 matrix
+#param m 3 x 3 rotation matrix
 
 lrotate <- function(A, m){
   A2 <- t(apply(A, 1, function(x) x %*% m))
@@ -67,10 +70,12 @@ lrotate <- function(A, m){
 
 #'lcentroid: computes centroid of all 3D points in matrix A (cannot have missing data)
 #'
-#'@param A An n x 3 matrix
 #'
 #'@return A matrix of the same dimensions as A
 #'@rdname lshift
+
+# source code param documentation. As added rdname helpfiles, shouldn't duplicate.
+#param A An n x 3 matrix
 
 lcentroid <- function(A){
   stopifnot(!any(is.na(A)))
@@ -81,10 +86,12 @@ lcentroid <- function(A){
 
 #'lcentroid2: like lcentroid but tolerates missing data
 #'
-#'@param A An n x 3 matrix
 #'
 #'@return A matrix of the same dimensions as A
 #'@rdname lshift
+
+# source code param documentation. As added rdname helpfiles, shouldn't duplicate.
+#param A An n x 3 matrix
 
 lcentroid2 <- function(A){
   stopifnot(is.numeric(A), dim(A)[2] == 3, is.matrix(A))
@@ -99,10 +106,12 @@ lcentroid2 <- function(A){
 
 #'lnorm: returns total square length, tolerates missing data
 #'
-#'@param A An n x 3 matrix
 #'
 #'@return A scalar of total square length.
 #'@rdname lshift
+
+# source code param documentation. As added rdname helpfiles, shouldn't duplicate.
+#param A An n x 3 matrix
 
 lnorm <- function(A){
   stopifnot(is.numeric(A), dim(A)[2] == 3, is.matrix(A))
@@ -119,11 +128,12 @@ lnorm <- function(A){
 
 #'lscale: like lshift[], but multiplicative not additive
 #'
-#'@param A An n x 3 matrix
-#'@param v Length 3 scaling vector
-#'
 #'@return A scalar of total square length.
-#'@rdname lshift 
+#'@rdname lshift
+
+# source code param documentation. As added rdname helpfiles, shouldn't duplicate.
+#param A An n x 3 matrix
+#param v A length 3 vector defining the scale factors.
 
 lscale <- function(A, v){
   A2 <- apply(A, 1, function(x)
