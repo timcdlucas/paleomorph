@@ -12,6 +12,8 @@ pcrstep(a, maxiter = 1000, tolerance = 1e-06, scaleDelta)
 \item{maxiter}{Maximum number of iterations to attempt}
 
 \item{tolerance}{Difference between two iterations that will cause the search to stop.}
+
+\item{scaleDelta}{Logical determining whether deltaa should be scaled by the total number of landmarks.}
 }
 \value{
 An M x N x 3 array of aligned shapes

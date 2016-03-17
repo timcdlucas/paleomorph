@@ -1,4 +1,4 @@
-]context('Test that EMMLi works correctly.')
+context('Test that EMMLi works correctly.')
 
 
 test_that('EMMLi runs and creates output.', {

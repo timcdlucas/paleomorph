@@ -98,6 +98,8 @@ scorea <- function(arr, m, n){
 #'@param newa An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@param m No of specimens
 #'@param n No of landmarks
+#'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
+#'@param zap Do the objects need to have missing data removed.
 #'
 #'@return The sum of squares distances (length 1 numeric) between all landmarks on all speciments.
 
@@ -170,6 +172,7 @@ unzapa <- function(a, b){
 #'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@param maxiter Maximum number of iterations to attempt
 #'@param tolerance Difference between two iterations that will cause the search to stop. 
+#'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'
 #'@return An M x N x 3 array of aligned shapes
 
@@ -243,6 +246,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
 #'   aligned as possible.
 #'
 #'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'
 #'@return An M x N x 3 array of aligned shapes
 
@@ -312,6 +316,7 @@ pctstep <- function(a, scaleDelta){
 #'   aligned as possible.
 #'
 #'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'
 #'@return An M x N x 3 array of aligned shapes
 

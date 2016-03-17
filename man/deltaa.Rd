@@ -14,6 +14,10 @@ deltaa(olda, newa, m, n, scaleDelta, zap = TRUE)
 \item{m}{No of specimens}
 
 \item{n}{No of landmarks}
+
+\item{scaleDelta}{Logical determining whether deltaa should be scaled by the total number of landmarks.}
+
+\item{zap}{Do the objects need to have missing data removed.}
 }
 \value{
 The sum of squares distances (length 1 numeric) between all landmarks on all speciments.

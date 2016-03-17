@@ -8,6 +8,8 @@ pctstep(a, scaleDelta)
 }
 \arguments{
 \item{a}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
+
+\item{scaleDelta}{Logical determining whether deltaa should be scaled by the total number of landmarks.}
 }
 \value{
 An M x N x 3 array of aligned shapes
