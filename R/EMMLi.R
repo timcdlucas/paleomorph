@@ -309,13 +309,14 @@ EMMLi = function(corr, N_sample, mod, saveAs){
  
   rholist_name = names(which(Post_Pob > 0.01))
   rholist_name = unlist(strsplit(rholist_name, split = 'mod\\$'))
-  rholist_name = unlist(strsplit(rholist_name, split = '1'))
+  rholist_name = unlist(strsplit(rholist_name, split = '1$'))
   
   write.table(results, file = saveAs, row.names = TRUE, col.names = NA, sep = ",")
   cat("\n\n", file = saveAs, append = TRUE)
   for(q in 1:length(rho_output)){
     cat(rholist_name[q], "\n", file = saveAs, append = TRUE)
-    write.table(rho_output[q], saveAs, row.names = TRUE, col.names = NA, sep = ",", append = TRUE)
+    write(paste(c('', colnames(rho_output[[q]])), collapse = ','), saveAs, append = TRUE)
+    write.table(rho_output[q], saveAs, row.names = TRUE, col.names = FALSE, sep = ",", append = TRUE)
     cat("\n", file = saveAs, append = TRUE)
   }
 }
