@@ -15,7 +15,7 @@ dotcvm <- function(M){
   N <- matrix(NA, nrow = dim(M)[2], ncol = dim(M)[2])
   for(i in 1:dim(M)[2]){
     for(j in i:dim(M)[2]){
-      N[i, j] <- dotcorrentry(M, i, j)
+      N[i, j] <- dotcvmentry(M, i, j)
     }
   }
   
@@ -47,7 +47,7 @@ dotcvmentry <- function(M, col1, col2){
 
   # For each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2), ])){
+    if(!anyNA(M[i, c(col1, col2), ])){
       n <- n + 1
       s1 <- s1 + M[i, col1, ]
       s2 <- s2 + M[i, col1, ]
@@ -56,8 +56,8 @@ dotcvmentry <- function(M, col1, col2){
 
   if(n <= 1) stop(paste("There is too much missing data to covary columns", col1, "and", col2))
 
-  s1 <- s1/n
-  s2 <- s2/n
+  s1 <- s1 / n
+  s2 <- s2 / n
 
   p <- 0
 
@@ -68,7 +68,7 @@ dotcvmentry <- function(M, col1, col2){
     }
   }
 
-  return(p/(n - 1))
+  return(p / (n - 1))
 }
 
 
