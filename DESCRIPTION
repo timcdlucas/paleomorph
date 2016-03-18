@@ -8,7 +8,6 @@ Maintainer: Tim Lucas <timcdlucas@gmail.com>
 Description: Calculate procrustes alignments and correlation and covariance matrices of 3D landmarks.
 License: None
 Imports:
-    abind
 Suggests:
     knitr,
     testthat
