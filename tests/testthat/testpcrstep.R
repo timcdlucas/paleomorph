@@ -1,5 +1,6 @@
 context('Test the pcrstep')
 
+library(abind)
 
 test_that('pcr step works in 2D with no missing data. 2 shapes', {
 

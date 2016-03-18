@@ -1,5 +1,6 @@
 context('Test full procrustes functino')
 
+library(abind)
 
 test_that('Basic procrustes works', {
 

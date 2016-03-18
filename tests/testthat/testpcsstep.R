@@ -1,6 +1,6 @@
 context('Test that the pcsstep works.')
 
-
+library(abind)
 
 
 

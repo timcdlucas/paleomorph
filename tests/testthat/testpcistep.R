@@ -1,6 +1,6 @@
 context('Test the pci initialisation step')
 
-
+library(abind)
 
 test_that('pci centers shapes',{
 
