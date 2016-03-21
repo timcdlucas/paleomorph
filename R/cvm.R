@@ -63,7 +63,7 @@ dotcvmentry <- function(M, col1, col2){
 
   # for each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2), ])){
+    if(!anyNA(M[i, c(col1, col2), ])){
       p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - s2))
     }
   }
