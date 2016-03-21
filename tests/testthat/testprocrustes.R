@@ -255,3 +255,81 @@ test_that('Partially missing data causes an error.', {
 
 })
 
+
+
+test_that('Procrustes with and without missing data give similar cvms', {
+
+  set.seed(22)
+  # Make a shape, then rotate it, then pcr it bake
+  sh1 <- matrix(sample(1:48), ncol = 3)
+
+  sh2 <- sh1 * 3
+
+  x <- runif(1, 0, 2*pi)
+  y <- runif(1, 0, 2*pi)
+  z <- runif(1, 0, 2*pi)
+
+  R <- rbind(c(cos(x)*cos(y), -cos(z)*sin(y) + sin(z)*sin(x)*cos(y), sin(z)*sin(y) + cos(z)*sin(x)*cos(y)),
+             c(cos(x)*sin(y), cos(z)*cos(y) + sin(z)*sin(x)*sin(y)  ,  -sin(z)*cos(y) + cos(z)*sin(x)*sin(y)),
+             c(-sin(x), sin(z)*cos(x), cos(x)*cos(z)))
+  
+
+  sh2 <- t(apply(sh2, 1, function(x) t(x) %*% R))
+
+  sh2 <- sh2 + 1
+
+
+
+  sh3 <- sh1 * 0.2
+
+  x <- runif(1, 0, 2*pi)
+  y <- runif(1, 0, 2*pi)
+  z <- runif(1, 0, 2*pi)
+
+  R <- rbind(c(cos(x)*cos(y), -cos(z)*sin(y) + sin(z)*sin(x)*cos(y), sin(z)*sin(y) + cos(z)*sin(x)*cos(y)),
+             c(cos(x)*sin(y), cos(z)*cos(y) + sin(z)*sin(x)*sin(y)  ,  -sin(z)*cos(y) + cos(z)*sin(x)*sin(y)  ),
+             c(-sin(x), sin(z)*cos(x), cos(x)*cos(z)))
+  
+
+  sh3 <- t(apply(sh3, 1, function(x) t(x) %*% R))
+
+  sh3 <- sh3 - 2
+  
+  sh4 <- sh1 * 3
+
+  A1 <- abind(sh1, sh2, sh3, sh4, along = 3)
+  A2 <- A1 + rnorm(length(A1), 0, 1)
+  A3 <- A1 + rnorm(length(A1), 0, 1)
+  A4 <- A1 + rnorm(length(A1), 0, 1)
+  A <- abind(A1, A2, A3, A4, along = 3)
+
+  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
+  A <- aperm(A, perm = c(3, 1, 2))
+
+
+  full <- procrustes(A, scale = TRUE, tolerance = 1e-10)
+
+  # Now add some missing data and repeat.
+  B <- A
+  B[1, c(1, 2), ] <- NA
+  B[2, c(4, 7), ] <- NA
+  B[3, c(10, 11, 12), ] <- NA
+  
+  missing <- procrustes(B, scale = TRUE, tolerance = 1e-10)
+
+  fullcorr <- dotcvm(full)
+  missingcorr <- dotcvm(missing)
+
+  # Still not sure how to really test this? 
+  #  I image the bigger the array and the less missing data, the closer the two 
+  #    covariancve matrices will be.
+  expect_true(all(fullcorr - missingcorr < 1e-4))
+
+})
+
+
+
+
+
+
+
