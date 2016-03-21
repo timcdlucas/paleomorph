@@ -2,3 +2,5 @@ cran-comments.md
 README.md
 README.Rmd
 NEWS.md
+
+.git/*
