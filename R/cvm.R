@@ -8,7 +8,6 @@
 #'@export
 #'
 #'@return N x N covariance matrix
-#'@name dotcvmd
 
 dotcvm <- function(M){
  # Calculate covariance between each pairs of columns.
@@ -50,7 +49,7 @@ dotcvmentry <- function(M, col1, col2){
     if(!anyNA(M[i, c(col1, col2), ])){
       n <- n + 1
       s1 <- s1 + M[i, col1, ]
-      s2 <- s2 + M[i, col1, ]
+      s2 <- s2 + M[i, col2, ]
     }
   }
 
@@ -184,10 +183,10 @@ dotcorrentry <- function(M, col1, col2){
 
   # For each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2), ])){
+    if(!anyNA(M[i, c(col1, col2), ])){
       n <- n + 1
       s1 <- s1 + M[i, col1, ]
-      s2 <- s2 + M[i, col1, ]
+      s2 <- s2 + M[i, col2, ]
     }
   }
 
@@ -202,11 +201,10 @@ dotcorrentry <- function(M, col1, col2){
 
   # for each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2), ])){
+    if(!anyNA(M[i, c(col1, col2), ])){
       p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - s2))
-	    sumi <- sumi + crossprod((M[i, col1, ]), (M[i, col1, ]))
-	    sumj <- sumj + crossprod((M[i, col2, ]), (M[i, col2, ]))
-
+	    sumi <- sumi + crossprod((M[i, col1, ] - s1), (M[i, col1, ] - s1))
+	    sumj <- sumj + crossprod((M[i, col2, ] - s2), (M[i, col2, ] - s2))
     }
   }
 
