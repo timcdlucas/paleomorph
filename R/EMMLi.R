@@ -78,7 +78,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
     col = array(eval(parse(text = colnam)))
     
     # na.omit() used to remove unclassified landmarks.
-    modNF = na.omit(cbind(mod[, 1], col)) 
+    modNF = stats::na.omit(cbind(mod[, 1], col)) 
     w = unique(modNF[, 2])
     
     modules = list()
@@ -101,7 +101,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
     if (length(w) > 1){ #check that the num. of modules is greater than 1
 
       # all possible combination of modules
-      cb = combn(w, 2) 
+      cb = utils::combn(w, 2) 
       for (i in seq(dim(cb)[2])){
         fg1 = modNF[modNF[, 2] == cb[1, i], ]
         fg2 = modNF[modNF[, 2] == cb[2, i], ]
@@ -311,7 +311,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
   rholist_name = unlist(strsplit(rholist_name, split = 'mod\\$'))
   rholist_name = unlist(strsplit(rholist_name, split = '1$'))
   
-  write.table(results, file = saveAs, row.names = TRUE, col.names = NA, sep = ",")
+  utils::write.table(results, file = saveAs, row.names = TRUE, col.names = NA, sep = ",")
   cat("\n\n", file = saveAs, append = TRUE)
   for(q in 1:length(rho_output)){
     cat(rholist_name[q], "\n", file = saveAs, append = TRUE)

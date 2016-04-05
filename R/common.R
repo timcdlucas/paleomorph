@@ -61,7 +61,7 @@ lrotate <- function(A, m){
   A2 <- t(apply(A, 1, function(x) x %*% m))
   
   if(anyNA(A2)){
-    A2[!complete.cases(A)] <- A[!complete.cases(A)]
+    A2[!stats::complete.cases(A)] <- A[!stats::complete.cases(A)]
   }
   
   return(A2)  
@@ -97,7 +97,7 @@ lcentroid2 <- function(A){
   stopifnot(is.numeric(A), dim(A)[2] == 3, is.matrix(A))
   
   # Find mean for each spatial dimension after removing rows that have an NA.
-  A2 <- apply(A[complete.cases(A), ], 2, mean)
+  A2 <- apply(A[stats::complete.cases(A), ], 2, mean)
   return(A2)
 }
 
@@ -119,7 +119,7 @@ lnorm <- function(A){
   # Square each row
   # sum
     
-  A2 <- sum(apply(A[complete.cases(A), ], 2, function(x) x %*% x))
+  A2 <- sum(apply(A[stats::complete.cases(A), ], 2, function(x) x %*% x))
   return(A2)
 }
 
