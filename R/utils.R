@@ -8,6 +8,7 @@
 
 countMissing <- function(A){
   stopifnot(is.numeric(A), length(dim(A)) == 3, dim(A)[3] == 3)
+  completeLandmarks(a)
   
   # Find landmarks with missing data
   miss <- apply(A, c(1, 2), function(x) any(is.na(x)))
@@ -26,7 +27,7 @@ countMissing <- function(A){
   message(paste(nIncomplete, 'specimens have missing data.'))
   message(paste('Max missing: specimen', whichMax, 'with', maxMissing, 'missing landmarks.\n'))
   
-  counts
+  return(counts)
   
 }
 
