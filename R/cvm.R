@@ -100,7 +100,7 @@ cvmentry <- Vectorize(function(M, col1, col2){
 
   # For each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2)])){
+    if(!anyNA(M[i, c(col1, col2)])){
       n <- n + 1
       s1 <- s1 + M[i, col1]
       s2 <- s2 + M[i, col1]
@@ -116,7 +116,7 @@ cvmentry <- Vectorize(function(M, col1, col2){
 
   # for each specimen
   for(i in 1:dim(M)[1]){
-    if(!anyNA(M[, c(col1, col2)])){
+    if(!anyNA(M[i, c(col1, col2)])){
       p <- p + (M[i, col1] - s1) * (M[i, col2] - s2)
     }
   }

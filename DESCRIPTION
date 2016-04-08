@@ -1,8 +1,8 @@
 Package: procrustespkg
 Type: Package
-Title: Proctustese analysis for paleobiology
+Title: Proctustes Analysis for Paleobiology
 Version: 0.1.1
-Date: 20/01/16
+Date: 2016-04-05
 Author: Tim Lucas, Prabu Sivasubramaniam, Anjali Goswami
 Maintainer: Tim Lucas <timcdlucas@gmail.com>
 Description: Calculate procrustes alignments and correlation and covariance matrices of 3D landmarks.
@@ -12,7 +12,8 @@ Imports:
     utils
 Suggests:
     knitr,
-    testthat
+    testthat,
+    abind
 VignetteBuilder: knitr
 LazyData: true
 URL: https://bitbucket.org/timcdlucas/procrustespkg

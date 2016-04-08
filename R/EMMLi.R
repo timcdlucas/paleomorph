@@ -54,7 +54,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
   # Check inputs
   stopifnot(is.numeric(corr), dim(corr)[1] == dim(corr)[2], is.numeric(N_sample), N_sample > 0, is.character(saveAs))
   # Check that models are given as integers
-  if (!all(sapply(mod[, -1], function(i) i%%1==0))) stop('mod should contain a column of names and then columns of integers defining models')
+  if (!all(sapply(mod[, -1], function(i) i %% 1 == 0))) stop('mod should contain a column of names and then columns of integers defining models')
   if (dim(corr)[1] != dim(corr)[2]) stop('corr should be a square matrix.')
   
   # Create null model
@@ -64,7 +64,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
   varlist = paste0('mod$', names(mod)[-1])
 
   # make the upper triangle of corr NA, we only use the lower triangle.
-  corr[upper.tri(corr, diag=T)] = NA
+  corr[upper.tri(corr, diag = T)] = NA
 
   # array of coefficient matrix, NAs are removed.
   corr_list = (as.array(corr[!is.na(corr)])) 
