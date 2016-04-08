@@ -1,14 +1,14 @@
-#' Decompose matric to a rotation and symetric positive definite matrix
-#'
-#' rpdecompose: Any invertible matrix can be uniquely decomposed
-#'   M = RP, where R is a rotation and P is symmetric positive
-#'   definite.  This returns the list {R,P}.
-#'
-#'
-#'@param m A matrix
-#'
-#'@return A list with matrices R (the rotation) and P (the symetric 
-#'  positive definite matrix) such that M = RP. 
+# Decompose matric to a rotation and symetric positive definite matrix
+#
+# rpdecompose: Any invertible matrix can be uniquely decomposed
+#   M = RP, where R is a rotation and P is symmetric positive
+#   definite.  This returns the list {R,P}.
+#
+#
+#@param m A matrix
+#
+#@return A list with matrices R (the rotation) and P (the symetric 
+#  positive definite matrix) such that M = RP. 
 
 
 
@@ -23,15 +23,15 @@ rp_decompose <- function(m){
 }
 
 
-#' Common manipulations of 3D points
-#'
-#'  lshift: translates all 3D points in matrix A by a common displacement
-#'
-#'@param A An n x 3 matrix
-#'@param v Length 3 displacement vector
-#'
-#'@return A matrix of the same dimensions as A
-#'@name lshift
+# Common manipulations of 3D points
+#
+#  lshift: translates all 3D points in matrix A by a common displacement
+#
+#@param A An n x 3 matrix
+#@param v Length 3 displacement vector
+#
+#@return A matrix of the same dimensions as A
+#@name lshift
 
 lshift <- function(A, v){
   A2 <- apply(A, 1, function(x)
@@ -46,12 +46,12 @@ lshift <- function(A, v){
 
 
 
-#'lrotate: rotates all 3D points in matrix A by a common matrix
-#'
-#'@param m 3 x 3 rotation matrix
-#'
-#'@return A matrix of the same dimensions as A
-#'@rdname lshift
+#lrotate: rotates all 3D points in matrix A by a common matrix
+#
+#@param m 3 x 3 rotation matrix
+#
+#@return A matrix of the same dimensions as A
+#@rdname lshift
 
 # source code param documentation. As added rdname helpfiles, shouldn't duplicate.
 #param A An n x 3 matrix
@@ -68,11 +68,11 @@ lrotate <- function(A, m){
 }
 
 
-#'lcentroid: computes centroid of all 3D points in matrix A (cannot have missing data)
-#'
-#'
-#'@return A matrix of the same dimensions as A
-#'@rdname lshift
+#lcentroid: computes centroid of all 3D points in matrix A (cannot have missing data)
+#
+#
+#@return A matrix of the same dimensions as A
+#@rdname lshift
 
 # source code param documentation. As added rdname helpfiles, shouldn't duplicate.
 #param A An n x 3 matrix
@@ -84,11 +84,11 @@ lcentroid <- function(A){
 
 
 
-#'lcentroid2: like lcentroid but tolerates missing data
-#'
-#'
-#'@return A matrix of the same dimensions as A
-#'@rdname lshift
+#lcentroid2: like lcentroid but tolerates missing data
+#
+#
+#@return A matrix of the same dimensions as A
+#@rdname lshift
 
 # source code param documentation. As added rdname helpfiles, shouldn't duplicate.
 #param A An n x 3 matrix
@@ -104,11 +104,11 @@ lcentroid2 <- function(A){
 
 
 
-#'lnorm: returns total square length, tolerates missing data
-#'
-#'
-#'@return A scalar of total square length.
-#'@rdname lshift
+#lnorm: returns total square length, tolerates missing data
+#
+#
+#@return A scalar of total square length.
+#@rdname lshift
 
 # source code param documentation. As added rdname helpfiles, shouldn't duplicate.
 #param A An n x 3 matrix
@@ -126,10 +126,10 @@ lnorm <- function(A){
 
 
 
-#'lscale: like lshift[], but multiplicative not additive
-#'
-#'@return A scalar of total square length.
-#'@rdname lshift
+#lscale: like lshift[], but multiplicative not additive
+#
+#@return A scalar of total square length.
+#@rdname lshift
 
 # source code param documentation. As added rdname helpfiles, shouldn't duplicate.
 #param A An n x 3 matrix
@@ -145,4 +145,29 @@ lscale <- function(A, v){
         )
   return(t(A2))
 }
+
+
+
+
+
+
+#completeLandmarks: Check that all landmarks are either complete or all NA
+#
+#@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#
+#@return NULL
+
+
+completeLandmarks <- function(a){
+  # Check that all landmarks are either complete or all NA
+  if(any(!is.na(a[apply(a, c(1, 2), function(x) anyNA(x))]))){
+    partial <- which(apply(a, c(1, 2), function(x) anyNA(x) & !all(is.na(x))), arr.ind = TRUE)
+    colnames(partial) <- c('specimen', 'landmark')
+    message('Some landmarks are partially complete and partially missing. The landmarks are: ')
+    print(partial)
+    stop('Exiting due to partially missing landmarks.')
+  }
+  
+}
+
 

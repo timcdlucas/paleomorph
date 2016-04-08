@@ -1,4 +1,4 @@
-context('Test full procrustes functino')
+context('Test full procrustes function')
 
 library(abind)
 
