@@ -13,9 +13,7 @@ countMissing <- function(A){
   miss <- apply(A, c(1, 2), function(x) any(is.na(x)))
 
   # Get counts for each specimen
-  #   I'm not sure how or why the vector ends up backwards.
-  #   Will add a test to make sure this is correct
-  counts <- rev(rowSums(miss))
+  counts <- rowSums(miss)
 
   # How many at least one missing
   nIncomplete <- sum(counts > 0)
