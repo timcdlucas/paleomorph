@@ -15,4 +15,10 @@ N x N covariance matrix
 \description{
 Calculate 3D covariance matrix
 }
+\details{
+This function does not guarantee that the returned matrix is  
+ positive definite. If the covariance matrix is not positive definite 
+ a warning is given and the matrix can be bent to create the closest
+ positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
+}
 

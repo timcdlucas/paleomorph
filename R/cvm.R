@@ -7,6 +7,11 @@
 #'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@export
 #'
+#'@details This function does not guarantee that the returned matrix is  
+#'  positive definite. If the covariance matrix is not positive definite 
+#'  a warning is given and the matrix can be bent to create the closest
+#'  positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
+#'
 #'@return N x N covariance matrix
 
 dotcvm <- function(M){
