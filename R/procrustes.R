@@ -181,7 +181,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
   for(count in 1:maxiter){
     # Make copy
     na2 <- na
-    if(count %% 50 == 0) message(paste('Iteration: ', count))
+    if(count %% 50 == 0) message('Iteration: ', count)
 
     # For each specimen except fist
     #   rotate that specimen 
@@ -219,9 +219,9 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
 
 
   # print some output
-  message(paste("rstep: score =", scorea(na, dim(na)[1], dim(na)[2]), 
-    ", delta =", deltaa(a, na, dim(na)[1], dim(na)[2], scaleDelta = scaleDelta), 
-    ", iterations = ", count))
+  message("rstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), 
+    ", delta = ", deltaa(a, na, dim(na)[1], dim(na)[2], scaleDelta = scaleDelta), 
+    ", iterations = ", count)
 
   # Replace missing values
   na <- unzapa(na, a)
@@ -364,7 +364,7 @@ pcsstep <- function(a, scaleDelta){
     na[i, , ] <- lscale(na[i, , ], v[i])
   }
   
-  message(paste("sstep: score =", scorea(na, m, n), ", delta =", deltaa(a, na, m, n, scaleDelta)))
+  message("sstep: score = ", scorea(na, m, n), ", delta = ", deltaa(a, na, m, n, scaleDelta))
   return(na)
 }
 
