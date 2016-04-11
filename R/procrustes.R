@@ -13,7 +13,8 @@
 #'   The more specimens and landmarks you have, the less each landmark is allowed to move before this tolerance
 #'   is reached. Setting \code{scaleDelta = TRUE} will make the alignment run faster but have potentially less 
 #'   well aligned results. But the alignment between a large and small array of shapes should be more comparable
-#'   with \code{scaleDelta = TRUE}.
+#'   with \code{scaleDelta = TRUE}. However, preliminary tests imply that run time scales linearly with 
+#'   \code{scaleDelta} set to \code{TRUE} or \code{FALSE}. 
 #'
 #'@return A new (M x N x 3) array, where each 3d vector has been transformed
 #'  in a per-specimen way.  The transformation is chosen to maximize,
@@ -311,6 +312,7 @@ pctstep <- function(a, scaleDelta){
 #'
 #'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
 #'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
+#'
 #'
 #'@return An M x N x 3 array of aligned shapes
 

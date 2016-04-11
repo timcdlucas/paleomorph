@@ -32,6 +32,7 @@ A number of computations are run until the difference between two iterations is 
   The more specimens and landmarks you have, the less each landmark is allowed to move before this tolerance
   is reached. Setting \code{scaleDelta = TRUE} will make the alignment run faster but have potentially less 
   well aligned results. But the alignment between a large and small array of shapes should be more comparable
-  with \code{scaleDelta = TRUE}.
+  with \code{scaleDelta = TRUE}. However, preliminary tests imply that run time scales linearly with 
+  \code{scaleDelta} set to \code{TRUE} or \code{FALSE}.
 }
 
