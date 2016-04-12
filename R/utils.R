@@ -8,7 +8,7 @@
 
 countMissing <- function(A){
   stopifnot(is.numeric(A), length(dim(A)) == 3, dim(A)[3] == 3)
-  completeLandmarks(a)
+  completeLandmarks(A)
   
   # Find landmarks with missing data
   miss <- apply(A, c(1, 2), function(x) any(is.na(x)))
