@@ -321,7 +321,7 @@ test_that('Procrustes with and without missing data give similar cvms', {
   missingcorr <- dotcvm(missing)
 
   # Still not sure how to really test this? 
-  #  I image the bigger the array and the less missing data, the closer the two 
+  #  I imagine the bigger the array and the less missing data, the closer the two 
   #    covariancve matrices will be.
   expect_true(all(fullcorr - missingcorr < 1e-4))
 

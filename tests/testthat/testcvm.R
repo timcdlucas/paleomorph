@@ -19,7 +19,7 @@ M[, 2, ] <- 1:12
 
 r <- dotcorrentry(M, 1, 2)
 
-#expect_equal(r, 1)
+expect_equal(r[1,1], 1)
 
 })
 
@@ -40,4 +40,31 @@ test_that('Congruence is never outside -1, 1', {
 
 
 })
+
+
+
+
+test_that('dotcvm calculates congruence coefficient properly.', {
+
+M <- array(0, dim = c(4, 2, 3))
+
+# Landmarks are perfectly correlated
+M[, 1, ] <- rep(1:4, by = 3)
+M[, 2, ] <- rep(1:4, by = 3)
+
+
+
+
+M <- array(0, dim = c(4, 2, 3))
+
+# Landmarks are perfectly correlated
+M[, 1, ] <- 1:12
+M[, 2, ] <- 1:12
+
+r <- dotcvmentry(M, 1, 2)
+
+expect_true(all(r > 0))
+
+})
+
 
