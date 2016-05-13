@@ -250,7 +250,7 @@ test_that('Partially missing data causes an error.', {
   a <- array(1:(3*6*7), dim = c(6, 7, 3))
   a[1, 2, ] <- NA
 
-  expect_that(procrustes(a), not(throws_error()))
+  expect_that(procrustes(a), testthat::not(throws_error()))
 
 
 })
