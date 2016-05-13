@@ -145,7 +145,7 @@ bestplane <- function(l){
   nl <- lshift(l, -c)
   
   eigen <- eigen(cov(nl))
-  n <- eigen$vectors[, 3]
+  n <- eigen$vectors[, 1]
 
   # Calculate how well the plane fits
   fit <- sum(sapply(1:NCOL(nl), function(i) n %*% nl[i, ]^2 ))
