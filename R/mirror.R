@@ -157,16 +157,15 @@ bestplane <- function(l){
 
 
 #' Reflects p in the plane defined by n.x = d
+#' n is a unit vector. d is a scalar.
 #' 
 #'@param p a length 3 vector (a 3D point in space)
 #'@param n Length three vector of coefficients for a plane nx = d
 #'@param d Length one vector giving coefficient d for a plane nx = d
 
 reflect <- function(p, n, d){
-   p - 2(n %*% p - d) * n/(n %*% n)
+   p - 2 * (n %*% p - d) * n/(n %*% n)
 }
-
-
 
 
 

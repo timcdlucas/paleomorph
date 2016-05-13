@@ -86,9 +86,17 @@ test_that('Mirrorfill1 replaces points correctly.', {
 
 
 test_that('Reflect works', {
-  # Define a horizontal plane
-  n <- c(1, -1, 0)
+
+  # Define a horizontal plane through origin
+  n <- c(0, 0, 1)
+  d <- 0
   
+  # Test point (1, 1, 1). Should reflect to (1, 1, -1).
+  p <- c(1, 1, 1)
+  
+  p2 <- reflect(p, n, d)
+  
+  expect_equal(p2, c(1, 1, -1))
 
 })
 
