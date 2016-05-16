@@ -19,6 +19,17 @@
 #'@return A new (M x N x 3) array, where each 3d vector has been transformed
 #'  in a per-specimen way.  The transformation is chosen to maximize,
 #'  in the least-squares sense, the distances between specimens.
+#'
+#'@examples
+#' # Make an array with 6 specimens and 20 landmarks
+#' a <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(6 * 20 * 3), 
+#'       dim = c(6, 20, 3))
+#'
+#' # Align the data (although it is already largely aligned)
+#' aligned <- procrustes(a)
+#' 
+#' plotSpecimens(aligned)
+#'
 
 procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tolerance = 10e-6){
   stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)
