@@ -13,6 +13,9 @@
 #'  positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
 #'
 #'@return N x N covariance matrix
+#'@examples
+#' M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+#' M.cvm <- dotcvm(M)
 
 dotcvm <- function(M){
  # Calculate covariance between each pairs of columns.
@@ -142,6 +145,10 @@ cvmentry <- Vectorize(function(M, col1, col2){
 #'@export
 #'
 #'@return Correlation matrix
+#'@examples
+#' M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+#' M.corr <- dotcorr(M)
+#'
 
 
 dotcorr <- function(M){
