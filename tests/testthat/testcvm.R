@@ -61,9 +61,25 @@ M <- array(0, dim = c(4, 2, 3))
 M[, 1, ] <- 1:12
 M[, 2, ] <- 1:12
 
-r <- dotcvmentry(M, 1, 2)
+r <- dotcvm(M)
+
+rcorr <- dotcorr(M)
 
 expect_true(all(r > 0))
+
+expect_true(all(r == r[1,1]))
+expect_true(all(rcorr == rcorr[1,1]))
+
+
+
+set.seed(1)
+M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+corr.mat <- dotcorr(M)
+expect_equal(diag(corr.mat), c(1,1))
+
+# Not sure a good test for this.
+cvm.mat <- dotcvm(M)
+
 
 })
 
