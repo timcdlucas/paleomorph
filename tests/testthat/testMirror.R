@@ -91,7 +91,7 @@ test_that('Mirrorfill1 replaces points correctly.', {
 
   mirrorS <- mirrorfill1(sna, l1 = c(2:7, 9:14), l2 = c(1, 8))
 
-  #todo need some tests here
+  expect_equal(mirrorS, s)
 
 })
 
