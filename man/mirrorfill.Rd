@@ -2,7 +2,7 @@
 % Please edit documentation in R/mirror.R
 \name{mirrorfill}
 \alias{mirrorfill}
-\title{Fill missing landmarks using mirrored values from other side of object}
+\title{Fill missing landmarks for all specimens in an array using mirrored values from other side of object}
 \usage{
 mirrorfill(a, l1, l2)
 }
@@ -19,5 +19,20 @@ Given an m x n x 3 matrix, replace a set of landmarks using their mirrored count
 \details{
 \code{l1} should be an even number length containing pairs of landmarks
  on either side of the specimen.
+}
+\examples{
+ # Create array
+ a <- array(rep(1:36, each = 4), dim = c(4, 12, 3))
+
+ # Make it symmetric
+ a[, 7:12, 1:2] <- a[, 1:6, 1:2]
+ a[, 7:12, 3] <- -a[, 1:6, 3]
+
+ # Remove some data points
+ missinga <- a
+ missinga[1:3, 1:2, ] <- NA
+
+ mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))
+
 }
 

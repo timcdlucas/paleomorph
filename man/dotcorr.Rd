@@ -16,4 +16,9 @@ Correlation matrix
 Calculates the congruence coefficient for 2 or 3 dimensional landmarks
   to give a M x M correlation matrix.
 }
+\examples{
+M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+M.corr <- dotcorr(M)
+
+}
 

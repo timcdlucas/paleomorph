@@ -13,6 +13,7 @@
 #'@param ... Further parameters passed to \code{plot3d}.
 #'
 #'@seealso \code{\link[rgl]{plot3d}}
+#'@export
 #'
 #'@examples
 #' a <- array(rep(rnorm(6 * 20, sd = 30), each = 6) + rnorm(6 * 20 * 3), 

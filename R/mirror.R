@@ -1,6 +1,6 @@
 #
 # Code for mirroring
-#   Two exported functions, mirrortrait and mirrorfill
+#   2 exported functions, mirrorfill1 and mirrorfill
 #
 
 

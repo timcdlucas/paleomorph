@@ -21,4 +21,8 @@ This function does not guarantee that the returned matrix is
  a warning is given and the matrix can be bent to create the closest
  positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
 }
+\examples{
+M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+M.cvm <- dotcvm(M)
+}
 

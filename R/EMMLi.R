@@ -47,9 +47,31 @@
 #'
 #'@export
 #'@return NULL. The output is saved to the file defined by the saveAs argument.
+#'@examples
+#'  set.seed(1)
+#'
+#'  # Chose a filename and directory for output
+#'  file <- paste0(tempdir(), 'EMMLiTest.csv')
+#'  
+#'  # Create a correlation matrix
+#'  dat <- matrix(runif(36, -1, 1), ncol = 6, nrow = 6)
+#'  diag(dat) <- 1
+#'
+#'  # Create dataframe of model definitions.
+#'  #   Use NAs indicate landmarks which are not part of the model
+#'  mod1 <- data.frame(landmarks = letters[1:6], 
+#'               modelA = rep(c(1, 2), each = 3),
+#'               modelB = rep(c(1,2), 3),
+#'               model3= c(rep(c(1,2), 2), NA, NA)) 
+#'
+#'
+#'  # run EMMLi
+#'  EMMLi(dat, 20, mod1, file)
+#'
+#'  unlink(file)
 
 
-EMMLi = function(corr, N_sample, mod, saveAs){
+EMMLi <- function(corr, N_sample, mod, saveAs){
   
   # Check inputs
   stopifnot(is.numeric(corr), dim(corr)[1] == dim(corr)[2], is.numeric(N_sample), N_sample > 0, is.character(saveAs))
