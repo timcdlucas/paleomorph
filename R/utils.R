@@ -5,6 +5,13 @@
 #'
 #'@return A length n vector giving the number of missing landmarks for each specimen.
 #'@export
+#'@examples
+#'
+#'
+#'
+#'  a <- array(1:(3*6*7), dim = c(6, 7, 3))
+#'  a[1, 2, ] <- NA
+#'  countMissing(a)
 
 countMissing <- function(A){
   stopifnot(is.numeric(A), length(dim(A)) == 3, dim(A)[3] == 3)
