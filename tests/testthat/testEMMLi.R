@@ -113,3 +113,43 @@ test_that('EMMLi is invariant to model order.', {
 
 
 
+
+test_that('EMMLi can take mod with NAs.', {
+
+  set.seed(1)
+  file <- paste0(tempdir(), 'EMMLiTest.csv')
+  
+  dat <- matrix(runif(36, -1, 1), ncol = 6, nrow = 6)
+  diag(dat) <- 1
+
+  mod1 <- data.frame(landmarks = letters[1:6], 
+               model1 = rep(c(1, 2), each = 3),
+               model2 = rep(c(1,2), 3),
+               model3= c(rep(c(1,2), 2), NA, NA)) 
+
+
+
+  EMMLi(dat, 20, mod1, file)
+
+  expect_true(file.exists(file))
+  
+  xx <- read.csv(file)
+
+  expect_true(exists('xx'))
+
+  # Bit of a mess because the csv is multiple tables.
+  # So extract the top table only
+  top <- xx[1:(which(xx[, 1] == '')[1] - 2), ]
+
+  expect_true(sum(top$dAICc == 0) == 1)
+
+
+  unlink(file)
+
+})
+
+
+
+
+
+

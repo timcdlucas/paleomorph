@@ -2,8 +2,8 @@
 ##  EMMLi 
 ##
 ##   Inputs: corr = lower triangle correlation matrix, 
-##  					mod = landmark classification, 
 ##       N_sample = the number of samples used to calculate the correlation matrix
+##  					mod = landmark classification, 
 ##				 saveAs = specify where to save the results.
 ##			  
 ##  Output: A .csv file, resembling the AIC worksheet. 
@@ -54,7 +54,7 @@ EMMLi = function(corr, N_sample, mod, saveAs){
   # Check inputs
   stopifnot(is.numeric(corr), dim(corr)[1] == dim(corr)[2], is.numeric(N_sample), N_sample > 0, is.character(saveAs))
   # Check that models are given as integers
-  if (!all(sapply(mod[, -1], function(i) i %% 1 == 0))) stop('mod should contain a column of names and then columns of integers defining models')
+  if (!all(sapply(mod[, -1], function(i) i %% 1 == 0) | is.na(mod[, -1]))) stop('mod should contain a column of names and then columns of integers defining models')
   if (dim(corr)[1] != dim(corr)[2]) stop('corr should be a square matrix.')
   
   # Create null model
