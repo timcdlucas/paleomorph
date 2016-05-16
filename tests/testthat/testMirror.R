@@ -25,8 +25,6 @@ test_that('Best plane returns the best plane.', {
   s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
   s[1:7, 3] <- -s[1:7, 3]
 
-  #s[, 3] <- s[, 3] + 5
-  
 
   pl <- bestplane(s)
   
@@ -37,6 +35,15 @@ test_that('Best plane returns the best plane.', {
 
 test_that('midline returns best plane', {
 
+  # Make an object that is reflected in the horizontal, z = 0 plane.
+  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
+  s[1:7, 3] <- -s[1:7, 3]
+
+  pl <- midline(s, 1:14)
+  pl2 <- midline(s, c(2:5, 9:12))
+
+  expect_equal(drop(pl$n[1] + pl$n[2] - pl$d), 0.0)
+  expect_equal(drop(pl2$n[1] + pl2$n[2] - pl2$d), 0.0)
 
 })
 
@@ -84,10 +91,9 @@ test_that('Mirrorfill1 replaces points correctly.', {
 
   mirrorS <- mirrorfill1(sna, l1 = c(2:7, 9:14), l2 = c(1, 8))
 
-
+  #todo need some tests here
 
 })
-
 
 test_that('Reflect works', {
 
@@ -104,4 +110,15 @@ test_that('Reflect works', {
 
 
 })
+
+
+
+
+test_that('mirrorfill returns errors when it should.', {
+
+  expect_error(mirrorfill(s, l1 = c(2:7, 9:14), l2 = c(99, 100)), 'fatal error in mirrorfill')
+
+})
+
+
 

@@ -12,19 +12,23 @@
 #'@param cols A vector of colours. 
 #'@param ... Further parameters passed to \code{plot3d}.
 #'
+#'@seealso \code{\link[rgl]{plot3d}}
+#'
 #'@examples
 #' a <- array(rep(rnorm(6 * 20, sd = 30), each = 6) + rnorm(6 * 20 * 3), 
 #'        dim = c(6, 20, 3))
 #' plotSpecimens(a)
 #'
 #' plotSpecimens(a, cols = grey(seq(0, 1, length.out = 6)))
+#'
+#' 
 
 plotSpecimens <- function(a, cols = NULL, ...) {
 
   # rgl can be a pain to install so it is in suggests, not imports.
   #   So if the user calls this function, need to check it is installed
   if (!requireNamespace("rgl", quietly = TRUE)) {
-    stop("Package rgl needed for this function to work. Please install it.",
+    stop("Package rgl needed for this function to work. Please install it with install.packages('rgl').",
       call. = FALSE)
   }
   

@@ -182,7 +182,7 @@ test_that('Scale switch and other params work', {
   # Now test that procrustes with scale = FALSE does return identical objects if objects were same size to start with.
 
   set.seed(122)
-  # Make a shape, then rotate it, then pcr it bake
+  # Make a shape, then rotate it, then pcr it back
   sh1 <- matrix(sample(1:48), ncol = 3)
 
   sh2 <- sh1 

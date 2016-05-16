@@ -11,7 +11,7 @@
 #'
 #'@param a An m x n x 3 matrix containing 3D landmark data of n landmarks and m specimens
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline
-#'@param l2 Vector of indices for which landmarks to be 
+#'@param l2 Vector of indices for which landmarks to be mirrored
 #'
 #'@details \code{l1} should be an even number length containing pairs of landmarks
 #'  on either side of the specimen.
@@ -130,7 +130,7 @@ midline <- function(s, l1){
 
   return(bestplane(mlist))
 }
-
+  
 
 #'Calculate the least squares plane of some points
 #'

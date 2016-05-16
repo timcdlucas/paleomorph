@@ -30,6 +30,9 @@
 #' 
 #' plotSpecimens(aligned)
 #'
+#' 
+#'
+#'
 
 procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tolerance = 10e-6){
   stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)

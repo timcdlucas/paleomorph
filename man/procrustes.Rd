@@ -35,4 +35,18 @@ A number of computations are run until the difference between two iterations is 
   with \code{scaleDelta = TRUE}. However, preliminary tests imply that run time scales linearly with 
   \code{scaleDelta} set to \code{TRUE} or \code{FALSE}.
 }
+\examples{
+# Make an array with 6 specimens and 20 landmarks
+a <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(6 * 20 * 3), 
+      dim = c(6, 20, 3))
+
+# Align the data (although it is already largely aligned)
+aligned <- procrustes(a)
+
+plotSpecimens(aligned)
+
+
+
+
+}
 
