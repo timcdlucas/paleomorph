@@ -116,7 +116,7 @@ test_that('Reflect works', {
 
 test_that('mirrorfill returns errors when it should.', {
 
-  expect_error(mirrorfill(s, l1 = c(2:7, 9:14), l2 = c(99, 100)), 'fatal error in mirrorfill')
+  expect_error(mirrorfill(s, l1 = c(2:7, 9:14), l2 = c(99, 100)))
 
 })
 
