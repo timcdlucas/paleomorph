@@ -250,7 +250,7 @@ test_that('Partially missing data causes an error.', {
   a <- array(1:(3*6*7), dim = c(6, 7, 3))
   a[1, 2, ] <- NA
 
-  expect_that(procrustes(a), testthat::not(throws_error()))
+  expect_error(procrustes(a), NA)
 
 
 })
@@ -318,7 +318,7 @@ test_that('Procrustes with and without missing data give similar cvms', {
   missing <- procrustes(B, scale = TRUE, tolerance = 1e-10)
 
   fullcorr <- dotcvm(full)
-  missingcorr <- dotcvm(missing)
+  missingcorr <- suppressWarnings(dotcvm(missing))
 
   # Still not sure how to really test this? 
   #  I imagine the bigger the array and the less missing data, the closer the two 
