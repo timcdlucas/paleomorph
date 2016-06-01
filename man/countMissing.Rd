@@ -15,4 +15,12 @@ A length n vector giving the number of missing landmarks for each specimen.
 \description{
 Count the number of missing landmarks in an array
 }
+\examples{
+
+
+
+ a <- array(1:(3*6*7), dim = c(6, 7, 3))
+ a[1, 2, ] <- NA
+ countMissing(a)
+}
 
