@@ -7,7 +7,7 @@
 dotcvm(M)
 }
 \arguments{
-\item{M}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
+\item{M}{An N x 3 x M array. M = no of specimens, N = no of landmarks.}
 }
 \value{
 N x N covariance matrix
@@ -22,7 +22,7 @@ This function does not guarantee that the returned matrix is
  positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
 }
 \examples{
-M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
 M.cvm <- dotcvm(M)
 }
 

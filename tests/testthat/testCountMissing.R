@@ -6,11 +6,11 @@ test_that('countMissing counts and prints correct information.', {
   
   set.seed(2)
 
-  A <- array(rnorm(10 * 20 * 3), dim = c(10, 20, 3))
+  A <- array(rnorm(10 * 20 * 3), dim = c(20, 3, 10))
   
   
-  A[1, c(3, 4, 5), ] <- NA
-  A[5, 8, ] <- NA
+  A[c(3, 4, 5), , 1] <- NA
+  A[8, , 5] <- NA
 
   miss <- countMissing(A)
 

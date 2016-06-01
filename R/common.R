@@ -153,15 +153,27 @@ lscale <- function(A, v){
 
 #completeLandmarks: Check that all landmarks are either complete or all NA
 #
-#@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #
 #@return NULL
 
 
 completeLandmarks <- function(a){
   # Check that all landmarks are either complete or all NA
-  if(any(!is.na(a[apply(a, c(1, 2), function(x) anyNA(x))]))){
-    partial <- which(apply(a, c(1, 2), function(x) anyNA(x) & !all(is.na(x))), arr.ind = TRUE)
+  # Which landmarks x species have at least one na.
+  mask <- apply(a, c(1, 3), function(x) anyNA(x))
+
+  # Find all data for the landmark x species that have at least one na
+  missingList <- which(mask, arr.ind = TRUE)
+  allMissing <- matrix(NA, nrow = nrow(missingList), ncol = 3)
+  for(r in 1:nrow(missingList)){
+    allMissing[r, ] <- a[missingList[r, 1], , missingList[r, 2]]
+  }
+
+  # If any of allMissing is not NA, then there is incomplete landmarks
+
+  if(any(!is.na(allMissing))){
+    partial <- which(apply(a, c(1, 3), function(x) anyNA(x) & !all(is.na(x))), arr.ind = TRUE)
     colnames(partial) <- c('specimen', 'landmark')
     message('Some landmarks are partially complete and partially missing. The landmarks are: ')
     print(partial)

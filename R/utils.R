@@ -9,16 +9,16 @@
 #'
 #'
 #'
-#'  a <- array(1:(3*6*7), dim = c(6, 7, 3))
-#'  a[1, 2, ] <- NA
+#'  a <- array(1:(3*6*7), dim = c(7, 3, 6))
+#'  a[2, , 1] <- NA
 #'  countMissing(a)
 
 countMissing <- function(A){
-  stopifnot(is.numeric(A), length(dim(A)) == 3, dim(A)[3] == 3)
+  stopifnot(is.numeric(A), length(dim(A)) == 3, dim(A)[2] == 3)
   completeLandmarks(A)
   
   # Find landmarks with missing data
-  miss <- apply(A, c(1, 2), function(x) any(is.na(x)))
+  miss <- apply(A, c(3, 2), function(x) any(is.na(x)))
 
   # Get counts for each specimen
   counts <- rowSums(miss)

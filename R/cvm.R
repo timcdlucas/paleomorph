@@ -4,7 +4,7 @@
 #' Calculate 3D covariance matrix 
 #' 
 #'
-#'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@export
 #'
 #'@details This function does not guarantee that the returned matrix is  
@@ -14,14 +14,14 @@
 #'
 #'@return N x N covariance matrix
 #'@examples
-#' M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+#' M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
 #' M.cvm <- dotcvm(M)
 
 dotcvm <- function(M){
  # Calculate covariance between each pairs of columns.
-  N <- matrix(NA, nrow = dim(M)[2], ncol = dim(M)[2])
-  for(i in 1:dim(M)[2]){
-    for(j in i:dim(M)[2]){
+  N <- matrix(NA, nrow = dim(M)[1], ncol = dim(M)[1])
+  for(i in 1:dim(M)[1]){
+    for(j in i:dim(M)[1]){
       N[i, j] <- dotcvmentry(M, i, j)
     }
   }
@@ -37,7 +37,7 @@ dotcvm <- function(M){
 #' Calculate 3D covariance between two landmarks across specimens 
 #' 
 #'
-#'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param col1 Integer of first column 
 #'@param col2 Integer of second column 
 #'
@@ -53,11 +53,11 @@ dotcvmentry <- function(M, col1, col2){
   s2 <- c(0, 0, 0)
 
   # For each specimen
-  for(i in 1:dim(M)[1]){
-    if(!anyNA(M[i, c(col1, col2), ])){
+  for(i in 1:dim(M)[3]){
+    if(!anyNA(M[c(col1, col2), , i])){
       n <- n + 1
-      s1 <- s1 + M[i, col1, ]
-      s2 <- s2 + M[i, col2, ]
+      s1 <- s1 + M[col1, , i]
+      s2 <- s2 + M[col2, , i]
     }
   }
 
@@ -69,9 +69,9 @@ dotcvmentry <- function(M, col1, col2){
   p <- 0
 
   # for each specimen
-  for(i in 1:dim(M)[1]){
-    if(!anyNA(M[i, c(col1, col2), ])){
-      p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - s2))
+  for(i in 1:dim(M)[3]){
+    if(!anyNA(M[c(col1, col2), , i])){
+      p <- p + crossprod((M[col1, , i] - s1), (M[col2, , i] - s2))
     }
   }
 
@@ -92,46 +92,46 @@ dotcvmentry <- function(M, col1, col2){
 
 
 
-cvm <- function(M){
-  # Calculate covariance between each pairs of columns.
-  N <- outer(1:dim(M)[2], 1:dim(M)[2], cvmentry, M = M)
-  e <- min(eigen(N)$values)
-  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
-  return(N)
-}
+#cvm <- function(M){
+#  # Calculate covariance between each pairs of columns.
+#  N <- outer(1:dim(M)[2], 1:dim(M)[2], cvmentry, M = M)
+#  e <- min(eigen(N)$values)
+#  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
+#  return(N)
+#}
 
 
-cvmentry <- Vectorize(function(M, col1, col2){
-  n <- 0
-  s1 <- 0
-  s2 <- 0
+#cvmentry <- Vectorize(function(M, col1, col2){
+#  n <- 0
+#  s1 <- 0
+#  s2 <- 0
 
-  # For each specimen
-  for(i in 1:dim(M)[1]){
-    if(!anyNA(M[i, c(col1, col2)])){
-      n <- n + 1
-      s1 <- s1 + M[i, col1]
-      s2 <- s2 + M[i, col1]
-    }
-  }
+#  # For each specimen
+#  for(i in 1:dim(M)[1]){
+#    if(!anyNA(M[i, c(col1, col2)])){
+#      n <- n + 1
+#      s1 <- s1 + M[i, col1]
+#      s2 <- s2 + M[i, col1]
+#    }
+#  }
 
-  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
+#  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
 
-  s1 <- s1/n
-  s2 <- s2/n
+#  s1 <- s1/n
+#  s2 <- s2/n
 
-  p <- 0
+#  p <- 0
 
-  # for each specimen
-  for(i in 1:dim(M)[1]){
-    if(!anyNA(M[i, c(col1, col2)])){
-      p <- p + (M[i, col1] - s1) * (M[i, col2] - s2)
-    }
-  }
+#  # for each specimen
+#  for(i in 1:dim(M)[1]){
+#    if(!anyNA(M[i, c(col1, col2)])){
+#      p <- p + (M[i, col1] - s1) * (M[i, col2] - s2)
+#    }
+#  }
 
-  return(p / (n - 1))
+#  return(p / (n - 1))
 
-}, vectorize.args=list('col1', 'col2'))
+#}, vectorize.args=list('col1', 'col2'))
 
 
 
@@ -139,23 +139,23 @@ cvmentry <- Vectorize(function(M, col1, col2){
 #' Calculate 3D correlation matrix 
 #' 
 #' Calculates the congruence coefficient for 2 or 3 dimensional landmarks
-#'   to give a M x M correlation matrix.
+#'   to give an N x N correlation matrix.
 #'
-#'@param M An M x N x D array. M = no of specimens, N = no of landmarks, D = 2 or 3 dimensions
+#'@param M An N x D x M array. M = no of specimens, N = no of landmarks, D = 2 or 3 dimensions
 #'@export
 #'
 #'@return Correlation matrix
 #'@examples
-#' M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+#' M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
 #' M.corr <- dotcorr(M)
 #'
 
 
 dotcorr <- function(M){
   # Calculate covariance between each pairs of columns.
-  N <- matrix(NA, nrow = dim(M)[2], ncol = dim(M)[2])
-  for(i in 1:dim(M)[2]){
-    for(j in i:dim(M)[2]){
+  N <- matrix(NA, nrow = dim(M)[1], ncol = dim(M)[1])
+  for(i in 1:dim(M)[1]){
+    for(j in i:dim(M)[1]){
       N[i, j] <- dotcorrentry(M, i, j)
     }
   }
@@ -179,7 +179,7 @@ dotcorr <- function(M){
 #' 
 #' Calculates the congruence coefficient for 2 or 3 dimensional landmarks
 #'
-#'@param M An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param col1 Integer of first column 
 #'@param col2 Integer of second column 
 #'
@@ -194,11 +194,11 @@ dotcorrentry <- function(M, col1, col2){
   s2 <- c(0, 0, 0)
 
   # For each specimen
-  for(i in 1:dim(M)[1]){
-    if(!anyNA(M[i, c(col1, col2), ])){
+  for(i in 1:dim(M)[3]){
+    if(!anyNA(M[c(col1, col2), , i])){
       n <- n + 1
-      s1 <- s1 + M[i, col1, ]
-      s2 <- s2 + M[i, col2, ]
+      s1 <- s1 + M[col1, ,i]
+      s2 <- s2 + M[col2, , i]
     }
   }
 
@@ -212,11 +212,11 @@ dotcorrentry <- function(M, col1, col2){
   sumj <- 0
 
   # for each specimen
-  for(i in 1:dim(M)[1]){
-    if(!anyNA(M[i, c(col1, col2), ])){
-      p <- p + crossprod((M[i, col1, ] - s1), (M[i, col2, ] - s2))
-	    sumi <- sumi + crossprod((M[i, col1, ] - s1), (M[i, col1, ] - s1))
-	    sumj <- sumj + crossprod((M[i, col2, ] - s2), (M[i, col2, ] - s2))
+  for(i in 1:dim(M)[3]){
+    if(!anyNA(M[c(col1, col2), , i])){
+      p <- p + crossprod((M[col1, , i] - s1), (M[col2, , i] - s2))
+	    sumi <- sumi + crossprod((M[col1, , i] - s1), (M[col1, , i] - s1))
+	    sumj <- sumj + crossprod((M[col2, , i] - s2), (M[col2, , i] - s2))
     }
   }
 

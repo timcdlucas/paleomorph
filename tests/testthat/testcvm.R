@@ -2,20 +2,12 @@ context('Test that all cvm functions work.')
 
 test_that('dotcorr calculates congruence coefficient properly.', {
 
-M <- array(0, dim = c(4, 2, 3))
+
+M <- array(0, dim = c(2, 3, 4))
 
 # Landmarks are perfectly correlated
-M[, 1, ] <- rep(1:4, by = 3)
-M[, 2, ] <- rep(1:4, by = 3)
-
-
-
-
-M <- array(0, dim = c(4, 2, 3))
-
-# Landmarks are perfectly correlated
-M[, 1, ] <- 1:12
-M[, 2, ] <- 1:12
+M[1, , ] <- 1:12
+M[2, , ] <- 1:12
 
 r <- dotcorrentry(M, 1, 2)
 
@@ -30,7 +22,7 @@ test_that('Congruence is never outside -1, 1', {
   r <- replicate(100, {
     # I don't think they need to be centered first. So use points not around (0, 0, 0)
     mu <- rnorm(1, 0, 3)
-    M <- array(rnorm(4*2*3, mu), dim = c(4, 2, 3))
+    M <- array(rnorm(4*2*3, mu), dim = c(2, 3, 4))
     dotcorr(M)
   })
 
@@ -46,20 +38,13 @@ test_that('Congruence is never outside -1, 1', {
 
 test_that('dotcvm calculates congruence coefficient properly.', {
 
-M <- array(0, dim = c(4, 2, 3))
+
+
+M <- array(0, dim = c(2, 3, 4))
 
 # Landmarks are perfectly correlated
-M[, 1, ] <- rep(1:4, by = 3)
-M[, 2, ] <- rep(1:4, by = 3)
-
-
-
-
-M <- array(0, dim = c(4, 2, 3))
-
-# Landmarks are perfectly correlated
-M[, 1, ] <- 1:12
-M[, 2, ] <- 1:12
+M[1, , ] <- 1:12
+M[2, , ] <- 1:12
 
 r <- dotcvm(M)
 
@@ -73,7 +58,7 @@ expect_true(all(rcorr == rcorr[1,1]))
 
 
 set.seed(1)
-M <- array(rnorm(4 * 2 * 3), dim = c(4, 2, 3)) 
+M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
 corr.mat <- dotcorr(M)
 expect_equal(diag(corr.mat), c(1,1))
 

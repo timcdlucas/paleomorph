@@ -19,8 +19,8 @@ Count the number of missing landmarks in an array
 
 
 
- a <- array(1:(3*6*7), dim = c(6, 7, 3))
- a[1, 2, ] <- NA
+ a <- array(1:(3*6*7), dim = c(7, 3, 6))
+ a[2, , 1] <- NA
  countMissing(a)
 }
 

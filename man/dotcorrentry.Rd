@@ -7,7 +7,7 @@
 dotcorrentry(M, col1, col2)
 }
 \arguments{
-\item{M}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
+\item{M}{An N x 3 x M array. M = no of specimens, N = no of landmarks.}
 
 \item{col1}{Integer of first column}
 
