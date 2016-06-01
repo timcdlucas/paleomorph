@@ -7,9 +7,9 @@
 
 #'Fill missing landmarks for all specimens in an array using mirrored values from other side of object
 #'
-#'Given an m x n x 3 matrix, replace a set of landmarks using their mirrored counterpart.
+#'Given an n x 3 x m matrix, replace a set of landmarks using their mirrored counterpart.
 #'
-#'@param a An m x n x 3 matrix containing 3D landmark data of n landmarks and m specimens
+#'@param a An n x 3 x m matrix containing 3D landmark data of n landmarks and m specimens
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline
 #'@param l2 Vector of indices for which landmarks to be mirrored
 #'
@@ -52,28 +52,28 @@ mirrorfill <- function(a, l1, l2){
 
 
 
-#'Fill missing landmarks using mirrored values from other side of object
-#'
-#'Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpark.
-#'
-#'@param s An n x 3 matrix containing 3D landmark data of n landmarks.
-#'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
-#'@param l2 Vector of indices for which landmarks to be replaced by their mirrored value.
-#'
-#'
-#'@details \code{l2} should be an even number length containing pairs of landmarks
-#'  on either side of the specimen. i.e. l2[1]
-#'@export
-#'@examples
-#'  # Make data that is reflected in x plane
-#'  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-#'  s[1:7, 1] <- -s[1:7, 1]
-#'
-#'  # Now remove some data
-#'  s[1, ] <- NA
-#'  
-#'  # Mirror point 1 using it's complimentary landmark, point 8.
-#'  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
+#Fill missing landmarks using mirrored values from other side of object
+#
+#Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpark.
+#
+#@param s An n x 3 matrix containing 3D landmark data of n landmarks.
+#@param l1 Vector of indices for which landmarks to use to make a specimen midline.
+#@param l2 Vector of indices for which landmarks to be replaced by their mirrored value.
+#
+#
+#@details \code{l2} should be an even number length containing pairs of landmarks
+#  on either side of the specimen. i.e. l2[1]
+#
+#@examples
+#  # Make data that is reflected in x plane
+#  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
+#  s[1:7, 1] <- -s[1:7, 1]
+#
+#  # Now remove some data
+#  s[1, ] <- NA
+#  
+#  # Mirror point 1 using it's complimentary landmark, point 8.
+#  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
 
 
 mirrorfill1 <- function(s, l1, l2){
@@ -130,10 +130,10 @@ mirrorfill1 <- function(s, l1, l2){
 
 
 
-#'Find the midline of an object
-#' 
-#'@param s An n x 3 matrix of the 3D coordinates of n landmarks.
-#'@param l1 Indices of the landmarks to use in creating the midline.
+#Find the midline of an object
+# 
+#@param s An n x 3 matrix of the 3D coordinates of n landmarks.
+#@param l1 Indices of the landmarks to use in creating the midline.
 
 midline <- function(s, l1){
   
@@ -156,12 +156,12 @@ midline <- function(s, l1){
 }
   
 
-#'Calculate the least squares plane of some points
-#'
-#'@param l An n x 3 matrix of landmarks to be used in creating the plane
-#'
-#'@return A list containing a unit vector n and a scalar d.
-#'  n.x = d is the least squares plane.
+#Calculate the least squares plane of some points
+#
+#@param l An n x 3 matrix of landmarks to be used in creating the plane
+#
+#@return A list containing a unit vector n and a scalar d.
+#  n.x = d is the least squares plane.
 
 bestplane <- function(l){
   # centre the points
@@ -180,12 +180,12 @@ bestplane <- function(l){
 
 
 
-#' Reflects p in the plane defined by n.x = d
-#' n is a unit vector. d is a scalar.
-#' 
-#'@param p a length 3 vector (a 3D point in space)
-#'@param n Length three vector of coefficients for a plane nx = d
-#'@param d Length one vector giving coefficient d for a plane nx = d
+# Reflects p in the plane defined by n.x = d
+# n is a unit vector. d is a scalar.
+# 
+#@param p a length 3 vector (a 3D point in space)
+#@param n Length three vector of coefficients for a plane nx = d
+#@param d Length one vector giving coefficient d for a plane nx = d
 
 reflect <- function(p, n, d){
    p - 2 * (n %*% p - d) * n/(n %*% n)

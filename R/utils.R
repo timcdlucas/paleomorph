@@ -18,7 +18,7 @@ countMissing <- function(A){
   completeLandmarks(A)
   
   # Find landmarks with missing data
-  miss <- apply(A, c(3, 2), function(x) any(is.na(x)))
+  miss <- apply(A, c(3, 1), function(x) any(is.na(x)))
 
   # Get counts for each specimen
   counts <- rowSums(miss)

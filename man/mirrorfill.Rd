@@ -7,14 +7,14 @@
 mirrorfill(a, l1, l2)
 }
 \arguments{
-\item{a}{An m x n x 3 matrix containing 3D landmark data of n landmarks and m specimens}
+\item{a}{An n x 3 x m matrix containing 3D landmark data of n landmarks and m specimens}
 
 \item{l1}{Vector of indices for which landmarks to use to make a specimen midline}
 
 \item{l2}{Vector of indices for which landmarks to be mirrored}
 }
 \description{
-Given an m x n x 3 matrix, replace a set of landmarks using their mirrored counterpart.
+Given an n x 3 x m matrix, replace a set of landmarks using their mirrored counterpart.
 }
 \details{
 \code{l1} should be an even number length containing pairs of landmarks
