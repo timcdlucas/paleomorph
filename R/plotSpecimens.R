@@ -3,7 +3,7 @@
 #' Plot an array of specimen landmark data in an interactive 3D frame
 #'
 #' This function requires the rgl package.
-#'   Given a M x N x 3 array (where M is the number of speciments
+#'   Given a N x 3 x M array (where M is the number of specimens
 #'   and N is the number of landmarks), as used elsewhere in this package,
 #'   plot each specimen in a different colour in an intereactive
 #'   3D frame.
@@ -17,8 +17,8 @@
 #'@export
 #'
 #'@examples
-#' a <- array(rep(rnorm(6 * 20, sd = 30), each = 6) + rnorm(6 * 20 * 3), 
-#'        dim = c(6, 20, 3))
+#' a <- array(rep(rnorm(3 * 20, sd = 30), by = 6) + rnorm(6 * 20 * 3), 
+#'        dim = c(20, 3, 6))
 #' plotSpecimens(a)
 #'
 #' plotSpecimens(a, bySpecimen = FALSE)
@@ -37,36 +37,36 @@ plotSpecimens <- function(a, cols = NULL, bySpecimen = TRUE, ...) {
   }
   
   # Check array is correct form
-  stopifnot(length(dim(a)) == 3, dim(a)[3] == 3, is.numeric(a), is.logical(bySpecimen))
+  stopifnot(length(dim(a)) == 3, dim(a)[2] == 3, is.numeric(a), is.logical(bySpecimen))
   
   if(is.null(cols)){
     if(bySpecimen){
-      cols <- 1:dim(a)[1]
+      cols <- 1:dim(a)[3]
     } else {
-      cols <- 1:dim(a)[2]
+      cols <- 1:dim(a)[1]
     }
   }    
 
   # Put the first specimen into vectors
   #  This is mostly a way to give reasonable axes labels, without blocking 
   #   xyzlabs from using ...
-  x <- a[1, , 1]
-  y <- a[1, , 2]
-  z <- a[1, , 3]
+  x <- a[, 1, 1]
+  y <- a[, 2, 1]
+  z <- a[, 3, 1]
 
   if(bySpecimen){
     # Do 3D plots
     rgl::plot3d(x, y, z, col = cols[1], ...) 
 
-    for(i in 2:dim(a)[1]){
-      rgl::plot3d(a[i, , 1], a[i, , 2], a[i, , 3], add = TRUE, col = cols[i], ...) 
+    for(i in 2:dim(a)[3]){
+      rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols[i], ...) 
     }
   } else {
         # Do 3D plots
     rgl::plot3d(x, y, z, col = cols, ...) 
 
-    for(i in 2:dim(a)[1]){
-      rgl::plot3d(a[i, , 1], a[i, , 2], a[i, , 3], add = TRUE, col = cols, ...) 
+    for(i in 2:dim(a)[3]){
+      rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols, ...) 
     }
 
   }
