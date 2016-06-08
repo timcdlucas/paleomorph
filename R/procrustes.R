@@ -125,9 +125,9 @@ deltaa <- function(olda, newa, m, n, scaleDelta, zap = TRUE){
   diff <- olda - newa
   
   if(scaleDelta){
-    delta <- sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x))) / (dim(olda)[1] * dim(olda)[2])
+    delta <- sum(apply(diff, c(1, 3), function(x) sqrt(x %*% x))) / (dim(olda)[1] * dim(olda)[3])
   } else {
-    delta <- sum(apply(diff, c(1, 2), function(x) sqrt(x %*% x)))
+    delta <- sum(apply(diff, c(1, 3), function(x) sqrt(x %*% x)))
   }
   return(delta)
 }
