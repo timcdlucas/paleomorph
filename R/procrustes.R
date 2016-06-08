@@ -83,8 +83,8 @@ scorea <- function(arr, m, n){
 
       # For each landmark
       for(k in 1:n){
-          if(!anyNA(arr[i, k, ]) & !anyNA(arr[j, k, ])){
-            w <- arr[i, k, ] - arr[j, k, ]
+          if(!anyNA(arr[k, , i]) & !anyNA(arr[k, , j])){
+            w <- arr[k, , i] - arr[k, , j]
             sumw <- sumw + w %*% w
           }
       }
