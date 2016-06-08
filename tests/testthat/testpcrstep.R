@@ -8,12 +8,11 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
   sq1 <- rbind(c(1, 1, 0), c(1, -1, 0), c(-1, -1, 0), c(-1, 1, 0))
   sq2 <- rbind(c(0, sqrt(2), 0), c(sqrt(2), 0, 0), c(0, -sqrt(2), 0),  c(-sqrt(2), 0, 0))
   A <- abind(sq1, sq2, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   A <- pcrstep(A, scaleDelta = FALSE)
   
-  expect_equal(A[1, , ], A[2, , ])
+  expect_equal(A[, , 1], A[, , 1])
 
 
 
@@ -22,12 +21,11 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
   sq1 <- rbind(c(1, 0, 1), c(1, 0, -1), c(-1, 0, -1), c(-1, 0, 1))
   sq2 <- rbind(c(0, 0, sqrt(2)), c(sqrt(2), 0, 0), c(0, 0, -sqrt(2)),  c(-sqrt(2), 0, 0))
   A <- abind(sq1, sq2, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   A <- pcrstep(A, scaleDelta = FALSE)
   
-  expect_equal(A[1, , ], A[2, , ])
+  expect_equal(A[, , 1], A[, , 2])
 
 
 
@@ -36,12 +34,11 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
   sq1 <- rbind(c(0,1,  1), c(0, 1, -1), c(0, -1, -1), c(0, -1, 1))
   sq2 <- rbind(c(0, 0, sqrt(2)), c( 0, sqrt(2),0), c(0, 0, -sqrt(2)),  c( 0, -sqrt(2),0))
   A <- abind(sq1, sq2, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   A <- pcrstep(A, scaleDelta = FALSE)
   
-  expect_equal(A[1, , ], A[2, , ])
+  expect_equal(A[, , 1], A[, , 2])
 
 })
 
@@ -50,7 +47,7 @@ test_that('pcr step works in 2D with no missing data. 2 shapes', {
 test_that('pcr step works in 3D by rotating. 2 shapes', {
 
   set.seed(1)
-  # Make a shape, then rotate it, then pcr it bake
+  # Make a shape, then rotate it, then pcr it back
   sh1 <- matrix(sample(1:48), ncol =3)
 
   x <- runif(1, 0, 2*pi)
@@ -65,12 +62,11 @@ test_that('pcr step works in 3D by rotating. 2 shapes', {
   sh2 <- t(apply(sh1, 1, function(x) t(x) %*% R))
 
   A <- abind(sh1, sh2, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   A <- pcrstep(A, maxiter = 1000, scaleDelta = FALSE)
   
-  expect_equal(A[1, , ], A[2, , ])
+  expect_equal(A[, , 1], A[, , 2])
 
 
 
@@ -85,8 +81,7 @@ test_that('pcr step works in 3D with noise. 2 shapes', {
   sh2 <- matrix(sample(1:48), ncol =3)
 
   A <- abind(sh1, sh2, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   B <- pcrstep(A, maxiter = 1000, scaleDelta = FALSE)
   
@@ -95,19 +90,3 @@ test_that('pcr step works in 3D with noise. 2 shapes', {
 })
 
 
-# library(rgl)
-#plot3d(A[1,,1], A[1,,2], A[1,,3], size = 6)
-#plot3d(A[2,,1], A[2,,2], A[2,,3], add = TRUE, col = 'Red', size = 6)
-
-
-#plot(A[1,,1] ~ A[1,,2], ylim = c(-sqrt(2), sqrt(2)),  xlim=c(-sqrt(2), sqrt(2)), type = 'b')
-# lines(A[2,,1] ~ A[2,,2], col = 'red', type = 'b')
-
-
-#plot(B[1,,1] ~ B[1,,2], ylim = c(-sqrt(2), sqrt(2)),  xlim=c(-sqrt(2), sqrt(2)), type = 'b')
-# lines(B[2,,1] ~ B[2,,2], col = 'red', type = 'b')
-
-
-
-#plot(A[1,,1] ~ A[1,,2], ylim = c(-25, 25),  xlim=c(-25, 25), type = 'b')
-# lines(A[2,,1] ~ A[2,,2], col = 'red', type = 'b')

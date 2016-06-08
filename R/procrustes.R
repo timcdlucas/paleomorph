@@ -201,42 +201,42 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
 
     # For each specimen except fist
     #   rotate that specimen 
-    for(i in 2:dim(na)[1]){
+    for(i in 2:dim(na)[3]){
       # Compute ta, the temporary matrix that will be used
 	    # in this iteration
-      ta <- matrix(0, nrow = dim(na)[2], ncol = 3)
+      ta <- matrix(0, nrow = dim(na)[1], ncol = 3)
 
       # Essentially calculate mean of other shapes
-      for(j in 1:dim(na)[1]){
+      for(j in 1:dim(na)[3]){
         if(i != j){ 
-          ta <- ta + na[j, , ] 
+          ta <- ta + na[, , j] 
         }
       } 
     
       # Compute na[i,,]^T (ta)
       # The rotation which best approximates this matrix will be
       # applied to na[i,,]
-      c <- base::crossprod(ta, na[i, , ])
+      c <- base::crossprod(ta, na[, , i])
       # Same but slower. Highlights difference to comments in Anjalis code.
       # c <- t(ta) %*% na[i,,]
 
       # Take rotation part from Singular value decomposition
       r <- rp_decompose(c)$R
       # Apply rotation to na[i,,].
-      na[i, , ] <- lrotate(na[i, , ], r)
+      na[, , i] <- lrotate(na[, , i], r)
       
     }    
 
     
     # print(deltaa(na2, na, dim(na2)[1], dim(na2)[2]))
     # Does new rotations only change the matrix a tiny bit?
-    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2], scaleDelta = scaleDelta, FALSE) < tolerance) break()
+    if(deltaa(na2, na, dim(na2)[3], dim(na2)[1], scaleDelta = scaleDelta, FALSE) < tolerance) break()
   }
 
 
   # print some output
-  message("rstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), 
-    ", delta = ", deltaa(a, na, dim(na)[1], dim(na)[2], scaleDelta = scaleDelta), 
+  message("rstep: score = ", scorea(na, dim(na)[3], dim(na)[1]), 
+    ", delta = ", deltaa(a, na, dim(na)[3], dim(na)[1], scaleDelta = scaleDelta), 
     ", iterations = ", count)
 
   # Replace missing values
