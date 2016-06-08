@@ -263,7 +263,7 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
 
 pctstep <- function(a, scaleDelta){
 
-  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
+  stopifnot(is.numeric(a), dim(a)[2] == 3, length(dim(a)) == 3)
 
 #     * The linear algebra here is a little tricky.
 #     * We have M equations in M unknowns, but one equation is redundant
@@ -275,8 +275,8 @@ pctstep <- function(a, scaleDelta){
 #     * least squares, and force the sum of the unknowns to 0.
 
   # m numer of specimens, n number of landmarks
-  m <- dim(a)[1]
-  n <- dim(a)[2]
+  m <- dim(a)[3]
+  n <- dim(a)[1]
 
   # inialise objects
   c <- matrix(0, nrow = m - 1, ncol = m - 1)
@@ -289,7 +289,7 @@ pctstep <- function(a, scaleDelta){
     for(j in seq(m)){
       if (i != j) {
         for(k in seq(n)){
-          if (all(!is.na(a[i, k, ])) && all(!is.na(a[j, k, ]))) {
+          if (all(!is.na(a[k, , i])) && all(!is.na(a[k, , j]))) {
             c[i - 1, i - 1] <- c[i - 1, i - 1] + 1
             if (j > 1) {
               c[i - 1, j - 1] <- c[i - 1, j - 1] - 1
@@ -307,10 +307,10 @@ pctstep <- function(a, scaleDelta){
 	v <- t(rbind(solve(c, bx), solve(c, by), solve(c, bz)))
 
   na <- a
-  for(i in 2:dim(na)[1]){
-    na[i, , ] <- lshift(a[i, , ], -v[i - 1, ])
+  for(i in 2:dim(na)[3]){
+    na[, , i] <- lshift(a[, , i], -v[i - 1, ])
   }
-  message("tstep: score = ", scorea(na, dim(na)[1], dim(na)[2]), ", delta = ", deltaa(na, a, dim(na)[1], dim(na)[2], scaleDelta))
+  message("tstep: score = ", scorea(na, dim(na)[3], dim(na)[1]), ", delta = ", deltaa(na, a, dim(na)[3], dim(na)[1], scaleDelta))
   return(na)
 }
 
@@ -333,16 +333,16 @@ pctstep <- function(a, scaleDelta){
 
 pcsstep <- function(a, scaleDelta){
 
-  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
+  stopifnot(is.numeric(a), dim(a)[2] == 3, length(dim(a)) == 3)
 
   # m numer of specimens, n number of landmarks
-  m <- dim(a)[1]
-  n <- dim(a)[2]
+  m <- dim(a)[3]
+  n <- dim(a)[1]
 
   na <- array(NA, dim = dim(a))
 
   for(i in 1:m){
-    na[i, , ] <- lscale(a[i, , ], 1/sqrt(lnorm(lshift(a[i, , ], -lcentroid2(a[i, , ])))))
+    na[, , i] <- lscale(a[, , i], 1/sqrt(lnorm(lshift(a[, , i], -lcentroid2(a[, , i])))))
   }
 
   # Compute D, the matrix whose largest eigenvalue will give the scalings
@@ -355,9 +355,9 @@ pcsstep <- function(a, scaleDelta){
         # Loop through landmarks 
         for(k in 1:n){
           # ignore if the landmark in either specimens has missing data.
-          if(!anyNA(na[i, k, ]) && !anyNA(na[j, k, ])){
-            d[i, i] <- d[i, i] - (na[i, k, ] %*% na[i, k, ])
-            d[i, j] <- d[i, j] + (na[i, k, ] %*% na[j, k, ])
+          if(!anyNA(na[k, , i]) && !anyNA(na[k, , j])){
+            d[i, i] <- d[i, i] - (na[k, , i] %*% na[k, , i])
+            d[i, j] <- d[i, j] + (na[k, , i] %*% na[k, , j])
           }
         }
       }  
@@ -378,7 +378,7 @@ pcsstep <- function(a, scaleDelta){
   }
 
   for(i in 1:m){
-    na[i, , ] <- lscale(na[i, , ], v[i])
+    na[, , i] <- lscale(na[, , i], v[i])
   }
   
   message("sstep: score = ", scorea(na, m, n), ", delta = ", deltaa(a, na, m, n, scaleDelta))
