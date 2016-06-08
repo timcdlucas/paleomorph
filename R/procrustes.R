@@ -1,7 +1,7 @@
 
 #' Run procrustese analysis to align 3D shapes. 
 #' 
-#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param scale Logical indicating whether the size of the objects should be scales
 #'  as well as rotated and translated.
 #'@param maxiter Maximum number of iterations to attempt
@@ -16,7 +16,7 @@
 #'   with \code{scaleDelta = TRUE}. However, preliminary tests imply that run time scales linearly with 
 #'   \code{scaleDelta} set to \code{TRUE} or \code{FALSE}. 
 #'
-#'@return A new (M x N x 3) array, where each 3d vector has been transformed
+#'@return A new (N x 3 x M) array, where each 3d vector has been transformed
 #'  in a per-specimen way.  The transformation is chosen to maximize,
 #'  in the least-squares sense, the distances between specimens.
 #'
@@ -67,7 +67,7 @@ procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tole
 
 #' Returns the sum of squares of distances that we're trying to minimize.
 #' 
-#'@param arr An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param arr An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param m No of specimens
 #'@param n No of landmarks
 #'
@@ -103,8 +103,8 @@ scorea <- function(arr, m, n){
 #'   in a1 and a2. 
 #' Used to see when a1 and a2 are very similar. e.g. deltaa(olda, newa, 10, 20, scaleDelta = FALSE) < 10e-7
 #'
-#'@param olda An M x N x 3 array. M = no of specimens, N = no of landmarks.
-#'@param newa An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param olda An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#'@param newa An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param m No of specimens
 #'@param n No of landmarks
 #'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
@@ -116,7 +116,7 @@ scorea <- function(arr, m, n){
 
 deltaa <- function(olda, newa, m, n, scaleDelta, zap = TRUE){
   stopifnot(dim(newa) == dim(olda), is.numeric(newa), is.numeric(olda), is.numeric(m), 
-            is.numeric(n), dim(newa) == c(m, n, 3), is.logical(scaleDelta))
+            is.numeric(n), dim(newa) == c(n, 3, m), is.logical(scaleDelta))
   if(zap){
     olda <- zapa(olda)
     newa <- zapa(newa)
@@ -136,17 +136,18 @@ deltaa <- function(olda, newa, m, n, scaleDelta, zap = TRUE){
 
 #' Replaces missing data points with c(0, 0, 0)
 #'
-#' Given an M x N x 3 array, returns an M x N x 3 array with no missing data.
+#' Given an N x 3 x M array, returns an N x 3 x M array with no missing data.
 #'   M is the number of specimens and N is the number of landmarks.
 #'
-#'@param a An M x N x 3 array.
+#'@param a An N x 3 x M array.
 #'
-#'@return An M x N x 3 array with no missing data. 
+#'@return An N x 3 x M array with no missing data. 
 
 zapa <- function(a){
   stopifnot(is.numeric(a))
 
-  a[apply(a, c(1, 2), function(x) anyNA(x))] <- 0
+  w <- which(apply(a, c(1, 3), function(x) anyNA(x)), arr.ind = TRUE)
+  a[w[, 1], , w[, 2]] <- 0
 
   return(a)
 }
@@ -154,14 +155,14 @@ zapa <- function(a){
 
 #' Puts missing data back in to a specimen x landmark array
 #'
-#' Given an M x N x 3 array, and a template defining which data were
-#'   missing, returns an M x N x 3 array with NAs for missing data.
+#' Given an N x 3 x M array, and a template defining which data were
+#'   missing, returns an N x 3 x M array with NAs for missing data.
 #'   M is the number of specimens and N is the number of landmarks.
 #'
-#'@param a An M x N x 3 array.
-#'@param b An M x N x 3 array to use a template. 
+#'@param a An N x 3 x M array.
+#'@param b An N x 3 x M array to use a template. 
 #'
-#'@return An M x N x 3 array with NAs for missing data. 
+#'@return An N x 3 x M array with NAs for missing data. 
 
 unzapa <- function(a, b){
 
@@ -174,16 +175,16 @@ unzapa <- function(a, b){
 
 #' Rotate all shapes until optimally aligned.
 #'
-#' Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
+#' Given an N x 3 x M array (M = no of specimens, N = no of landmarks.) 
 #'   this will find the optimal rotation for all shapes so that they are as
 #'   aligned as possible.
 #'
-#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param maxiter Maximum number of iterations to attempt
 #'@param tolerance Difference between two iterations that will cause the search to stop. 
 #'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'
-#'@return An M x N x 3 array of aligned shapes
+#'@return An N x 3 x M array of aligned shapes
 
 
 pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
@@ -250,14 +251,14 @@ pcrstep <- function(a, maxiter = 1000, tolerance = 10e-7, scaleDelta){
 
 #' Translate all shapes until optimally aligned.
 #'
-#' Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
+#' Given an N x 3 x M array (M = no of specimens, N = no of landmarks.) 
 #'   this will find the optimal translation for all shapes so that they are as
 #'   aligned as possible.
 #'
-#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'
-#'@return An M x N x 3 array of aligned shapes
+#'@return An N x 3 x M array of aligned shapes
 
 
 pctstep <- function(a, scaleDelta){
@@ -320,15 +321,15 @@ pctstep <- function(a, scaleDelta){
 
 #' Resize all shapes until optimally aligned.
 #'
-#' Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
+#' Given an N x 3 x M array (M = no of specimens, N = no of landmarks.) 
 #'   this will find the optimal resizing for all shapes so that they are as
 #'   aligned as possible.
 #'
-#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
 #'
 #'
-#'@return An M x N x 3 array of aligned shapes
+#'@return An N x 3 x M array of aligned shapes
 
 pcsstep <- function(a, scaleDelta){
 
@@ -397,14 +398,14 @@ pcsstep <- function(a, scaleDelta){
 #'  so that the "total size" constraint is satisfied and scorea[] will
 #'  become meaningful.
 #'
-#' Given an M x N x 3 array (M = no of specimens, N = no of landmarks.) 
+#' Given an N x 3 x M array (M = no of specimens, N = no of landmarks.) 
 #'   this will find the optimal resizing for all shapes so that they are as
 #'   aligned as possible.
 #'
-#'@param a An M x N x 3 array. M = no of specimens, N = no of landmarks.
+#'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param scale Logical indicating whether the size of the objects should be scaled.
 #'
-#'@return An M x N x 3 array of aligned shapes
+#'@return An N x 3 x M array of aligned shapes
 
 pcistep <- function(a, scale = TRUE){
 
