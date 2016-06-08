@@ -35,7 +35,7 @@
 #'
 
 procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tolerance = 10e-6){
-  stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[3] == 3)
+  stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[2] == 3)
 
   # Check that all landmarks are either complete or all NA
   completeLandmarks(a)
@@ -52,13 +52,13 @@ procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tole
     if(scale) na <- pcsstep(na, scaleDelta)
 
     # Check progress
-    if(deltaa(na2, na, dim(na2)[1], dim(na2)[2], scaleDelta) < tolerance) break()
+    if(deltaa(na2, na, dim(na2)[3], dim(na2)[1], scaleDelta) < tolerance) break()
   }
 
   # If it didn't converge give a warning
   if(iter == maxiter){
     warning('After ', maxiter, ' iterations the solution has not converged.')
-    warning('Delta = ', round(deltaa(na2, na, dim(na2)[1], dim(na2)[2], scaleDelta), 4), ', tolerance = ', tolerance)
+    warning('Delta = ', round(deltaa(na2, na, dim(na2)[3], dim(na2)[1], scaleDelta), 4), ', tolerance = ', tolerance)
   }
 
   return(na)
@@ -295,9 +295,9 @@ pctstep <- function(a, scaleDelta){
               c[i - 1, j - 1] <- c[i - 1, j - 1] - 1
             }
 
-            bx[i - 1] <- bx[i - 1] + a[i, k, 1] - a[j, k, 1]
-            by[i - 1] <- by[i - 1] + a[i, k, 2] - a[j, k, 2]
-            bz[i - 1] <- bz[i - 1] + a[i, k, 3] - a[j, k, 3]
+            bx[i - 1] <- bx[i - 1] + a[k, 1, i] - a[k, 1, j]
+            by[i - 1] <- by[i - 1] + a[k, 2, i] - a[k, 2, j]
+            bz[i - 1] <- bz[i - 1] + a[k, 3, i] - a[k, 3, j]
           }          
         }
       }

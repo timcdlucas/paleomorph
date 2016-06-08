@@ -44,14 +44,13 @@ test_that('Basic procrustes works', {
 
 
   A <- abind(sh1, sh2, sh3, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   B <- procrustes(A, scale = TRUE, tolerance = 10e-9)
   
-  expect_equal(B[1, , ], B[2, , ])
-  expect_equal(B[2, , ], B[3, , ])
-  expect_equal(B[1, , ], B[3, , ])
+  expect_equal(B[, , 1], B[, , 2])
+  expect_equal(B[, , 2], B[, , 3])
+  expect_equal(B[, , 1], B[, , 3])
 
 
 })
@@ -100,14 +99,13 @@ test_that('Missing data procrustes works', {
 
 
   A <- abind(sh1, sh2, sh3, sh4, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
+
 
   B <- procrustes(A, scale = TRUE, tolerance = 1e-10)
   
-  expect_equal(B[1, , ], B[2, , ])
-  expect_equal(B[2, , ], B[3, , ])
-  expect_equal(B[1, , ], B[3, , ])
+  expect_equal(B[, , 1], B[, , 2])
+  expect_equal(B[, , 2], B[, , 3])
+  expect_equal(B[, , 1], B[, , 3])
 
 
 
@@ -160,21 +158,19 @@ test_that('Scale switch and other params work', {
 
 
   A <- abind(sh1, sh2, sh3, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
 
-  A <- aperm(A, perm = c(3, 1, 2))
 
   # procrustes with and without scaling.
   B <- procrustes(A, scale = TRUE)
   C <- procrustes(A, scale = FALSE)
 
-  expect_true(all(B[1, , ] - B[2, , ] < 1e-7))
-  expect_true(all(B[1, , ] - B[3, , ] < 1e-7))
-  expect_true(all(B[2, , ] - B[3, , ] < 1e-7))
+  expect_true(all(B[, , 1] - B[, , 2] < 1e-7))
+  expect_true(all(B[, , 1] - B[, , 3] < 1e-7))
+  expect_true(all(B[, , 2] - B[, , 3] < 1e-7))
 
-  expect_false(all(C[1, , ] - C[2, , ] < 1e-7))
-  expect_false(all(C[1, , ] - C[2, , ] < 1e-7))
-  expect_false(all(C[1, , ] - C[2, , ] < 1e-7))
+  expect_false(all(C[, , 1] - C[, , 2] < 1e-7))
+  expect_false(all(C[, , 1] - C[, , 2] < 1e-7))
+  expect_false(all(C[, , 1] - C[, , 2] < 1e-7))
 
 
   ######################################################
@@ -221,16 +217,14 @@ test_that('Scale switch and other params work', {
 
 
   A <- abind(sh1, sh2, sh3, along = 3)
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
 
-  A <- aperm(A, perm = c(3, 1, 2))
 
   # procrustes with and without scaling.
   B <- procrustes(A, scale = FALSE)
 
-  expect_true(all(B[1, , ] - B[2, , ] < 1e-7))
-  expect_true(all(B[1, , ] - B[3, , ] < 1e-7))
-  expect_true(all(B[2, , ] - B[3, , ] < 1e-7))
+  expect_true(all(B[, , 1] - B[, , 2] < 1e-7))
+  expect_true(all(B[, , 1] - B[, , 3] < 1e-7))
+  expect_true(all(B[, , 2] - B[, , 3] < 1e-7))
 
 })
 
@@ -241,14 +235,14 @@ test_that('Scale switch and other params work', {
 
 test_that('Partially missing data causes an error.', {
 
-  a <- array(1:(3*6*7), dim = c(6, 7, 3))
+  a <- array(1:(3*6*7), dim = c(7, 3, 6))
   a[1, 2, 3] <- NA
 
   expect_error(procrustes(a))
 
   
-  a <- array(1:(3*6*7), dim = c(6, 7, 3))
-  a[1, 2, ] <- NA
+  a <- array(1:(3*6*7), dim = c(7, 3, 6))
+  a[1, , 2] <- NA
 
   expect_error(procrustes(a), NA)
 
@@ -256,11 +250,11 @@ test_that('Partially missing data causes an error.', {
 })
 
 
-
+# TODO
 test_that('Procrustes with and without missing data give similar cvms', {
 
   set.seed(22)
-  # Make a shape, then rotate it, then pcr it bake
+  # Make a shape, then rotate it, then pcr it back
   sh1 <- matrix(sample(1:48), ncol = 3)
 
   sh2 <- sh1 * 3
@@ -303,17 +297,15 @@ test_that('Procrustes with and without missing data give similar cvms', {
   A4 <- A1 + rnorm(length(A1), 0, 1)
   A <- abind(A1, A2, A3, A4, along = 3)
 
-  # Currently a 4 x 3 x 2 array. We want 2 x 4 x 3
-  A <- aperm(A, perm = c(3, 1, 2))
 
 
   full <- procrustes(A, scale = TRUE, tolerance = 1e-10)
 
   # Now add some missing data and repeat.
   B <- A
-  B[1, c(1, 2), ] <- NA
-  B[2, c(4, 7), ] <- NA
-  B[3, c(10, 11, 12), ] <- NA
+  B[c(1, 2), , 1] <- NA
+  B[c(4, 7), , 2] <- NA
+  B[c(10, 11, 12), , 3] <- NA
   
   missing <- procrustes(B, scale = TRUE, tolerance = 1e-10)
 
@@ -323,7 +315,7 @@ test_that('Procrustes with and without missing data give similar cvms', {
   # Still not sure how to really test this? 
   #  I imagine the bigger the array and the less missing data, the closer the two 
   #    covariancve matrices will be.
-  expect_true(all(fullcorr - missingcorr < 1e-4))
+  expect_true(all(fullcorr - missingcorr < 1e-3))
 
 })
 
