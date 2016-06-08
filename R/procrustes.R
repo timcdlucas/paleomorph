@@ -412,19 +412,19 @@ pcistep <- function(a, scale = TRUE){
   na <- a
 
   # Shift centroid to origin
-  for(i in 1:dim(na)[1]){
-    na[i, , ] <- lshift(na[i, , ], -lcentroid2(na[i, , ]))
+  for(i in 1:dim(na)[3]){
+    na[, , i] <- lshift(na[, , i], -lcentroid2(na[, , i]))
   }
   
   # Scale size of each specimen to 1/sqrt(m)
   if(scale){
-    for(i in 1:dim(na)[1]){
-      na[i, , ] <- lscale(na[i, , ],  1/sqrt(dim(na)[1] * lnorm(na[i, , ])))
+    for(i in 1:dim(na)[3]){
+      na[, , i] <- lscale(na[, , i],  1/sqrt(dim(na)[3] * lnorm(na[, , i])))
     }
   }
 
 
-  message("istep: score = ", scorea(zapa(na), dim(na)[1], dim(na)[2]))
+  message("istep: score = ", scorea(zapa(na), dim(na)[3], dim(na)[1]))
 
   return(na)
 }
