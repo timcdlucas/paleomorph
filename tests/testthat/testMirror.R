@@ -179,11 +179,11 @@ test_that('mirror fill handles all missing vs not missing cases correctly.', {
 
 
   # Create array
-  a <- array(rep(1:60, by = 4), dim = c(20, 3, 4))
+  a <- array(rep(1:60), dim = c(20, 3, 4))
 
   # Make it symmetric
-  a[11:20, , 1:2] <- a[1:10, , 1:2]
-  a[11:20, , 3] <- -a[1:10, , 3]
+  a[11:20, 1:2, ] <- a[1:10, 1:2, ]
+  a[11:20, 3, ] <- -a[1:10, 3, ]
 
   # Make a point that DOESN't reflect properly. 
   # This will be used to check that mirrorfill doesn't overwrite existing data.

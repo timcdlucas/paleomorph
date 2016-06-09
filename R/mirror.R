@@ -168,18 +168,8 @@ bestplane <- function(l){
   c <- lcentroid(l)
   nl <- lshift(l, -c)
   
-  eigen <- eigen(cov(nl))
+  n <- largestev(eigen(cov(nl)))
 
-  # Select the eigen vector which corresponds to the largest eignvalue.
-
-  #w <- which.max(abs(eigen$values))
-  #if(w != which.max(eigen$values)) print('absss')
-  n <- eigen$vectors[, 1]
-
-  #if(all(n < 0)){ n <- -n; print('swiiitch')}
-
-
-  print(3)
 
   # Calculate how well the plane fits
   fit <- sum(sapply(1:NCOL(nl), function(i) n %*% nl[i, ]^2 ))
@@ -204,5 +194,20 @@ reflect <- function(p, n, d){
 
 
 
+# largestev
+#(*
+# * This might be a bit paranoid, but the Mathematica documentation doesn't
+# * seem to guarantee that
+# *    - the last eigenvalue returned is the largest
+# *    - the eigenvectors are normalized
+# *    - if all components of an eigenvector have the same sign, then the
+# *      positive sign is the one chosen
+# *)
+
+largestev <- function(eig){
+  n <- eig$vectors[, which.max(eig$values)]
+  if(all(n < 0)) n <- -n
+  return(n)
+}
 
 
