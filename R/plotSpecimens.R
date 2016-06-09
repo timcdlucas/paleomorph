@@ -9,8 +9,8 @@
 #'   3D frame.
 #'
 #'@param a An N x 3 x M array.
-#'@param l1 Optional vector of indices for which landmarks to use to make a specimen midline.
-#'@param midlineSpecimens Numeric vector indicating which specimens should be used to built the midline plane (defaults to all).
+#'@param l1 Optional vector of indices for which landmarks to use to make a specimen midline. If NULL, no midline plane is plotted. 
+#'@param midlineSpecimens Numeric vector indicating which specimens should be used to built the midline plane. If NULL, but l1 is defined, all specimens are used.
 #'@param cols A vector of colours. 
 #'@param bylandmark Logical that determined whether points should be coloured by specimen (default) or by landmark.
 #'@param ... Further parameters passed to \code{plot3d}.
@@ -29,7 +29,7 @@
 #'
 #' 
 
-plotSpecimens <- function(a, l1 = NULL, cols = NULL, bySpecimen = TRUE, ...) {
+plotSpecimens <- function(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL, bySpecimen = TRUE, ...) {
 
   # rgl can be a pain to install so it is in suggests, not imports.
   #   So if the user calls this function, need to check it is installed
@@ -41,15 +41,19 @@ plotSpecimens <- function(a, l1 = NULL, cols = NULL, bySpecimen = TRUE, ...) {
   # Check array is correct form
   stopifnot(length(dim(a)) == 3, dim(a)[2] == 3, is.numeric(a), is.logical(bySpecimen))
   
-#  # Create midline if indices given
-#  if(!is.null(l1)){
-#    if(is.null(midlineSpecimens) midlineSpecimens <- 1:dim(a)[3]
-#    
-#    midlineLandmarks <- a[l1, , midlineSpecimens]    
-#    X <- aperm(midlineLandmarks, c(3, 1, 2))
-#    dim(X) <- c(dim(midlineLandmarks)[1] * dim(midlineLandmarks)[3], 3)
-#    mid <- midline(X, l1)  
-#  }
+  # Create midline if indices given
+  if(!is.null(l1)){
+    if(is.null(midlineSpecimens)) midlineSpecimens <- 1:dim(a)[3]
+
+    splitArrayToList <- list()
+    for(i in 1:length(midlineSpecimens)){
+      splitArrayToList[[i]] <- a[l1, , midlineSpecimens[i]]
+    }
+    
+    X <- do.call(abind, list(splitArrayToList, along = 1))
+
+    mid <- midline(X, 1:NROW(X))  
+  }
   
 
   # Create colour palette if not given
@@ -72,17 +76,20 @@ plotSpecimens <- function(a, l1 = NULL, cols = NULL, bySpecimen = TRUE, ...) {
     # Do 3D plots
     rgl::plot3d(x, y, z, col = cols[1], ...) 
 
-    for(i in 2:dim(a)[3]){
+    for(i in seq_along(dim(a)[3])[-1]){
       rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols[i], ...) 
     }
   } else {
         # Do 3D plots
     rgl::plot3d(x, y, z, col = cols, ...) 
 
-    for(i in 2:dim(a)[3]){
+    for(i in seq_along(dim(a)[3])[-1]){
       rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols, ...) 
     }
+  }
 
+  if(!is.null(l1)){
+    rgl::planes3d(a = mid$n, d = mid$d)
   }
     
 }
