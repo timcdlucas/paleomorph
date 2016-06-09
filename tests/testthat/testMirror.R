@@ -222,7 +222,6 @@ test_that('mirror fill handles all missing vs not missing cases correctly.', {
   #   point in other speciments
   expect_true(mirrorA[4, 1, 3] ==  mirrorA[4, 1, 2])
   expect_true(mirrorA[4, 1, 3] ==  mirrorA[4, 1, 1])
-
 })
 
 

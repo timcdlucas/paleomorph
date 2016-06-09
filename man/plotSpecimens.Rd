@@ -4,18 +4,19 @@
 \alias{plotSpecimens}
 \title{Plot an array of specimen landmark data in an interactive 3D frame}
 \usage{
-plotSpecimens(a, l1 = NULL, cols = NULL, bySpecimen = TRUE, ...)
+plotSpecimens(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL,
+  bySpecimen = TRUE, ...)
 }
 \arguments{
 \item{a}{An N x 3 x M array.}
 
-\item{l1}{Optional vector of indices for which landmarks to use to make a specimen midline.}
+\item{l1}{Optional vector of indices for which landmarks to use to make a specimen midline. If NULL, no midline plane is plotted.}
+
+\item{midlineSpecimens}{Numeric vector indicating which specimens should be used to built the midline plane. If NULL, but l1 is defined, all specimens are used.}
 
 \item{cols}{A vector of colours.}
 
 \item{...}{Further parameters passed to \code{plot3d}.}
-
-\item{midlineSpecimens}{Numeric vector indicating which specimens should be used to built the midline plane (defaults to all).}
 
 \item{bylandmark}{Logical that determined whether points should be coloured by specimen (default) or by landmark.}
 }

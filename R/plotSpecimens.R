@@ -89,7 +89,7 @@ plotSpecimens <- function(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL, by
   }
 
   if(!is.null(l1)){
-    rgl::planes3d(a = mid$n, d = mid$d)
+    rgl::planes3d(a = mid$n, d = mid$d, alpha = 0.5)
   }
     
 }
