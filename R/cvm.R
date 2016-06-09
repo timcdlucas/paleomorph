@@ -34,15 +34,15 @@ dotcvm <- function(M){
 }
 
 
-#' Calculate 3D covariance between two landmarks across specimens 
-#' 
-#'
-#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
-#'@param col1 Integer of first column 
-#'@param col2 Integer of second column 
-#'
-#'@return Covariance value
-#'@name dotcvmentry
+# Calculate 3D covariance between two landmarks across specimens 
+# 
+#
+#@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#@param col1 Integer of first column 
+#@param col2 Integer of second column 
+#
+#@return Covariance value
+#@name dotcvmentry
 
 
 
@@ -80,58 +80,6 @@ dotcvmentry <- function(M, col1, col2){
 
 
 
-
-
-
-#' Calculate 1D covariance between two landmarks across specimens 
-#' 
-#'
-#'@param M An M x N matrix. M = no of specimens, N = no of landmarks.
-#'
-#'@return 1D covariance matrix
-
-
-
-#cvm <- function(M){
-#  # Calculate covariance between each pairs of columns.
-#  N <- outer(1:dim(M)[2], 1:dim(M)[2], cvmentry, M = M)
-#  e <- min(eigen(N)$values)
-#  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
-#  return(N)
-#}
-
-
-#cvmentry <- Vectorize(function(M, col1, col2){
-#  n <- 0
-#  s1 <- 0
-#  s2 <- 0
-
-#  # For each specimen
-#  for(i in 1:dim(M)[1]){
-#    if(!anyNA(M[i, c(col1, col2)])){
-#      n <- n + 1
-#      s1 <- s1 + M[i, col1]
-#      s2 <- s2 + M[i, col1]
-#    }
-#  }
-
-#  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
-
-#  s1 <- s1/n
-#  s2 <- s2/n
-
-#  p <- 0
-
-#  # for each specimen
-#  for(i in 1:dim(M)[1]){
-#    if(!anyNA(M[i, c(col1, col2)])){
-#      p <- p + (M[i, col1] - s1) * (M[i, col2] - s2)
-#    }
-#  }
-
-#  return(p / (n - 1))
-
-#}, vectorize.args=list('col1', 'col2'))
 
 
 
@@ -175,15 +123,15 @@ dotcorr <- function(M){
 
 
 
-#' Calculate 3D correlation between two landmarks across specimens 
-#' 
-#' Calculates the congruence coefficient for 2 or 3 dimensional landmarks
-#'
-#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
-#'@param col1 Integer of first column 
-#'@param col2 Integer of second column 
-#'
-#'@return Length 1 numeric giving the congruence correlation
+# Calculate 3D correlation between two landmarks across specimens 
+# 
+# Calculates the congruence coefficient for 2 or 3 dimensional landmarks
+#
+#@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#@param col1 Integer of first column 
+#@param col2 Integer of second column 
+#
+#@return Length 1 numeric giving the congruence correlation
 
 
 

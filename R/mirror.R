@@ -13,38 +13,38 @@
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline
 #'@param l2 Vector of indices for which landmarks to be mirrored
 #'
-#'@details \code{l1} should be an even number length containing pairs of landmarks
+#'@details \code{l2} should be an even number length containing pairs of landmarks
 #'  on either side of the specimen.
 #'@export
 #'@examples
 #'  # Create array
-#'  a <- array(rep(1:36, each = 4), dim = c(4, 12, 3))
+#'  a <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
 #'
 #'  # Make it symmetric
-#'  a[, 7:12, 1:2] <- a[, 1:6, 1:2]
-#'  a[, 7:12, 3] <- -a[, 1:6, 3]
+#'  a[7:12, 1:2, ] <- a[1:6, 1:2, ]
+#'  a[7:12, 3, ] <- -a[1:6, 3, ]
 #'
 #'  # Remove some data points
 #'  missinga <- a
-#'  missinga[1:3, 1:2, ] <- NA
+#'  missinga[1:2, , 1:3] <- NA
 #'
 #'  mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))
 #'
 
 mirrorfill <- function(a, l1, l2){
-  stopifnot(is.numeric(a), dim(a)[3] == 3, length(dim(a)) == 3)
+  stopifnot(is.numeric(a), dim(a)[2] == 3, length(dim(a)) == 3)
 
   # Count specimens and landmarks and check they're positive.
-  m <- dim(a)[1]
-  n <- dim(a)[2]
+  m <- dim(a)[3]
+  n <- dim(a)[1]
   stopifnot(m > 1, n > 1)
 
   # Make replicate that we will fill in
-  a2 <- array(NA, dim = c(m, n, 3))
+  a2 <- array(NA, dim = c(n, 3, m))
 
   # For each specimen, use mirrorfill1 to replace missing points.
   for(i in 1:m){
-    a2[i, , ] <- mirrorfill1(a[i, , ], l1, l2)
+    a2[, , i] <- mirrorfill1(a[, , i], l1, l2)
   }
 
   return(a2)
@@ -52,28 +52,28 @@ mirrorfill <- function(a, l1, l2){
 
 
 
-#Fill missing landmarks using mirrored values from other side of object
-#
-#Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpark.
-#
-#@param s An n x 3 matrix containing 3D landmark data of n landmarks.
-#@param l1 Vector of indices for which landmarks to use to make a specimen midline.
-#@param l2 Vector of indices for which landmarks to be replaced by their mirrored value.
-#
-#
-#@details \code{l2} should be an even number length containing pairs of landmarks
-#  on either side of the specimen. i.e. l2[1]
-#
-#@examples
-#  # Make data that is reflected in x plane
-#  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-#  s[1:7, 1] <- -s[1:7, 1]
-#
-#  # Now remove some data
-#  s[1, ] <- NA
-#  
-#  # Mirror point 1 using it's complimentary landmark, point 8.
-#  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
+#'Fill missing landmarks using mirrored values from other side of object
+#'
+#'Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpark.
+#'
+#'@param s An n x 3 matrix containing 3D landmark data of n landmarks.
+#'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
+#'@param l2 Vector of indices for which landmarks to be replaced by their mirrored value.
+#'
+#'
+#'@details \code{l2} should be an even number length containing pairs of landmarks
+#'  on either side of the specimen. i.e. l2[1]
+#'@export
+#'@examples
+#'  # Make data that is reflected in x plane
+#'  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
+#'  s[1:7, 1] <- -s[1:7, 1]
+#'
+#'  # Now remove some data
+#'  s[1, ] <- NA
+#'  
+#'  # Mirror point 1 using it's complimentary landmark, point 8.
+#'  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
 
 
 mirrorfill1 <- function(s, l1, l2){
@@ -101,7 +101,7 @@ mirrorfill1 <- function(s, l1, l2){
     # In list of integers a, b, c, d,
     #   a and b are a pair and c and d are a pair
     #   Compare each pair both ways and replace missing values with mirrored version
-    #   i.e. is a has missing data, replace a with reflection of b
+    #   i.e. if a has missing data, replace a with reflection of b
     #   but if b has missing data, replace b with reflection of a
     #   If neither has missing data do nothing. If both have missing data, do nothing.
     if(i %% 2 == 1){
@@ -169,7 +169,17 @@ bestplane <- function(l){
   nl <- lshift(l, -c)
   
   eigen <- eigen(cov(nl))
+
+  # Select the eigen vector which corresponds to the largest eignvalue.
+
+  #w <- which.max(abs(eigen$values))
+  #if(w != which.max(eigen$values)) print('absss')
   n <- eigen$vectors[, 1]
+
+  #if(all(n < 0)){ n <- -n; print('swiiitch')}
+
+
+  print(3)
 
   # Calculate how well the plane fits
   fit <- sum(sapply(1:NCOL(nl), function(i) n %*% nl[i, ]^2 ))
@@ -190,8 +200,6 @@ bestplane <- function(l){
 reflect <- function(p, n, d){
    p - 2 * (n %*% p - d) * n/(n %*% n)
 }
-
-
 
 
 

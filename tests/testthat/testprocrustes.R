@@ -304,8 +304,7 @@ test_that('Procrustes with and without missing data give similar cvms', {
   # Now add some missing data and repeat.
   B <- A
   B[c(1, 2), , 1] <- NA
-  B[c(4, 7), , 2] <- NA
-  B[c(10, 11, 12), , 3] <- NA
+
   
   missing <- procrustes(B, scale = TRUE, tolerance = 1e-10)
 
@@ -315,7 +314,7 @@ test_that('Procrustes with and without missing data give similar cvms', {
   # Still not sure how to really test this? 
   #  I imagine the bigger the array and the less missing data, the closer the two 
   #    covariancve matrices will be.
-  expect_true(all(fullcorr - missingcorr < 1e-3))
+  expect_true(all(fullcorr - missingcorr < 1e-5))
 
 })
 

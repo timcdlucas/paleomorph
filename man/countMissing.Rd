@@ -7,7 +7,7 @@
 countMissing(A)
 }
 \arguments{
-\item{A}{An n x m x 3 array where n is the number of specimens and m is the number of landmarks.}
+\item{A}{An m x 3 x n array where n is the number of specimens and m is the number of landmarks.}
 }
 \value{
 A length n vector giving the number of missing landmarks for each specimen.

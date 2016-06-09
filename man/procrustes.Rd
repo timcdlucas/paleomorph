@@ -8,7 +8,7 @@ procrustes(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000,
   tolerance = 1e-05)
 }
 \arguments{
-\item{a}{An M x N x 3 array. M = no of specimens, N = no of landmarks.}
+\item{a}{An N x 3 x M array. M = no of specimens, N = no of landmarks.}
 
 \item{scale}{Logical indicating whether the size of the objects should be scales
 as well as rotated and translated.}
@@ -20,7 +20,7 @@ as well as rotated and translated.}
 \item{tolerance}{Difference between two iterations that will cause the search to stop.}
 }
 \value{
-A new (M x N x 3) array, where each 3d vector has been transformed
+A new (N x 3 x M) array, where each 3d vector has been transformed
  in a per-specimen way.  The transformation is chosen to maximize,
  in the least-squares sense, the distances between specimens.
 }

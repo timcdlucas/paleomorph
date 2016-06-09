@@ -4,27 +4,31 @@
 \alias{plotSpecimens}
 \title{Plot an array of specimen landmark data in an interactive 3D frame}
 \usage{
-plotSpecimens(a, cols = NULL, bySpecimen = TRUE, ...)
+plotSpecimens(a, l1 = NULL, cols = NULL, bySpecimen = TRUE, ...)
 }
 \arguments{
-\item{a}{An M x N x 3 array.}
+\item{a}{An N x 3 x M array.}
+
+\item{l1}{Optional vector of indices for which landmarks to use to make a specimen midline.}
 
 \item{cols}{A vector of colours.}
 
 \item{...}{Further parameters passed to \code{plot3d}.}
 
+\item{midlineSpecimens}{Numeric vector indicating which specimens should be used to built the midline plane (defaults to all).}
+
 \item{bylandmark}{Logical that determined whether points should be coloured by specimen (default) or by landmark.}
 }
 \description{
 This function requires the rgl package.
-  Given a M x N x 3 array (where M is the number of speciments
+  Given a N x 3 x M array (where M is the number of specimens
   and N is the number of landmarks), as used elsewhere in this package,
   plot each specimen in a different colour in an intereactive
   3D frame.
 }
 \examples{
-a <- array(rep(rnorm(6 * 20, sd = 30), each = 6) + rnorm(6 * 20 * 3), 
-       dim = c(6, 20, 3))
+a <- array(rep(rnorm(3 * 20, sd = 30), by = 6) + rnorm(6 * 20 * 3), 
+       dim = c(20, 3, 6))
 plotSpecimens(a)
 
 plotSpecimens(a, bySpecimen = FALSE)
@@ -34,6 +38,6 @@ plotSpecimens(a, cols = grey(seq(0, 1, length.out = 6)))
 
 }
 \seealso{
-\code{\link[rgl]{plot3d}}
+\code{\link[rgl]{plot3d}} \code{\link{mirrorfill}}
 }
 

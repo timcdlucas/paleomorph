@@ -8,12 +8,14 @@
 #'   plot each specimen in a different colour in an intereactive
 #'   3D frame.
 #'
-#'@param a An M x N x 3 array.
+#'@param a An N x 3 x M array.
+#'@param l1 Optional vector of indices for which landmarks to use to make a specimen midline.
+#'@param midlineSpecimens Numeric vector indicating which specimens should be used to built the midline plane (defaults to all).
 #'@param cols A vector of colours. 
 #'@param bylandmark Logical that determined whether points should be coloured by specimen (default) or by landmark.
 #'@param ... Further parameters passed to \code{plot3d}.
 #'
-#'@seealso \code{\link[rgl]{plot3d}}
+#'@seealso \code{\link[rgl]{plot3d}} \code{\link{mirrorfill}}
 #'@export
 #'
 #'@examples
@@ -27,7 +29,7 @@
 #'
 #' 
 
-plotSpecimens <- function(a, cols = NULL, bySpecimen = TRUE, ...) {
+plotSpecimens <- function(a, l1 = NULL, cols = NULL, bySpecimen = TRUE, ...) {
 
   # rgl can be a pain to install so it is in suggests, not imports.
   #   So if the user calls this function, need to check it is installed
@@ -39,6 +41,18 @@ plotSpecimens <- function(a, cols = NULL, bySpecimen = TRUE, ...) {
   # Check array is correct form
   stopifnot(length(dim(a)) == 3, dim(a)[2] == 3, is.numeric(a), is.logical(bySpecimen))
   
+#  # Create midline if indices given
+#  if(!is.null(l1)){
+#    if(is.null(midlineSpecimens) midlineSpecimens <- 1:dim(a)[3]
+#    
+#    midlineLandmarks <- a[l1, , midlineSpecimens]    
+#    X <- aperm(midlineLandmarks, c(3, 1, 2))
+#    dim(X) <- c(dim(midlineLandmarks)[1] * dim(midlineLandmarks)[3], 3)
+#    mid <- midline(X, l1)  
+#  }
+  
+
+  # Create colour palette if not given
   if(is.null(cols)){
     if(bySpecimen){
       cols <- 1:dim(a)[3]
@@ -72,3 +86,7 @@ plotSpecimens <- function(a, cols = NULL, bySpecimen = TRUE, ...) {
   }
     
 }
+
+
+
+

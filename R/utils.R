@@ -1,7 +1,7 @@
 
 #' Count the number of missing landmarks in an array
 #'
-#'@param A An n x m x 3 array where n is the number of specimens and m is the number of landmarks.
+#'@param A An m x 3 x n array where n is the number of specimens and m is the number of landmarks.
 #'
 #'@return A length n vector giving the number of missing landmarks for each specimen.
 #'@export

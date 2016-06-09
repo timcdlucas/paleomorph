@@ -2,26 +2,19 @@
 % Please edit documentation in R/cvm.R
 \name{dotcorr}
 \alias{dotcorr}
-\title{Calculate 1D covariance between two landmarks across specimens}
+\title{Calculate 3D correlation matrix}
 \usage{
 dotcorr(M)
 }
 \arguments{
-\item{M}{An M x N matrix. M = no of specimens, N = no of landmarks.}
-
 \item{M}{An N x D x M array. M = no of specimens, N = no of landmarks, D = 2 or 3 dimensions}
 }
 \value{
-1D covariance matrix
-Calculate 3D correlation matrix 
-
-Calculates the congruence coefficient for 2 or 3 dimensional landmarks
-  to give an N x N correlation matrix.
-
 Correlation matrix
 }
 \description{
-Calculate 1D covariance between two landmarks across specimens
+Calculates the congruence coefficient for 2 or 3 dimensional landmarks
+  to give an N x N correlation matrix.
 }
 \examples{
 M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 

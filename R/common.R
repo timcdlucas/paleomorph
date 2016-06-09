@@ -166,8 +166,11 @@ completeLandmarks <- function(a){
   # Find all data for the landmark x species that have at least one na
   missingList <- which(mask, arr.ind = TRUE)
   allMissing <- matrix(NA, nrow = nrow(missingList), ncol = 3)
-  for(r in 1:nrow(missingList)){
-    allMissing[r, ] <- a[missingList[r, 1], , missingList[r, 2]]
+  
+  if(nrow(missingList) > 0){
+    for(r in 1:nrow(missingList)){
+      allMissing[r, ] <- a[missingList[r, 1], , missingList[r, 2]]
+    }
   }
 
   # If any of allMissing is not NA, then there is incomplete landmarks
@@ -181,5 +184,10 @@ completeLandmarks <- function(a){
   }
   
 }
+
+
+
+
+
 
 
