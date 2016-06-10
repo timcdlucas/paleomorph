@@ -3,10 +3,9 @@ Type: Package
 Title: Proctustes Analysis for Paleobiology
 Version: 0.1.1.9999
 Date: 2016-04-05
-Author: Tim Lucas, Prabu Sivasubramaniam, Anjali Goswami
+Author: Tim Lucas, Anjali Goswami
 Maintainer: Tim Lucas <timcdlucas@gmail.com>
 Description: Calculate procrustes alignments and correlation and covariance matrices of 3D landmarks.
-  Perform tests of models of modularity of landmarks using EMMLi.
 License: None
 Imports:
     stats,
@@ -16,7 +15,6 @@ Suggests:
     testthat,
     abind,
     rgl
-VignetteBuilder: knitr
 LazyData: true
 URL: https://bitbucket.org/timcdlucas/procrustespkg
 RoxygenNote: 5.0.1
