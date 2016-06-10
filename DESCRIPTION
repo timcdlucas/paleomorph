@@ -6,7 +6,7 @@ Date: 2016-04-05
 Author: Tim Lucas, Anjali Goswami
 Maintainer: Tim Lucas <timcdlucas@gmail.com>
 Description: Calculate procrustes alignments and correlation and covariance matrices of 3D landmarks.
-License: None
+License: MIT + file LICENSE
 Imports:
     stats,
     utils
