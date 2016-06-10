@@ -194,12 +194,12 @@ bestplane <- function(l){
   c <- lcentroid(l)
   nl <- lshift(l, -c)
   
-  n <- largestev(eigen(cov(nl)))
+  n <- smallestev(eigen(cov(nl)))
 
 
   # Calculate how well the plane fits
-  fit <- sum(sapply(1:NCOL(nl), function(i) n %*% nl[i, ]^2 ))
-  message('Fit of midline plane is ', fit, ' with ', NCOL(nl), ' landmarks.')
+  fit <- sum(sapply(1:NROW(nl), function(i) n %*% nl[i, ]^2 ))
+  message('Fit of midline plane is ', fit, ' with ', NROW(nl), ' landmarks.')
   return(list(n = n, d = n %*% c))
 }
 

@@ -21,10 +21,9 @@ test_that('Best plane works', {
 
 test_that('Best plane returns the best plane.', {
 
-  # Make an object that is reflected in the horizontal, z = 0 plane.
-  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-  s[1:7, 3] <- -s[1:7, 3]
-
+  set.seed(3)
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(rnorm(10), rnorm(10), 0)
 
   pl <- bestplane(s)
 
@@ -36,9 +35,8 @@ test_that('Best plane returns the best plane.', {
 
 test_that('midline returns best plane', {
 
-  # Make an object that is reflected in the horizontal, z = 0 plane.
-  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-  s[1:7, 3] <- -s[1:7, 3]
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(rnorm(14), rnorm(14), 0)
 
   pl <- midline(s, 1:14)
   pl2 <- midline(s, c(2:5, 9:12))
@@ -53,9 +51,9 @@ test_that('midline returns best plane', {
 test_that('bestplane and midline return same values when no missing data.', {
 
 
-  # Make an object that is reflected in the horizontal, z = 0 plane.
-  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-  s[1:7, 3] <- -s[1:7, 3]
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(rnorm(14), rnorm(14), 0)
+
 
   p1 <- bestplane(s)
   l1 <- 1:14
@@ -66,9 +64,8 @@ test_that('bestplane and midline return same values when no missing data.', {
 
 
   set.seed(99)
-  # Make an object that is reflected in the horizontal, z = 0 plane.
-  s <- matrix(rep(rnorm(21), 2), byrow = TRUE, ncol = 3)
-  s[1:7, 3] <- -s[1:7, 3]
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(rnorm(14), rnorm(14), 0)
 
   p1 <- bestplane(s)
   l1 <- 1:14
@@ -82,39 +79,31 @@ test_that('bestplane and midline return same values when no missing data.', {
 
 test_that('Mirrorfill1 replaces points correctly.', {
   
-  # Make an object that is reflected in the horizontal, z = 0 plane.
-  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-  s[1:7, 3] <- -s[1:7, 3]
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(rnorm(14), rnorm(14), 0)
 
-  # Now make a copy with missing data
-  sna <- s
-  sna[1, ] <- NA
+  # Now add a data point not on the z = 0 plane
+  s <- rbind(s, c(1, 2, 1), c(NA, NA, NA))
 
-  mirrorS <- mirrorfill1(sna, l1 = c(2:7, 9:14), l2 = c(1, 8))
+  mirrorS <- mirrorfill1(s, l1 = 1:14, l2 = c(15, 16))
 
-  expect_equal(mirrorS, s)
+  expect_equal(mirrorS[16, ], c(1, 2, -1))
 
 })
 
 
 test_that('Mirrorfill1 replaces points correctly with l1 as 2 col matrix.', {
   
-  # Make an object that is reflected in the horizontal, z = 0 plane.
-  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-  s[1:7, 3] <- -s[1:7, 3]
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(rnorm(14), rnorm(14), 0)
 
-  # Now make a copy with missing data
-  sna <- s
-  sna[1, ] <- NA
-  sna[9, ] <- NA
+  # Now add a data point not on the z = 0 plane
+  s <- rbind(s, c(1, 2, 1), c(NA, NA, NA), c(3, 4, -2), c(NA, NA, NA))
 
-  mirrorS <- mirrorfill1(sna, l1 = c(3:7, 10:14), l2 = c(1, 8, 2, 9))
+  mirrorS <- mirrorfill1(s, l1 = 1:14, l2 = matrix(15:18, byrow = TRUE, ncol = 2))
 
-  l2.m <- matrix(c(1, 8, 2, 9), ncol = 2, byrow = TRUE)
-  mirrorS2 <- mirrorfill1(sna, l1 = c(3:7, 10:14), l2 = l2.m)
-
-  expect_equal(mirrorS2, s)
-  expect_equal(mirrorS2, mirrorS)
+  expect_equal(mirrorS[16, ], c(1, 2, -1))
+  expect_equal(mirrorS[18, ], c(3, 4, 2))
 
 })
 
@@ -147,24 +136,25 @@ test_that('mirrorfill returns errors when it should.', {
 
 test_that('mirrorfill works correctly.', {
 
-  # Create array
-  a <- array(rep(1:36, each = 4), dim = c(12, 3, 4))
+  # Create array in z = 0 plane
+  a <- array(rep(1:36, 4), dim = c(12, 3, 4))
+  a[, 3, ] <- 0
 
-  # Make it symmetric
-  a[7:12, 1:2, ] <- a[1:6, 1:2, ]
-  a[7:12, 3, ] <- -a[1:6, 3, ]
+  # Make points 1:4 not on plane and symetric
+  a[1:4, 3, ] <- c(1, -1, 2, -2)
+  a[c(1, 3), 1:2, ] <- a[c(2, 4), 1:2, ]
 
   # Remove some data points
   missinga <- a
-  missinga[1:2, , 1] <- NA
+  missinga[c(1, 3), , 1] <- NA
 
-  mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))
+  mirrorA <- mirrorfill(missinga, l1 = 5:12, l2 = 1:4)
 
   expect_equal(mirrorA, a)
 
   # Check l2 as a matrix works
-  l2.m <- matrix(c(1, 7, 2, 8), byrow = TRUE, ncol = 2)
-  mirrorA2 <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = l2.m)
+  l2.m <- matrix(1:4, byrow = TRUE, ncol = 2)
+  mirrorA2 <- mirrorfill(missinga, l1 = 5:12, l2 = l2.m)
 
   expect_equal(mirrorA2, a)
 
@@ -175,21 +165,28 @@ test_that('mirrorfill works correctly.', {
 
 test_that('mirrorfill works correctly when multiple specimens have missing data.', {
 
-  # Create array
-  a <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
+  # Create array in z = 0 plane
+  a <- array(rep(1:36, 4), dim = c(12, 3, 4))
+  a[, 3, ] <- 0
 
-  # Make it symmetric
-  a[7:12, 1:2, ] <- a[1:6, 1:2, ]
-  a[7:12, 3, ] <- -a[1:6, 3, ]
+  # Make points 1:4 not on plane and symetric
+  a[1:4, 3, ] <- c(1, -1, 2, -2)
+  a[c(1, 3), 1:2, ] <- a[c(2, 4), 1:2, ]
 
   # Remove some data points
   missinga <- a
-  missinga[1:2, , 1:3] <- NA
+  missinga[c(1, 3), , 1:3] <- NA
 
-  mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))
+
+  mirrorA <- mirrorfill(missinga, l1 = 5:12, l2 = 1:4)
 
   expect_equal(mirrorA, a)
 
+  # Check l2 as a matrix works
+  l2.m <- matrix(1:4, byrow = TRUE, ncol = 2)
+  mirrorA2 <- mirrorfill(missinga, l1 = 5:12, l2 = l2.m)
+
+  expect_equal(mirrorA2, a)
 })
 
 
@@ -207,44 +204,49 @@ test_that('mirror fill handles all missing vs not missing cases correctly.', {
     #   If neither has missing data do nothing. If both have missing data, do nothing.
 
 
-  # Create array
-  a <- array(rep(1:60), dim = c(20, 3, 4))
+  # Create array in z = 0 plane
+  a <- array(rep(1:36, 4), dim = c(12, 3, 4))
+  a[, 3, ] <- 0
 
-  # Make it symmetric
-  a[11:20, 1:2, ] <- a[1:10, 1:2, ]
-  a[11:20, 3, ] <- -a[1:10, 3, ]
+  # Make points 1:4 not on plane and symetric
+  a[1:8, 3, ] <- c(1, -1, 2, -2)
+  a[c(1, 3, 5, 7), 1:2, ] <- a[c(2, 4, 6, 8), 1:2, ]
+
 
   # Make a point that DOESN't reflect properly. 
   # This will be used to check that mirrorfill doesn't overwrite existing data.
-  a[4, 1, 4] <- 9999
+  a[7, 1, 4] <- 9999
 
   # Remove some data points
   missinga <- a
-  # 1 AND 11 missing.
-  # 2, NOT 12 missing
-  # Not 3 AND 13 missing
-  # NOT 4 OR 14 missing
 
-  missinga[c(1, 11), , 1] <- NA
-  missinga[2, , 2] <- NA
-  missinga[13, , 3] <- NA
+
+  # 1 AND 2 missing.
+  # 3, NOT 4 missing
+  # (Not 5) AND 6 missing
+  # NOT (4 OR 14) missing
+
+  missinga[c(1, 2), , 1] <- NA
+  missinga[3, , 2] <- NA
+  missinga[6, , 3] <- NA
+
   
-  mirrorA <- mirrorfill(missinga, l1 = c(5:10, 15:20), l2 = c(1, 11, 2, 12, 3, 13, 3, 14))
+  mirrorA <- mirrorfill(missinga, l1 = 9:12, l2 = 1:8)
 
-  # 1 AND 11 missing. Should still be NAs
-  expect_true(all(is.na(mirrorA[c(1, 11), , 1])))
+  # 1 AND 2 missing. Should still be NAs
+  expect_true(all(is.na(mirrorA[c(1, 2), , 1])))
 
-  # 2, NOT 12 missing
-  # Not 3 AND 13 missing
+  # 3, NOT 4 missing
+  # (Not 3) AND 5 missing
   # Should equal original a array
   expect_equal(mirrorA[, , 2], a[, , 2])
   expect_equal(mirrorA[, , 3], a[, , 3])
 
   # NOT 4 OR 14 missing
-  #   mirrorA[4, 4, 1] should be 9999 NOT mirrorA[1a, 4, 1] 
+  #   mirrorA[7, 4, 1] should be 9999 NOT mirrorA[1a, 4, 1] 
 
-  expect_equal(mirrorA[4, 1, 4], 9999)
-  expect_false(mirrorA[4, 1, 4] ==  mirrorA[4, 1, 3])
+  expect_equal(mirrorA[7, 1, 4], 9999)
+  expect_false(mirrorA[7, 1, 4] ==  mirrorA[4, 1, 3])
 
   # Just to illustrate. 
   # Other mirrored points will be equal to their equivalent 
@@ -252,7 +254,7 @@ test_that('mirror fill handles all missing vs not missing cases correctly.', {
   expect_true(mirrorA[4, 1, 3] ==  mirrorA[4, 1, 2])
   expect_true(mirrorA[4, 1, 3] ==  mirrorA[4, 1, 1])
 })
-
+  
 
 
 

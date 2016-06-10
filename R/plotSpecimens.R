@@ -12,7 +12,7 @@
 #'@param l1 Optional vector of indices for which landmarks to use to make a specimen midline. If NULL, no midline plane is plotted. 
 #'@param midlineSpecimens Numeric vector indicating which specimens should be used to built the midline plane. If NULL, but l1 is defined, all specimens are used.
 #'@param cols A vector of colours. 
-#'@param bylandmark Logical that determined whether points should be coloured by specimen (default) or by landmark.
+#'@param bySpecimen Logical that determined whether points should be coloured by specimen (default) or by landmark.
 #'@param planeOptions Named list of parameters passed to \code{\link[rgl]{rgl.material}} to control the appearence of 
 #'  plotted mirror planes.
 #'@param ... Further parameters passed to \code{plot3d}. 

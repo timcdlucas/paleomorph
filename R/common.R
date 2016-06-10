@@ -207,3 +207,24 @@ largestev <- function(eig){
 }
 
 
+
+
+# smallestev
+#(*
+# * This might be a bit paranoid, but the Mathematica documentation doesn't
+# * seem to guarantee that
+# *    - the last eigenvalue returned is the largest
+# *    - the eigenvectors are normalized
+# *    - if all components of an eigenvector have the same sign, then the
+# *      positive sign is the one chosen
+# *)
+
+smallestev <- function(eig){
+  n <- eig$vectors[, which.min(eig$values)]
+  if(all(n < 0)) n <- -n
+  return(n)
+}
+
+
+
+
