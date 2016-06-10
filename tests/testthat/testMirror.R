@@ -162,6 +162,12 @@ test_that('mirrorfill works correctly.', {
 
   expect_equal(mirrorA, a)
 
+  # Check l2 as a matrix works
+  l2.m <- matrix(c(1, 7, 2, 8), byrow = TRUE, ncol = 2)
+  mirrorA2 <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = l2.m)
+
+  expect_equal(mirrorA2, a)
+
 
 })
 

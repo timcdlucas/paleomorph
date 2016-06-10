@@ -11,12 +11,19 @@ mirrorfill(a, l1, l2)
 
 \item{l1}{Vector of indices for which landmarks to use to make a specimen midline}
 
-\item{l2}{Vector of indices for which landmarks to be mirrored}
+\item{l2}{Vector or matrix of indices for which landmarks to be replaced by their mirrored value.}
 }
 \description{
 Given an n x 3 x m matrix, replace a set of landmarks using their mirrored counterpart.
 }
 \details{
+\code{l2} should be either 
+ \itemize{
+   \item An even length vector containing pairs of landmarks on either side of the specimen. 
+     i.e. l2[1] and l2[2] are paired, l2[3] and l2[4] are paired etc.
+   \item A two column matrix with each row giving a pair of landmarks to be mirrored.
+ }
+
 \code{l2} should be an even number length containing pairs of landmarks
  on either side of the specimen.
 }
