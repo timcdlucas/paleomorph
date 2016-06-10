@@ -76,25 +76,8 @@ plotSpecimens <- function(a,
   }    
 
   # Sort out planeOptions
-  planeParams <- list(a = mid$n, d = mid$d[1])
-  if(is.null(planeOptions)){
-    planeParams <- c(planeParams, alpha = 0.5)
-  } else {
-    # Check planeParams is named
-    if(is.null(names(planeOptions))) stop('planeOptions should be a named list')
+  planeParams <- makePlaneParamsList(mid, planeOptions)
 
-    # Hack. List of knowns params from ?rgl.material
-    knownParameters <- c("color", "alpha", "lit", "ambient", "specular", "emission", "shininess", "smooth", "texture", "textype", "texmipmap", "texminfilter", "texmagfilter", "texenvmap", "front", "back", "size", "lwd", "fog", "point_antialias", "line_antialias", "depth_mask", "depth_test")
-
-    # Any params in planeOptions that are not in rgl.material?
-    unknownParams <- sapply(names(planeOptions), function(x) x %in% knownParameters)
-    # Print warning, telling user which parameters are unknown
-    if(!all(unknownParams)){
-      warning("Unknown parameters in planeOptions. I don't recognise: ", paste(names(planeOptions)[!unknownParams], collapse = ', '))
-    }
-    # Combine planeOptions with mid ready for plotting.
-    planeParams <- c(planeParams, planeOptions)
-  }
 
   # Put the first specimen into vectors
   #  This is mostly a way to give reasonable axes labels, without blocking 
@@ -128,5 +111,31 @@ plotSpecimens <- function(a,
 }
 
 
+
+
+# Utility function for messing around with parameters for plane plotting.
+
+makePlaneParamsList <- function(mid, planeOptions){
+
+  planeParams <- list(a = mid$n, d = mid$d[1])
+  if(is.null(planeOptions)){
+    planeParams <- c(planeParams, alpha = 0.5)
+  } else {
+    # Check planeParams is named
+    if(is.null(names(planeOptions))) stop('planeOptions should be a named list')
+
+    # Hack. List of knowns params from ?rgl.material
+    knownParameters <- c("color", "alpha", "lit", "ambient", "specular", "emission", "shininess", "smooth", "texture", "textype", "texmipmap", "texminfilter", "texmagfilter", "texenvmap", "front", "back", "size", "lwd", "fog", "point_antialias", "line_antialias", "depth_mask", "depth_test")
+
+    # Any params in planeOptions that are not in rgl.material?
+    unknownParams <- sapply(names(planeOptions), function(x) x %in% knownParameters)
+    # Print warning, telling user which parameters are unknown
+    if(!all(unknownParams)){
+      warning("Unknown parameters in planeOptions. I don't recognise: ", paste(names(planeOptions)[!unknownParams], collapse = ', '))
+    }
+    # Combine planeOptions with mid ready for plotting.
+    planeParams <- c(planeParams, planeOptions)
+  }
+}
 
 
