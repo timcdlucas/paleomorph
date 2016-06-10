@@ -58,11 +58,15 @@ mirrorfill <- function(a, l1, l2){
 #'
 #'@param s An n x 3 matrix containing 3D landmark data of n landmarks.
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
-#'@param l2 Vector of indices for which landmarks to be replaced by their mirrored value.
+#'@param l2 Vector or matrix of indices for which landmarks to be replaced by their mirrored value.
 #'
 #'
-#'@details \code{l2} should be an even number length containing pairs of landmarks
-#'  on either side of the specimen. 
+#'@details \code{l2} should be either 
+#'  \itemize{
+#'    \item An even length vector containing pairs of landmarks on either side of the specimen. 
+#'      i.e. l2[1] and l2[2] are paired, l2[3] and l2[4] are paired etc.
+#'    \item A two column matrix with each row giving a pair of landmarks to be mirrored.
+#'  }
 #'@export
 #'@examples
 #'  # Make data that is reflected in x plane
@@ -81,7 +85,21 @@ mirrorfill1 <- function(s, l1, l2){
   stopifnot(is.numeric(s), dim(s)[2] == 3, length(dim(s)) == 2)
   stopifnot(is.integer(l1), is.integer(l2) | is.numeric(l2))
 
-  if(length(l2) %% 2) stop('Number of mirrored points is odd')
+  if(is.vector(l2)){
+    if(length(l2) %% 2) stop('Number of mirrored points is odd')
+  } else if(is.matrix(l2)){
+    if(dim(l2)[2] != 2){
+      stop('l2 should be a even length vector or a two column matrix.')
+    }
+  } else {
+    stop('l2 should be a even length vector or a two column matrix.')
+  } 
+
+  # Get l2 into vector format
+  #  I should probably rewrite whole function to use matrix form. Maybe later.
+  if(is.matrix(l2)){
+    l2 <- as.vector(t(l2))
+  }
 
   # Count missing data points
   count1 <- sum(apply(s, 1, anyNA))

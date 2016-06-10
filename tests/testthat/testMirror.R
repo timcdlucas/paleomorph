@@ -96,6 +96,29 @@ test_that('Mirrorfill1 replaces points correctly.', {
 
 })
 
+
+test_that('Mirrorfill1 replaces points correctly with l1 as 2 col matrix.', {
+  
+  # Make an object that is reflected in the horizontal, z = 0 plane.
+  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
+  s[1:7, 3] <- -s[1:7, 3]
+
+  # Now make a copy with missing data
+  sna <- s
+  sna[1, ] <- NA
+  sna[9, ] <- NA
+
+  mirrorS <- mirrorfill1(sna, l1 = c(3:7, 10:14), l2 = c(1, 8, 2, 9))
+
+  l2.m <- matrix(c(1, 8, 2, 9), ncol = 2, byrow = TRUE)
+  mirrorS2 <- mirrorfill1(sna, l1 = c(3:7, 10:14), l2 = l2.m)
+
+  expect_equal(mirrorS2, s)
+  expect_equal(mirrorS2, mirrorS)
+
+})
+
+
 test_that('Reflect works', {
 
   # Define a horizontal plane through origin
@@ -223,5 +246,7 @@ test_that('mirror fill handles all missing vs not missing cases correctly.', {
   expect_true(mirrorA[4, 1, 3] ==  mirrorA[4, 1, 2])
   expect_true(mirrorA[4, 1, 3] ==  mirrorA[4, 1, 1])
 })
+
+
 
 
