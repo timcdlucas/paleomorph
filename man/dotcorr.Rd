@@ -7,13 +7,13 @@
 dotcorr(M)
 }
 \arguments{
-\item{M}{An N x D x M array. M = no of specimens, N = no of landmarks, D = 2 or 3 dimensions}
+\item{M}{An N x D x M array. M = no of specimens, N = no of landmarks, D = 3 dimensions}
 }
 \value{
 Correlation matrix
 }
 \description{
-Calculates the congruence coefficient for 2 or 3 dimensional landmarks
+Calculates the congruence coefficient for 3 dimensional landmarks
   to give an N x N correlation matrix.
 }
 \examples{

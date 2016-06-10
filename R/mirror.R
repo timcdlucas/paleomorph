@@ -62,7 +62,7 @@ mirrorfill <- function(a, l1, l2){
 #'
 #'
 #'@details \code{l2} should be an even number length containing pairs of landmarks
-#'  on either side of the specimen. i.e. l2[1]
+#'  on either side of the specimen. 
 #'@export
 #'@examples
 #'  # Make data that is reflected in x plane

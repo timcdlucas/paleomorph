@@ -93,3 +93,6 @@ expect_error(r <- dotcvmentry(M, 1, 2), NA)
 
 })
 
+
+
+

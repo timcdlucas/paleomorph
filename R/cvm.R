@@ -86,10 +86,10 @@ dotcvmentry <- function(M, col1, col2){
 
 #' Calculate 3D correlation matrix 
 #' 
-#' Calculates the congruence coefficient for 2 or 3 dimensional landmarks
+#' Calculates the congruence coefficient for 3 dimensional landmarks
 #'   to give an N x N correlation matrix.
 #'
-#'@param M An N x D x M array. M = no of specimens, N = no of landmarks, D = 2 or 3 dimensions
+#'@param M An N x D x M array. M = no of specimens, N = no of landmarks, D = 3 dimensions
 #'@export
 #'
 #'@return Correlation matrix
@@ -125,7 +125,7 @@ dotcorr <- function(M){
 
 # Calculate 3D correlation between two landmarks across specimens 
 # 
-# Calculates the congruence coefficient for 2 or 3 dimensional landmarks
+# Calculates the congruence coefficient for 3 dimensional landmarks
 #
 #@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #@param col1 Integer of first column 
