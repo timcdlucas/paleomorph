@@ -366,10 +366,7 @@ pcsstep <- function(a, scaleDelta){
 
 
   # Do the stuff that was in largestev function
-  v <- eigen(d)$vectors[, 1]
-  if(v[which.max(abs(v))] < 0){
-    v <- -v
-  }
+  v <- largestev(eigen(d))
 
   # The actual scaling is done here
   # Check that scaling isn't negative  

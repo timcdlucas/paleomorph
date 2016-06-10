@@ -220,20 +220,4 @@ reflect <- function(p, n, d){
 
 
 
-# largestev
-#(*
-# * This might be a bit paranoid, but the Mathematica documentation doesn't
-# * seem to guarantee that
-# *    - the last eigenvalue returned is the largest
-# *    - the eigenvectors are normalized
-# *    - if all components of an eigenvector have the same sign, then the
-# *      positive sign is the one chosen
-# *)
-
-largestev <- function(eig){
-  n <- eig$vectors[, which.max(eig$values)]
-  if(all(n < 0)) n <- -n
-  return(n)
-}
-
 
