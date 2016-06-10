@@ -5,7 +5,7 @@
 \title{Plot an array of specimen landmark data in an interactive 3D frame}
 \usage{
 plotSpecimens(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL,
-  bySpecimen = TRUE, ...)
+  bySpecimen = TRUE, planeOptions = NULL, ...)
 }
 \arguments{
 \item{a}{An N x 3 x M array.}
@@ -15,6 +15,9 @@ plotSpecimens(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL,
 \item{midlineSpecimens}{Numeric vector indicating which specimens should be used to built the midline plane. If NULL, but l1 is defined, all specimens are used.}
 
 \item{cols}{A vector of colours.}
+
+\item{planeOptions}{Named list of parameters passed to \code{\link[rgl]{rgl.material}} to control the appearence of 
+plotted mirror planes.}
 
 \item{...}{Further parameters passed to \code{plot3d}.}
 
@@ -36,9 +39,11 @@ plotSpecimens(a, bySpecimen = FALSE)
 
 plotSpecimens(a, cols = grey(seq(0, 1, length.out = 6)))
 
+plotSpecimens(a, l1 = c(1:4), planeOptions = list(alpha = 0.4, color = 'red'))
+
 
 }
 \seealso{
-\code{\link[rgl]{plot3d}} \code{\link{mirrorfill}}
+\code{\link[rgl]{plot3d}} \code{\link{mirrorfill}} \code{\link[rgl]{planes3d}} \code{\link[rgl]{rgl.material}}
 }
 

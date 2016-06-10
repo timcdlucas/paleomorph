@@ -13,9 +13,11 @@
 #'@param midlineSpecimens Numeric vector indicating which specimens should be used to built the midline plane. If NULL, but l1 is defined, all specimens are used.
 #'@param cols A vector of colours. 
 #'@param bylandmark Logical that determined whether points should be coloured by specimen (default) or by landmark.
-#'@param ... Further parameters passed to \code{plot3d}.
+#'@param planeOptions Named list of parameters passed to \code{\link[rgl]{rgl.material}} to control the appearence of 
+#'  plotted mirror planes.
+#'@param ... Further parameters passed to \code{plot3d}. 
 #'
-#'@seealso \code{\link[rgl]{plot3d}} \code{\link{mirrorfill}}
+#'@seealso \code{\link[rgl]{plot3d}} \code{\link{mirrorfill}} \code{\link[rgl]{planes3d}} \code{\link[rgl]{rgl.material}}
 #'@export
 #'
 #'@examples
@@ -27,9 +29,17 @@
 #'
 #' plotSpecimens(a, cols = grey(seq(0, 1, length.out = 6)))
 #'
+#' plotSpecimens(a, l1 = c(1:4), planeOptions = list(alpha = 0.4, color = 'red'))
+#'
 #' 
 
-plotSpecimens <- function(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL, bySpecimen = TRUE, ...) {
+plotSpecimens <- function(a, 
+                          l1 = NULL, 
+                          midlineSpecimens = NULL, 
+                          cols = NULL, 
+                          bySpecimen = TRUE, 
+                          planeOptions = NULL,
+                          ...) {
 
   # rgl can be a pain to install so it is in suggests, not imports.
   #   So if the user calls this function, need to check it is installed
@@ -50,7 +60,7 @@ plotSpecimens <- function(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL, by
       splitArrayToList[[i]] <- a[l1, , midlineSpecimens[i]]
     }
     
-    X <- do.call(abind, list(splitArrayToList, along = 1))
+    X <- do.call(abind::abind, list(splitArrayToList, along = 1))
 
     mid <- midline(X, 1:NROW(X))  
   }
@@ -65,6 +75,27 @@ plotSpecimens <- function(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL, by
     }
   }    
 
+  # Sort out planeOptions
+  planeParams <- list(a = mid$n, d = mid$d[1])
+  if(is.null(planeOptions)){
+    planeParams <- c(planeParams, alpha = 0.5)
+  } else {
+    # Check planeParams is named
+    if(is.null(names(planeOptions))) stop('planeOptions should be a named list')
+
+    # Hack. List of knowns params from ?rgl.material
+    knownParameters <- c("color", "alpha", "lit", "ambient", "specular", "emission", "shininess", "smooth", "texture", "textype", "texmipmap", "texminfilter", "texmagfilter", "texenvmap", "front", "back", "size", "lwd", "fog", "point_antialias", "line_antialias", "depth_mask", "depth_test")
+
+    # Any params in planeOptions that are not in rgl.material?
+    unknownParams <- sapply(names(planeOptions), function(x) x %in% knownParameters)
+    # Print warning, telling user which parameters are unknown
+    if(!all(unknownParams)){
+      warning("Unknown parameters in planeOptions. I don't recognise: ", paste(names(planeOptions)[!unknownParams], collapse = ', '))
+    }
+    # Combine planeOptions with mid ready for plotting.
+    planeParams <- c(planeParams, planeOptions)
+  }
+
   # Put the first specimen into vectors
   #  This is mostly a way to give reasonable axes labels, without blocking 
   #   xyzlabs from using ...
@@ -72,24 +103,26 @@ plotSpecimens <- function(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL, by
   y <- a[, 2, 1]
   z <- a[, 3, 1]
 
+  # Plot with colours either bySpecimen or by landmark
   if(bySpecimen){
     # Do 3D plots
     rgl::plot3d(x, y, z, col = cols[1], ...) 
 
-    for(i in seq_along(dim(a)[3])[-1]){
+    for(i in seq_len(dim(a)[3])[-1]){
       rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols[i], ...) 
     }
   } else {
-        # Do 3D plots
+    # Do 3D plots
     rgl::plot3d(x, y, z, col = cols, ...) 
 
-    for(i in seq_along(dim(a)[3])[-1]){
+    for(i in seq_len(dim(a)[3])[-1]){
       rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols, ...) 
     }
   }
 
+  # Plot a plane if asked for.
   if(!is.null(l1)){
-    rgl::planes3d(a = mid$n, d = mid$d, alpha = 0.5)
+    do.call(rgl::planes3d, planeParams)
   }
     
 }
