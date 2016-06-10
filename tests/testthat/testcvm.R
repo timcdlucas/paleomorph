@@ -69,3 +69,27 @@ cvm.mat <- dotcvm(M)
 })
 
 
+
+
+
+
+test_that('dotcorr, dotcvm work with dimnames.', {
+
+
+M <- array(0, dim = c(2, 3, 4), dimnames=list(NULL, NULL, letters[1:4]))
+
+# Landmarks are perfectly correlated
+M[1, , ] <- 1:12
+M[2, , ] <- 1:12
+
+expect_error(r <- dotcorrentry(M, 1, 2), NA)
+
+expect_equal(r[1,1], 1)
+
+
+
+expect_error(r <- dotcvmentry(M, 1, 2), NA)
+
+
+})
+

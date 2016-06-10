@@ -324,3 +324,27 @@ test_that('Procrustes with and without missing data give similar cvms', {
 
 
 
+
+test_that('procrustes works with names.', {
+
+  a <- array(1:(3*6*7), dim = c(7, 3, 6))
+
+  b <- array(1:(3*6*7), dim = c(7, 3, 6), dimnames=list(NULL, NULL, letters[1:6]))
+
+
+  expect_error(procrustes(b), NA)
+  expect_equal(procrustes(a), procrustes(b))
+
+
+
+
+  b <- array(1:(3*6*7), dim = c(7, 3, 6), dimnames=list(letters[1:7], NULL, letters[1:6]))
+
+
+  expect_error(procrustes(b), NA)
+  expect_equal(procrustes(a), procrustes(b))
+
+})
+
+
+
