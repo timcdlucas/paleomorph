@@ -344,6 +344,15 @@ test_that('procrustes works with names.', {
   expect_error(procrustes(b), NA)
   expect_equal(procrustes(a), procrustes(b))
 
+
+
+  b <- array(1:(3*6*7), dim = c(7, 3, 6), dimnames=list(as.character(1:7), NULL, as.character(3:8)))
+
+
+  expect_error(procrustes(b), NA)
+  expect_equal(procrustes(a), procrustes(b))
+
+
 })
 
 
