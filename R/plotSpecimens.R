@@ -63,6 +63,7 @@ plotSpecimens <- function(a,
     X <- do.call(abind::abind, list(splitArrayToList, along = 1))
 
     mid <- midline(X, 1:NROW(X))  
+    planeParams <- makePlaneParamsList(mid, planeOptions)
   }
   
 
@@ -76,7 +77,7 @@ plotSpecimens <- function(a,
   }    
 
   # Sort out planeOptions
-  planeParams <- makePlaneParamsList(mid, planeOptions)
+
 
 
   # Put the first specimen into vectors
