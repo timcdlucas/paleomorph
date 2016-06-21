@@ -37,8 +37,8 @@ A number of computations are run until the difference between two iterations is 
 }
 \examples{
 # Make an array with 6 specimens and 20 landmarks
-a <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(6 * 20 * 3), 
-      dim = c(6, 20, 3))
+a <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(20 * 3 * 6 ), 
+      dim = c(20, 3, 6))
 
 # Align the data (although it is already largely aligned)
 aligned <- procrustes(a)

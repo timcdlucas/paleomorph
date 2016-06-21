@@ -16,12 +16,12 @@ plotSpecimens(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL,
 
 \item{cols}{A vector of colours.}
 
+\item{bySpecimen}{Logical that determined whether points should be coloured by specimen (default) or by landmark.}
+
 \item{planeOptions}{Named list of parameters passed to \code{\link[rgl]{rgl.material}} to control the appearence of 
 plotted mirror planes.}
 
 \item{...}{Further parameters passed to \code{plot3d}.}
-
-\item{bylandmark}{Logical that determined whether points should be coloured by specimen (default) or by landmark.}
 }
 \description{
 This function requires the rgl package.
