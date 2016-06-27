@@ -1,3 +1,3 @@
 Sys.setenv("R_TESTS" = "")
 library(testthat)
-test_check("procrustespkg")
+test_check("paleomorph")
