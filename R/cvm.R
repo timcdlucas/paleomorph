@@ -1,7 +1,10 @@
 
 
 
-#' Calculate 3D covariance matrix 
+#' Calculate 3D covariance matrix using unscaled congruence coefficient.  Skips any missing values in computation of covariance matrix 
+#'
+#' Calculate 3D covariance matrix using unscaled congruence coefficient.  
+#'   Skips any missing values in computation of covariance matrix
 #' 
 #'
 #'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
@@ -84,10 +87,11 @@ dotcvmentry <- function(M, col1, col2){
 
 
 
-#' Calculate 3D correlation matrix 
+#' Calculate 3D correlation matrix using the congruence coefficient.  Skips any missing values in computation of correlation matrix 
 #' 
-#' Calculates the congruence coefficient for 3 dimensional landmarks
-#'   to give an N x N correlation matrix.
+#'  Calculate 3D correlation matrix using the congruence coefficient.  
+#'    Skips any missing values in computation of correlation matrix
+#'    Gives an N x N correlation matrix.
 #'
 #'@param M An N x D x M array. M = no of specimens, N = no of landmarks, D = 3 dimensions
 #'@export

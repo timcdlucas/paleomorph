@@ -5,7 +5,7 @@
 
 
 
-#'Fill missing landmarks for all specimens in an array using mirrored values from other side of object
+#'Fills missing symmetrical landmarks for all specimens in an array using mirrored values from other side of object where present
 #'
 #'Given an n x 3 x m matrix, replace a set of landmarks using their mirrored counterpart.
 #'

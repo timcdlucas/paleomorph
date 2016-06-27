@@ -1,5 +1,5 @@
 
-#' Run procrustese analysis to align 3D shapes. 
+#' Conducts Procrustes superimposition to align 3D shapes. 
 #' 
 #'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
 #'@param scale Logical indicating whether the size of the objects should be scales

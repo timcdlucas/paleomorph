@@ -2,7 +2,7 @@
 % Please edit documentation in R/mirror.R
 \name{mirrorfill}
 \alias{mirrorfill}
-\title{Fill missing landmarks for all specimens in an array using mirrored values from other side of object}
+\title{Fills missing symmetrical landmarks for all specimens in an array using mirrored values from other side of object where present}
 \usage{
 mirrorfill(a, l1, l2)
 }

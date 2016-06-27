@@ -2,7 +2,7 @@
 % Please edit documentation in R/procrustes.R
 \name{procrustes}
 \alias{procrustes}
-\title{Run procrustese analysis to align 3D shapes.}
+\title{Conducts Procrustes superimposition to align 3D shapes.}
 \usage{
 procrustes(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000,
   tolerance = 1e-05)
@@ -25,7 +25,7 @@ A new (N x 3 x M) array, where each 3d vector has been transformed
  in the least-squares sense, the distances between specimens.
 }
 \description{
-Run procrustese analysis to align 3D shapes.
+Conducts Procrustes superimposition to align 3D shapes.
 }
 \details{
 A number of computations are run until the difference between two iterations is less than \code{tolerance}.

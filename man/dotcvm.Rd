@@ -2,7 +2,7 @@
 % Please edit documentation in R/cvm.R
 \name{dotcvm}
 \alias{dotcvm}
-\title{Calculate 3D covariance matrix}
+\title{Calculate 3D covariance matrix using unscaled congruence coefficient.  Skips any missing values in computation of covariance matrix}
 \usage{
 dotcvm(M)
 }
@@ -13,7 +13,8 @@ dotcvm(M)
 N x N covariance matrix
 }
 \description{
-Calculate 3D covariance matrix
+Calculate 3D covariance matrix using unscaled congruence coefficient.  
+  Skips any missing values in computation of covariance matrix
 }
 \details{
 This function does not guarantee that the returned matrix is  
