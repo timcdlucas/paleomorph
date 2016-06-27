@@ -5,3 +5,4 @@ NEWS.md
 
 .git/*
 ^appveyor\.yml$
+.travis.yml
