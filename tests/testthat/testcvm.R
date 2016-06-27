@@ -69,6 +69,27 @@ cvm.mat <- dotcvm(M)
 })
 
 
+test_that('dotcvm calculates congruence coefficient with NAs.', {
+
+
+
+M <- array(0, dim = c(2, 3, 4))
+
+# Landmarks are perfectly correlated
+M[1, , ] <- 1:12
+M[2, , ] <- 1:12
+
+r1 <- dotcvm(M)
+
+M[1, , 1] <- NA
+
+r2 <- dotcvm(M)
+
+expect_true(r1[2, 2] == r2[2, 2])
+
+
+})
+
 
 
 
