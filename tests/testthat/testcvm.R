@@ -117,3 +117,28 @@ expect_error(r <- dotcvmentry(M, 1, 2), NA)
 
 
 
+test_that('dotcovar calculates covariance matrix with NAs.', {
+
+
+
+M <- array(0, dim = c(2, 3, 4))
+
+# Landmarks are perfectly correlated
+M[1, , ] <- 1:12
+M[2, , ] <- 1:12
+
+r1 <- dotcovar(M)
+
+M[1, , 1] <- NA
+
+r2 <- dotcovar(M)
+
+expect_true(r1[4:6, 4:6] == r2[4:6, 4:6])
+
+expect_equal(ncol(r2), 2 * 3)
+
+})
+
+
+
+

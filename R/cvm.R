@@ -154,7 +154,7 @@ dotcorrentry <- function(M, col1, col2){
     }
   }
 
-  if(n <= 1) stop(paste("There is too much missing data  covary columns", col1, "and", col2))
+  if(n <= 1) stop(paste("There is too much missing data covary columns", col1, "and", col2))
 
   s1 <- s1/n
   s2 <- s2/n
@@ -180,6 +180,53 @@ dotcorrentry <- function(M, col1, col2){
 
 
 
+
+
+
+#' Calculate covariance matrix between individual dimensions within landmarks
+#'
+#' Calculate covariance matrix between individual dimensions within landmarks. Skips any missing values
+#'   in computation of covariance matrix.
+#' 
+#'
+#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#'@export
+#'
+#'@details This function does not guarantee that the returned matrix is  
+#'  positive definite. If the covariance matrix is not positive definite 
+#'  a warning is given and the matrix can be bent to create the closest
+#'  positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
+#'
+#'@return 3N x 3N covariance matrix
+#'@examples
+#' M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
+#' M.cvm <- dotcovar(M)
+
+dotcovar <- function(M){
+  # Calculate covariance between each pairs of columns.
+
+  Mflat <- matrix(NA, nrow = dim(M)[3], ncol = 3 * dim(M)[1])
+
+  Mflat[, seq(1, 3 * dim(M)[1], by = 3)] <- t(M[, 1, ])
+  Mflat[, seq(2, 3 * dim(M)[1], by = 3)] <- t(M[, 2, ])
+  Mflat[, seq(3, 3 * dim(M)[1], by = 3)] <- t(M[, 3, ])
+
+  N <- matrix(NA, nrow = 3 * dim(M)[1], ncol = 3 * dim(M)[1])
+
+  
+  for(i in 1:NCOL(Mflat)){
+    for(j in i:NCOL(Mflat)){
+      N[i, j] <- cov(Mflat[, i], Mflat[, j], use = 'complete.obs')
+    }
+  }
+  
+  N[lower.tri(N)] <- t(N)[lower.tri(N)]
+    
+  
+  e <- min(eigen(N)$values)
+  if(e < 0) warning(paste('CVM has negative eigenvalue', e))
+  return(N)
+}
 
 
 

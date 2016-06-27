@@ -2,6 +2,7 @@
 
 export(countMissing)
 export(dotcorr)
+export(dotcovar)
 export(dotcvm)
 export(mirrorfill)
 export(mirrorfill1)
