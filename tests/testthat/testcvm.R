@@ -133,7 +133,7 @@ M[1, , 1] <- NA
 
 r2 <- dotcovar(M)
 
-expect_true(r1[4:6, 4:6] == r2[4:6, 4:6])
+expect_equal(r1[4:6, 4:6], r2[4:6, 4:6])
 
 expect_equal(ncol(r2), 2 * 3)
 
