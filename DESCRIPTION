@@ -1,7 +1,7 @@
 Package: paleomorph
 Type: Package
 Title: Geometric Morphometric Tools for Paleobiology
-Version: 0.1.1.9999
+Version: 0.1.1
 Date: 2016-04-05
 Author: Tim Lucas, Anjali Goswami
 Maintainer: Tim Lucas <timcdlucas@gmail.com>
