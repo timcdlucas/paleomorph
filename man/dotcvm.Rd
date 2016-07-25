@@ -4,10 +4,10 @@
 \alias{dotcvm}
 \title{Calculate 3D covariance matrix using unscaled congruence coefficient.  Skips any missing values in computation of covariance matrix}
 \usage{
-dotcvm(M)
+dotcvm(A)
 }
 \arguments{
-\item{M}{An N x 3 x M array. M = no of specimens, N = no of landmarks.}
+\item{A}{An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.}
 }
 \value{
 N x N covariance matrix
@@ -23,7 +23,7 @@ This function does not guarantee that the returned matrix is
  positive definite matrix with \code{as.matrix(Matrix::nearPD(mat)$mat)}.
 }
 \examples{
-M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
-M.cvm <- dotcvm(M)
+A <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
+A.cvm <- dotcvm(A)
 }
 

@@ -7,7 +7,7 @@
 #'   Skips any missing values in computation of covariance matrix
 #' 
 #'
-#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#'@param A An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.
 #'@export
 #'
 #'@details This function does not guarantee that the returned matrix is  
@@ -17,15 +17,15 @@
 #'
 #'@return N x N covariance matrix
 #'@examples
-#' M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
-#' M.cvm <- dotcvm(M)
+#' A <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
+#' A.cvm <- dotcvm(A)
 
-dotcvm <- function(M){
+dotcvm <- function(A){
  # Calculate covariance between each pairs of columns.
-  N <- matrix(NA, nrow = dim(M)[1], ncol = dim(M)[1])
-  for(i in 1:dim(M)[1]){
-    for(j in i:dim(M)[1]){
-      N[i, j] <- dotcvmentry(M, i, j)
+  N <- matrix(NA, nrow = dim(A)[1], ncol = dim(A)[1])
+  for(i in 1:dim(A)[1]){
+    for(j in i:dim(A)[1]){
+      N[i, j] <- dotcvmentry(A, i, j)
     }
   }
   
@@ -87,28 +87,28 @@ dotcvmentry <- function(M, col1, col2){
 
 
 
-#' Calculate 3D correlation matrix using the congruence coefficient.  Skips any missing values in computation of correlation matrix 
+#' Calculate 3D vector correlation matrix using the congruence coefficient. Skips any missing values in computation of correlation matrix 
 #' 
-#'  Calculate 3D correlation matrix using the congruence coefficient.  
-#'    Skips any missing values in computation of correlation matrix
+#' Calculate 3D vector correlation matrix using the congruence coefficient. 
+#'    Skips any missing values in computation of correlation matrix.
 #'    Gives an N x N correlation matrix.
 #'
-#'@param M An N x D x M array. M = no of specimens, N = no of landmarks, D = 3 dimensions
+#'@param A An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.
 #'@export
 #'
 #'@return Correlation matrix
 #'@examples
-#' M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
-#' M.corr <- dotcorr(M)
+#' A <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
+#' A.corr <- dotcorr(A)
 #'
 
 
-dotcorr <- function(M){
+dotcorr <- function(A){
   # Calculate covariance between each pairs of columns.
-  N <- matrix(NA, nrow = dim(M)[1], ncol = dim(M)[1])
-  for(i in 1:dim(M)[1]){
-    for(j in i:dim(M)[1]){
-      N[i, j] <- dotcorrentry(M, i, j)
+  N <- matrix(NA, nrow = dim(A)[1], ncol = dim(A)[1])
+  for(i in 1:dim(A)[1]){
+    for(j in i:dim(A)[1]){
+      N[i, j] <- dotcorrentry(A, i, j)
     }
   }
   
@@ -183,13 +183,13 @@ dotcorrentry <- function(M, col1, col2){
 
 
 
-#' Calculate covariance matrix between individual dimensions within landmarks
+#' Calculate covariance matrix between individual landmark coordinates
 #'
-#' Calculate covariance matrix between individual dimensions within landmarks. Skips any missing values
-#'   in computation of covariance matrix.
+#' Calculate covariance matrix between individual landmark coordinates. 
+#'   Skips any missing values in computation of covariance matrix.
 #' 
 #'
-#'@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#'@param A   An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.
 #'@export
 #'
 #'@details This function does not guarantee that the returned matrix is  
@@ -199,19 +199,19 @@ dotcorrentry <- function(M, col1, col2){
 #'
 #'@return 3N x 3N covariance matrix
 #'@examples
-#' M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
-#' M.cvm <- dotcovar(M)
+#' A <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
+#' A.cov <- covar(A)
 
-dotcovar <- function(M){
+covar <- function(A){
   # Calculate covariance between each pairs of columns.
 
-  Mflat <- matrix(NA, nrow = dim(M)[3], ncol = 3 * dim(M)[1])
+  Mflat <- matrix(NA, nrow = dim(A)[3], ncol = 3 * dim(A)[1])
 
-  Mflat[, seq(1, 3 * dim(M)[1], by = 3)] <- t(M[, 1, ])
-  Mflat[, seq(2, 3 * dim(M)[1], by = 3)] <- t(M[, 2, ])
-  Mflat[, seq(3, 3 * dim(M)[1], by = 3)] <- t(M[, 3, ])
+  Mflat[, seq(1, 3 * dim(A)[1], by = 3)] <- t(A[, 1, ])
+  Mflat[, seq(2, 3 * dim(A)[1], by = 3)] <- t(A[, 2, ])
+  Mflat[, seq(3, 3 * dim(A)[1], by = 3)] <- t(A[, 3, ])
 
-  N <- matrix(NA, nrow = 3 * dim(M)[1], ncol = 3 * dim(M)[1])
+  N <- matrix(NA, nrow = 3 * dim(A)[1], ncol = 3 * dim(A)[1])
 
   
   for(i in 1:NCOL(Mflat)){

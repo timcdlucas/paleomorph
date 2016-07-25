@@ -2,26 +2,26 @@
 % Please edit documentation in R/mirror.R
 \name{mirrorfill}
 \alias{mirrorfill}
-\title{Fills missing symmetrical landmarks for all specimens in an array using mirrored values from other side of object where present}
+\title{Fill missing symmetrical landmarks for all specimens in an array using mirrored values from other side of a bilaterally symmetrical object where present}
 \usage{
-mirrorfill(a, l1, l2)
+mirrorfill(A, l1, l2)
 }
 \arguments{
-\item{a}{An n x 3 x m matrix containing 3D landmark data of n landmarks and m specimens}
+\item{A}{An N x 3 x M matrix where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.}
 
 \item{l1}{Vector of indices for which landmarks to use to make a specimen midline}
 
-\item{l2}{Vector or matrix of indices for which landmarks to be replaced by their mirrored value.}
+\item{l2}{Vector or matrix of pairs of symmetrical landmarks}
 }
 \description{
-Given an n x 3 x m matrix, replace a set of landmarks using their mirrored counterpart.
+Given an N x 3 x M matrix, where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens, fill in missing landmarks using their mirrored counterpart.
 }
 \details{
 \code{l2} should be either 
  \itemize{
    \item An even length vector containing pairs of landmarks on either side of the specimen. 
      i.e. l2[1] and l2[2] are paired, l2[3] and l2[4] are paired etc.
-   \item A two column matrix with each row giving a pair of landmarks to be mirrored.
+   \item A two column matrix with each row giving a pair of symmetrical landmarks.
  }
 
 \code{l2} should be an even number length containing pairs of landmarks
@@ -29,14 +29,14 @@ Given an n x 3 x m matrix, replace a set of landmarks using their mirrored count
 }
 \examples{
  # Create array
- a <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
+ A <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
 
- # Make it symmetric
- a[7:12, 1:2, ] <- a[1:6, 1:2, ]
- a[7:12, 3, ] <- -a[1:6, 3, ]
+ # Make it symmetrical
+ A[7:12, 1:2, ] <- A[1:6, 1:2, ]
+ A[7:12, 3, ] <- -A[1:6, 3, ]
 
  # Remove some data points
- missinga <- a
+ missinga <- A
  missinga[1:2, , 1:3] <- NA
 
  mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))

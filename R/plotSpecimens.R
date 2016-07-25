@@ -8,7 +8,7 @@
 #'   plot each specimen in a different colour in an intereactive
 #'   3D frame.
 #'
-#'@param a An N x 3 x M array.
+#'@param A An N x 3 x M array.
 #'@param l1 Optional vector of indices for which landmarks to use to make a specimen midline. If NULL, no midline plane is plotted. 
 #'@param midlineSpecimens Numeric vector indicating which specimens should be used to built the midline plane. If NULL, but l1 is defined, all specimens are used.
 #'@param cols A vector of colours. 
@@ -21,19 +21,19 @@
 #'@export
 #'
 #'@examples
-#' a <- array(rep(rnorm(3 * 20, sd = 30), by = 6) + rnorm(6 * 20 * 3), 
+#' A <- array(rep(rnorm(3 * 20, sd = 30), by = 6) + rnorm(6 * 20 * 3), 
 #'        dim = c(20, 3, 6))
-#' plotSpecimens(a)
+#' plotSpecimens(A)
 #'
-#' plotSpecimens(a, bySpecimen = FALSE)
+#' plotSpecimens(A, bySpecimen = FALSE)
 #'
-#' plotSpecimens(a, cols = grey(seq(0, 1, length.out = 6)))
+#' plotSpecimens(A, cols = grey(seq(0, 1, length.out = 6)))
 #'
-#' plotSpecimens(a, l1 = c(1:4), planeOptions = list(alpha = 0.4, color = 'red'))
+#' plotSpecimens(A, l1 = c(1:4), planeOptions = list(alpha = 0.4, color = 'red'))
 #'
 #' 
 
-plotSpecimens <- function(a, 
+plotSpecimens <- function(A, 
                           l1 = NULL, 
                           midlineSpecimens = NULL, 
                           cols = NULL, 
@@ -49,15 +49,15 @@ plotSpecimens <- function(a,
   }
   
   # Check array is correct form
-  stopifnot(length(dim(a)) == 3, dim(a)[2] == 3, is.numeric(a), is.logical(bySpecimen))
+  stopifnot(length(dim(A)) == 3, dim(A)[2] == 3, is.numeric(A), is.logical(bySpecimen))
   
   # Create midline if indices given
   if(!is.null(l1)){
-    if(is.null(midlineSpecimens)) midlineSpecimens <- 1:dim(a)[3]
+    if(is.null(midlineSpecimens)) midlineSpecimens <- 1:dim(A)[3]
 
     splitArrayToList <- list()
     for(i in 1:length(midlineSpecimens)){
-      splitArrayToList[[i]] <- a[l1, , midlineSpecimens[i]]
+      splitArrayToList[[i]] <- A[l1, , midlineSpecimens[i]]
     }
     
     X <- do.call(abind::abind, list(splitArrayToList, along = 1))
@@ -70,9 +70,9 @@ plotSpecimens <- function(a,
   # Create colour palette if not given
   if(is.null(cols)){
     if(bySpecimen){
-      cols <- 1:dim(a)[3]
+      cols <- 1:dim(A)[3]
     } else {
-      cols <- 1:dim(a)[1]
+      cols <- 1:dim(A)[1]
     }
   }    
 
@@ -83,24 +83,24 @@ plotSpecimens <- function(a,
   # Put the first specimen into vectors
   #  This is mostly a way to give reasonable axes labels, without blocking 
   #   xyzlabs from using ...
-  x <- a[, 1, 1]
-  y <- a[, 2, 1]
-  z <- a[, 3, 1]
+  x <- A[, 1, 1]
+  y <- A[, 2, 1]
+  z <- A[, 3, 1]
 
   # Plot with colours either bySpecimen or by landmark
   if(bySpecimen){
     # Do 3D plots
     rgl::plot3d(x, y, z, col = cols[1], ...) 
 
-    for(i in seq_len(dim(a)[3])[-1]){
-      rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols[i], ...) 
+    for(i in seq_len(dim(A)[3])[-1]){
+      rgl::plot3d(A[, 1, i], A[, 2, i], A[, 3, i], add = TRUE, col = cols[i], ...) 
     }
   } else {
     # Do 3D plots
     rgl::plot3d(x, y, z, col = cols, ...) 
 
-    for(i in seq_len(dim(a)[3])[-1]){
-      rgl::plot3d(a[, 1, i], a[, 2, i], a[, 3, i], add = TRUE, col = cols, ...) 
+    for(i in seq_len(dim(A)[3])[-1]){
+      rgl::plot3d(A[, 1, i], A[, 2, i], A[, 3, i], add = TRUE, col = cols, ...) 
     }
   }
 

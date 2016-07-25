@@ -5,20 +5,21 @@
 
 
 
-#'Fills missing symmetrical landmarks for all specimens in an array using mirrored values from other side of object where present
+#'Fill missing symmetrical landmarks for all specimens in an array using mirrored values from other side of a bilaterally symmetrical object where present
 #'
-#'Given an n x 3 x m matrix, replace a set of landmarks using their mirrored counterpart.
+#'Given an N x 3 x M matrix, where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens, fill in missing landmarks using their mirrored counterpart.
+
 #'
-#'@param a An n x 3 x m matrix containing 3D landmark data of n landmarks and m specimens
+#'@param A An N x 3 x M matrix where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline
-#'@param l2 Vector or matrix of indices for which landmarks to be replaced by their mirrored value.
+#'@param l2 Vector or matrix of pairs of symmetrical landmarks
 #'
 #'
 #'@details \code{l2} should be either 
 #'  \itemize{
 #'    \item An even length vector containing pairs of landmarks on either side of the specimen. 
 #'      i.e. l2[1] and l2[2] are paired, l2[3] and l2[4] are paired etc.
-#'    \item A two column matrix with each row giving a pair of landmarks to be mirrored.
+#'    \item A two column matrix with each row giving a pair of symmetrical landmarks.
 #'  }
 #'
 #'@details \code{l2} should be an even number length containing pairs of landmarks
@@ -26,25 +27,25 @@
 #'@export
 #'@examples
 #'  # Create array
-#'  a <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
+#'  A <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
 #'
-#'  # Make it symmetric
-#'  a[7:12, 1:2, ] <- a[1:6, 1:2, ]
-#'  a[7:12, 3, ] <- -a[1:6, 3, ]
+#'  # Make it symmetrical
+#'  A[7:12, 1:2, ] <- A[1:6, 1:2, ]
+#'  A[7:12, 3, ] <- -A[1:6, 3, ]
 #'
 #'  # Remove some data points
-#'  missinga <- a
+#'  missinga <- A
 #'  missinga[1:2, , 1:3] <- NA
 #'
 #'  mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))
 #'
 
-mirrorfill <- function(a, l1, l2){
-  stopifnot(is.numeric(a), dim(a)[2] == 3, length(dim(a)) == 3)
+mirrorfill <- function(A, l1, l2){
+  stopifnot(is.numeric(A), dim(A)[2] == 3, length(dim(A)) == 3)
 
   # Count specimens and landmarks and check they're positive.
-  m <- dim(a)[3]
-  n <- dim(a)[1]
+  m <- dim(A)[3]
+  n <- dim(A)[1]
   stopifnot(m > 1, n > 1)
 
   # Make replicate that we will fill in
@@ -52,7 +53,7 @@ mirrorfill <- function(a, l1, l2){
 
   # For each specimen, use mirrorfill1 to replace missing points.
   for(i in 1:m){
-    a2[, , i] <- mirrorfill1(a[, , i], l1, l2)
+    a2[, , i] <- mirrorfill1(A[, , i], l1, l2)
   }
 
   return(a2)
@@ -60,20 +61,20 @@ mirrorfill <- function(a, l1, l2){
 
 
 
-#'Fill missing landmarks using mirrored values from other side of object
+#'Fill missing landmarks for a single specimen using mirrored values from other side of object
 #'
-#'Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpark.
+#'Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpart.
 #'
 #'@param s An n x 3 matrix containing 3D landmark data of n landmarks.
 #'@param l1 Vector of indices for which landmarks to use to make a specimen midline.
-#'@param l2 Vector or matrix of indices for which landmarks to be replaced by their mirrored value.
+#'@param l2 Vector or matrix of pairs of symmetrical landmarks.
 #'
 #'
 #'@details \code{l2} should be either 
 #'  \itemize{
 #'    \item An even length vector containing pairs of landmarks on either side of the specimen. 
 #'      i.e. l2[1] and l2[2] are paired, l2[3] and l2[4] are paired etc.
-#'    \item A two column matrix with each row giving a pair of landmarks to be mirrored.
+#'    \item A two column matrix with each row giving a pair of symmetrical landmarks.
 #'  }
 #'@export
 #'@examples

@@ -2,16 +2,15 @@
 % Please edit documentation in R/procrustes.R
 \name{procrustes}
 \alias{procrustes}
-\title{Conducts Procrustes superimposition to align 3D shapes.}
+\title{Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.}
 \usage{
-procrustes(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000,
+procrustes(A, scale = TRUE, scaleDelta = FALSE, maxiter = 1000,
   tolerance = 1e-05)
 }
 \arguments{
-\item{a}{An N x 3 x M array. M = no of specimens, N = no of landmarks.}
+\item{A}{N x 3 x M matrix where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens}
 
-\item{scale}{Logical indicating whether the size of the objects should be scales
-as well as rotated and translated.}
+\item{scale}{Logical indicating whether objects should be scaled to unit centroid size}
 
 \item{scaleDelta}{Logical determining whether deltaa should be scaled by the total number of landmarks.}
 
@@ -20,12 +19,10 @@ as well as rotated and translated.}
 \item{tolerance}{Difference between two iterations that will cause the search to stop.}
 }
 \value{
-A new (N x 3 x M) array, where each 3d vector has been transformed
- in a per-specimen way.  The transformation is chosen to maximize,
- in the least-squares sense, the distances between specimens.
+A new (N x 3 x M) array, where each 3d vector has been rotated and translated to minimize distances among specimens, and scaled to unit centroid size if requested.
 }
 \description{
-Conducts Procrustes superimposition to align 3D shapes.
+Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.
 }
 \details{
 A number of computations are run until the difference between two iterations is less than \code{tolerance}.
@@ -37,11 +34,11 @@ A number of computations are run until the difference between two iterations is 
 }
 \examples{
 # Make an array with 6 specimens and 20 landmarks
-a <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(20 * 3 * 6 ), 
+A <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(20 * 3 * 6 ), 
       dim = c(20, 3, 6))
 
 # Align the data (although it is already largely aligned)
-aligned <- procrustes(a)
+aligned <- procrustes(A)
 
 plotSpecimens(aligned)
 

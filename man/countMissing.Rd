@@ -7,7 +7,7 @@
 countMissing(A)
 }
 \arguments{
-\item{A}{An m x 3 x n array where n is the number of specimens and m is the number of landmarks.}
+\item{A}{An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.}
 }
 \value{
 A length n vector giving the number of missing landmarks for each specimen.
@@ -19,8 +19,8 @@ Count the number of missing landmarks in an array
 
 
 
- a <- array(1:(3*6*7), dim = c(7, 3, 6))
- a[2, , 1] <- NA
- countMissing(a)
+ A <- array(1:(3*6*7), dim = c(7, 3, 6))
+ A[2, , 1] <- NA
+ countMissing(A)
 }
 

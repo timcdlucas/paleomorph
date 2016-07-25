@@ -2,7 +2,7 @@
 % Please edit documentation in R/mirror.R
 \name{mirrorfill1}
 \alias{mirrorfill1}
-\title{Fill missing landmarks using mirrored values from other side of object}
+\title{Fill missing landmarks for a single specimen using mirrored values from other side of object}
 \usage{
 mirrorfill1(s, l1, l2)
 }
@@ -11,17 +11,17 @@ mirrorfill1(s, l1, l2)
 
 \item{l1}{Vector of indices for which landmarks to use to make a specimen midline.}
 
-\item{l2}{Vector or matrix of indices for which landmarks to be replaced by their mirrored value.}
+\item{l2}{Vector or matrix of pairs of symmetrical landmarks.}
 }
 \description{
-Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpark.
+Given an n x 3 matrix, replace a set of landmarks using their mirrored counterpart.
 }
 \details{
 \code{l2} should be either 
  \itemize{
    \item An even length vector containing pairs of landmarks on either side of the specimen. 
      i.e. l2[1] and l2[2] are paired, l2[3] and l2[4] are paired etc.
-   \item A two column matrix with each row giving a pair of landmarks to be mirrored.
+   \item A two column matrix with each row giving a pair of symmetrical landmarks.
  }
 }
 \examples{

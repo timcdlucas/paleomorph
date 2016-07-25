@@ -4,11 +4,11 @@
 \alias{plotSpecimens}
 \title{Plot an array of specimen landmark data in an interactive 3D frame}
 \usage{
-plotSpecimens(a, l1 = NULL, midlineSpecimens = NULL, cols = NULL,
+plotSpecimens(A, l1 = NULL, midlineSpecimens = NULL, cols = NULL,
   bySpecimen = TRUE, planeOptions = NULL, ...)
 }
 \arguments{
-\item{a}{An N x 3 x M array.}
+\item{A}{An N x 3 x M array.}
 
 \item{l1}{Optional vector of indices for which landmarks to use to make a specimen midline. If NULL, no midline plane is plotted.}
 
@@ -31,15 +31,15 @@ This function requires the rgl package.
   3D frame.
 }
 \examples{
-a <- array(rep(rnorm(3 * 20, sd = 30), by = 6) + rnorm(6 * 20 * 3), 
+A <- array(rep(rnorm(3 * 20, sd = 30), by = 6) + rnorm(6 * 20 * 3), 
        dim = c(20, 3, 6))
-plotSpecimens(a)
+plotSpecimens(A)
 
-plotSpecimens(a, bySpecimen = FALSE)
+plotSpecimens(A, bySpecimen = FALSE)
 
-plotSpecimens(a, cols = grey(seq(0, 1, length.out = 6)))
+plotSpecimens(A, cols = grey(seq(0, 1, length.out = 6)))
 
-plotSpecimens(a, l1 = c(1:4), planeOptions = list(alpha = 0.4, color = 'red'))
+plotSpecimens(A, l1 = c(1:4), planeOptions = list(alpha = 0.4, color = 'red'))
 
 
 }

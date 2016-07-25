@@ -5,7 +5,7 @@ Version: 0.1.1
 Date: 2016-04-05
 Author: Tim Lucas, Anjali Goswami
 Maintainer: Tim Lucas <timcdlucas@gmail.com>
-Description: Fills missing symmetrical data with mirroring, calculates Procrustes alignments with or without scaling, and computes vector correlation and covariance matrices (congruence coefficients) of 3D landmarks. Tolerates missing data for all analyses. 
+Description: Fill missing symmetrical data with mirroring, calculate Procrustes alignments with or without scaling, and compute standard or vector correlation and covariance matrices (congruence coefficients) of 3D landmarks. Tolerates missing data for all analyses.
 License: MIT + file LICENSE
 Imports:
     stats,

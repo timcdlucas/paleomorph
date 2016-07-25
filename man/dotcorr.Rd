@@ -2,24 +2,24 @@
 % Please edit documentation in R/cvm.R
 \name{dotcorr}
 \alias{dotcorr}
-\title{Calculate 3D correlation matrix using the congruence coefficient.  Skips any missing values in computation of correlation matrix}
+\title{Calculate 3D vector correlation matrix using the congruence coefficient. Skips any missing values in computation of correlation matrix}
 \usage{
-dotcorr(M)
+dotcorr(A)
 }
 \arguments{
-\item{M}{An N x D x M array. M = no of specimens, N = no of landmarks, D = 3 dimensions}
+\item{A}{An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.}
 }
 \value{
 Correlation matrix
 }
 \description{
-Calculate 3D correlation matrix using the congruence coefficient.  
-   Skips any missing values in computation of correlation matrix
+Calculate 3D vector correlation matrix using the congruence coefficient. 
+   Skips any missing values in computation of correlation matrix.
    Gives an N x N correlation matrix.
 }
 \examples{
-M <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
-M.corr <- dotcorr(M)
+A <- array(rnorm(4 * 2 * 3), dim = c(2, 3, 4)) 
+A.corr <- dotcorr(A)
 
 }
 

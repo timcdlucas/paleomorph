@@ -1,9 +1,10 @@
 
-#' Conducts Procrustes superimposition to align 3D shapes. 
+#' Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.
+#'
+#'Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.
 #' 
-#'@param a An N x 3 x M array. M = no of specimens, N = no of landmarks.
-#'@param scale Logical indicating whether the size of the objects should be scales
-#'  as well as rotated and translated.
+#'@param A N x 3 x M matrix where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens
+#'@param scale Logical indicating whether objects should be scaled to unit centroid size
 #'@param maxiter Maximum number of iterations to attempt
 #'@param tolerance Difference between two iterations that will cause the search to stop. 
 #'@param scaleDelta Logical determining whether deltaa should be scaled by the total number of landmarks.
@@ -16,17 +17,15 @@
 #'   with \code{scaleDelta = TRUE}. However, preliminary tests imply that run time scales linearly with 
 #'   \code{scaleDelta} set to \code{TRUE} or \code{FALSE}. 
 #'
-#'@return A new (N x 3 x M) array, where each 3d vector has been transformed
-#'  in a per-specimen way.  The transformation is chosen to maximize,
-#'  in the least-squares sense, the distances between specimens.
+#'@return A new (N x 3 x M) array, where each 3d vector has been rotated and translated to minimize distances among specimens, and scaled to unit centroid size if requested.
 #'
 #'@examples
 #' # Make an array with 6 specimens and 20 landmarks
-#' a <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(20 * 3 * 6 ), 
+#' A <- array(rep(rnorm(6 * 20, sd = 20), each = 6) + rnorm(20 * 3 * 6 ), 
 #'       dim = c(20, 3, 6))
 #'
 #' # Align the data (although it is already largely aligned)
-#' aligned <- procrustes(a)
+#' aligned <- procrustes(A)
 #' 
 #' plotSpecimens(aligned)
 #'
@@ -34,13 +33,13 @@
 #'
 #'
 
-procrustes <- function(a, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tolerance = 10e-6){
-  stopifnot(is.numeric(a), is.logical(scale), length(dim(a)) == 3, dim(a)[2] == 3)
+procrustes <- function(A, scale = TRUE, scaleDelta = FALSE, maxiter = 1000, tolerance = 10e-6){
+  stopifnot(is.numeric(A), is.logical(scale), length(dim(A)) == 3, dim(A)[2] == 3)
 
   # Check that all landmarks are either complete or all NA
-  completeLandmarks(a)
+  completeLandmarks(A)
   
-  na <- pcistep(a, scale)
+  na <- pcistep(A, scale)
 
   for(iter in 1:maxiter){
     # Save a copy of the array
