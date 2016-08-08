@@ -23,6 +23,7 @@ A new (N x 3 x M) array, where each 3d vector has been rotated and translated to
 }
 \description{
 Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.
+Skips any missing values in computation of Procrustes coordinates.
 }
 \details{
 A number of computations are run until the difference between two iterations is less than \code{tolerance}.

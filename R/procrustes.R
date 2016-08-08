@@ -2,6 +2,7 @@
 #' Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.
 #'
 #'Conducts Procrustes superimposition to align 3D shapes with or without scaling to centroid size.
+#'Skips any missing values in computation of Procrustes coordinates.
 #' 
 #'@param A N x 3 x M matrix where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens
 #'@param scale Logical indicating whether objects should be scaled to unit centroid size
@@ -18,6 +19,8 @@
 #'   \code{scaleDelta} set to \code{TRUE} or \code{FALSE}. 
 #'
 #'@return A new (N x 3 x M) array, where each 3d vector has been rotated and translated to minimize distances among specimens, and scaled to unit centroid size if requested.
+#'@importFrom utils write.table
+#'@importFrom stats complete.cases cov
 #'
 #'@examples
 #' # Make an array with 6 specimens and 20 landmarks

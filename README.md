@@ -4,7 +4,8 @@ paleomorph
 [![Build Status](https://travis-ci.org/timcdlucas/paleomorph.svg)](https://travis-ci.org/timcdlucas/paleomorph)
 [![codecov.io](https://codecov.io/github/timcdlucas/paleomorph/coverage.svg?branch=master)](https://codecov.io/github/timcdlucas/paleomorph?branch=master)
 
-An R package for procrustes analysis for paleobiology.
+Geometric Morphometric Tools for Paleobiology.
+
 Fills missing symmetrical data with mirroring, calculates Procrustes alignments with or without scaling, and computes vector correlation and covariance matrices (congruence coefficients) of 3D landmarks. 
 Tolerates missing data for all analyses. 
 Based on code written by Anjali Goswami.
