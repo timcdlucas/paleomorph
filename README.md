@@ -15,8 +15,7 @@ Installation
 -------------
 
 ```r
-library(devtools)
-install.packages('timcdlucas/paleomorph')
+install.packages('paleomorph')
 library(paleomorph)
 ```
 
