@@ -2,9 +2,17 @@
 language: r
 sudo: required
 
-r:
- - devel
- - release
+matrix:
+  include:
+    - os: linux
+      dist: precise
+      sudo: false
+      r: devel
+    - os: linux
+      dist: precise
+      sudo: false
+      r: release
+
 
 
 # cache packages to speed up builds
