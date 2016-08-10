@@ -16,5 +16,6 @@ Suggests:
     abind,
     rgl
 LazyData: true
-URL: https://bitbucket.org/timcdlucas/procrustespkg
+URL: https://github.com/timcdlucas/paleomorph/
+BugReports: https://github.com/timcdlucas/paleomorph/issues
 RoxygenNote: 5.0.1
