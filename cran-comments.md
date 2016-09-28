@@ -1,9 +1,9 @@
 ## Test environments
 * local ubuntu 14.04 R 3.3.1 
-* travis CI ubuntu 12.04 R devel (2016-06-30 r70858)
+* travis CI ubuntu 12.04 R devel (2016-08-08 r71062)
 * travis CI ubuntu 12.04 R 3.3.1
-* win-builder R devel 2016-06-05 r70711
-* win-builder R 3.3.0 (2016-05-03)
+* win-builder R devel (2016-08-08 r71061)
+* win-builder R3.3.1 (2016-06-21)
 
 
 ## R CMD check results
