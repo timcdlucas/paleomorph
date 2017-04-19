@@ -1,6 +1,6 @@
 context('Test that all cvm functions work.')
 
-test_that('dotcorr calculates congruence coefficient properly.', {
+test_that('dotcorr calculates correlation coefficient properly.', {
 
 
 M <- array(0, dim = c(2, 3, 4))
@@ -139,6 +139,30 @@ expect_equal(ncol(r2), 2 * 3)
 
 })
 
+
+
+
+
+
+test_that('dotcvm calculates congruence coefficient properly with 2d data.', {
+  
+  
+  
+  M <- array(0, dim = c(2, 2, 4))
+  
+  # Landmarks are perfectly correlated
+  M[1, , ] <- 1:8
+  M[2, , ] <- 1:8
+  
+  r <- dotcvm(M)
+  
+
+  expect_true(all(r > 0))
+  
+  expect_true(all(r == r[1,1]))
+
+  
+})
 
 
 
