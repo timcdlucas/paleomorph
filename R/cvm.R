@@ -52,8 +52,8 @@ dotcvm <- function(A){
 # Check columns have enough data and then calculate covariance between columns
 dotcvmentry <- function(M, col1, col2){
   n <- 0
-  s1 <- rep(0, dim(M)[3])
-  s2 <- rep(0, dim(M)[3])
+  s1 <- rep(0, dim(M)[2])
+  s2 <- rep(0, dim(M)[2])
 
   # For each specimen
   for(i in 1:dim(M)[3]){
