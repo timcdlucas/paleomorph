@@ -1,13 +1,13 @@
 
 
 
-#' Calculate 3D covariance matrix using unscaled congruence coefficient.  Skips any missing values in computation of covariance matrix 
+#' Calculate 2d or 3D covariance matrix using unscaled congruence coefficient.  Skips any missing values in computation of covariance matrix 
 #'
-#' Calculate 3D covariance matrix using unscaled congruence coefficient.  
+#' Calculate 2D or 3D covariance matrix using unscaled congruence coefficient.  
 #'   Skips any missing values in computation of covariance matrix
 #' 
 #'
-#'@param A An N x 3 x M array where N is the number of landmarks, 3 is the number of dimensions, and M is the number of specimens.
+#'@param A An N x D x M array where N is the number of landmarks, D is the number of dimensions (2 or 3), and M is the number of specimens.
 #'@export
 #'
 #'@details This function does not guarantee that the returned matrix is  
@@ -40,7 +40,7 @@ dotcvm <- function(A){
 # Calculate 3D covariance between two landmarks across specimens 
 # 
 #
-#@param M An N x 3 x M array. M = no of specimens, N = no of landmarks.
+#@param M An N x D x M array. M = no of specimens, N = no of landmarks. D = 2 or 3 dimensions
 #@param col1 Integer of first column 
 #@param col2 Integer of second column 
 #
@@ -52,8 +52,8 @@ dotcvm <- function(A){
 # Check columns have enough data and then calculate covariance between columns
 dotcvmentry <- function(M, col1, col2){
   n <- 0
-  s1 <- c(0, 0, 0)
-  s2 <- c(0, 0, 0)
+  s1 <- rep(0, dim(M)[3])
+  s2 <- rep(0, dim(M)[3])
 
   # For each specimen
   for(i in 1:dim(M)[3]){
