@@ -1,8 +1,8 @@
 Package: paleomorph
 Type: Package
 Title: Geometric Morphometric Tools for Paleobiology
-Version: 0.1.2
-Date: 2016-04-05
+Version: 0.1.4
+Date: 2017-04-19
 Author: Tim Lucas, Anjali Goswami
 Maintainer: Tim Lucas <timcdlucas@gmail.com>
 Description: Fill missing symmetrical data with mirroring, calculate Procrustes alignments with or without scaling, and compute standard or vector correlation and covariance matrices (congruence coefficients) of 3D landmarks. Tolerates missing data for all analyses.
