@@ -1,7 +1,7 @@
 context('Test all functions used for mirroring')
 
 
-
+set.seed(991)
 test_that('Best plane works', {
 
 
@@ -92,6 +92,54 @@ test_that('Mirrorfill1 replaces points correctly.', {
 })
 
 
+
+test_that('Mirrorfill1 replaces points correctly in another plane.', {
+  
+  
+  # Make an object that is in the horizontal, y = 0 plane.
+  s <- cbind(rnorm(14), 0, rnorm(14))
+  
+  # Now add a data point not on the z = 0 plane
+  s <- rbind(s, c(1, 2, 1), c(NA, NA, NA))
+  
+  mirrorS <- mirrorfill1(s, l1 = 1:14, l2 = c(15, 16))
+  
+  expect_equal(mirrorS[16, ], c(1, -2, 1))
+})
+
+
+test_that('Mirrorfill1 replaces points correctly in third plane.', {
+  
+  
+  # Make an object that is in the horizontal, y = 0 plane.
+  s <- cbind(0, rnorm(14), rnorm(14))
+  
+  # Now add a data point not on the z = 0 plane
+  s <- rbind(s, c(1, 2, 1), c(NA, NA, NA))
+  
+  mirrorS <- mirrorfill1(s, l1 = 1:14, l2 = c(15, 16))
+  
+  expect_equal(mirrorS[16, ], c(-1, 2, 1))
+})
+
+
+
+test_that('Example from mirrorfill1 works correctly', {
+  
+  # Make data that is reflected in x plane
+  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
+  s[1:7, 1] <- -s[1:7, 1]
+  
+  # Now remove some data
+  s[1, ] <- NA
+  
+  # Mirror point 1 using it's complimentary landmark, point 8.
+  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
+  expect_equal(mirrorS[1, ], c(-1, 2, 3))
+  
+})
+
+
 test_that('Mirrorfill1 replaces points correctly with l1 as 2 col matrix.', {
   
   # Make an object that is in the horizontal, z = 0 plane.
@@ -121,6 +169,28 @@ test_that('Reflect works', {
   
   expect_equal(p2, c(1, 1, -1))
 
+  
+  n <- c(0, 1, 0)
+  d <- 0
+  
+  # Test point (1, 1, 1). Should reflect to (1, 1, -1).
+  p <- c(1, 1, 1)
+  
+  p2 <- reflect(p, n, d)
+  
+  expect_equal(p2, c(1, -1, 1))
+  
+  
+  n <- c(1, 0, 0)
+  d <- 0
+  
+  # Test point (1, 1, 1). Should reflect to (1, 1, -1).
+  p <- c(1, 1, 1)
+  
+  p2 <- reflect(p, n, d)
+  
+  expect_equal(p2, c(-1, 1, 1))
+  
 
 })
 
