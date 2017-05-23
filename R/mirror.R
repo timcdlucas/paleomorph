@@ -26,19 +26,24 @@
 #'  on either side of the specimen.
 #'@export
 #'@examples
-#'  # Create array
-#'  A <- array(rep(1:36, by = 4), dim = c(12, 3, 4))
-#'
-#'  # Make it symmetrical
-#'  A[7:12, 1:2, ] <- A[1:6, 1:2, ]
-#'  A[7:12, 3, ] <- -A[1:6, 3, ]
-#'
-#'  # Remove some data points
-#'  missinga <- A
-#'  missinga[1:2, , 1:3] <- NA
-#'
-#'  mirrorA <- mirrorfill(missinga, l1 = c(3:6, 9:12), l2 = c(1, 7, 2, 8))
-#'
+#' 
+#' # Make objects that are in the z = 0 plane.
+#' A <- array(rnorm(12 * 3 * 4), dim = c(12, 3, 4))
+#' 
+#' # Make it symmetrical
+#' A[, 3, ] <- 0.1
+#' A2 <- A
+#' A2[, 3, ] <- -0.1
+#' A <- abind::abind(A, A2, along = 1)
+#' 
+#' 
+#' # Add some missing data points
+#' missinga <- A
+#' missinga <- abind::abind(missinga, array(NA, dim = c(2, 3, 4)), along = 1)
+#' 
+#' mirrorA <- mirrorfill(missinga, l1 = c(1:24), l2 = c(23, 25, 24, 26))
+#' 
+
 
 mirrorfill <- function(A, l1, l2){
   stopifnot(is.numeric(A), dim(A)[2] == 3, length(dim(A)) == 3)
@@ -78,15 +83,23 @@ mirrorfill <- function(A, l1, l2){
 #'  }
 #'@export
 #'@examples
-#'  # Make data that is reflected in x plane
-#'  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-#'  s[1:7, 1] <- -s[1:7, 1]
-#'
-#'  # Now remove some data
-#'  s[1, ] <- NA
-#'  
-#'  # Mirror point 1 using it's complimentary landmark, point 8.
-#'  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
+#' 
+#' 
+#' # Make data that is reflected in x plane
+#' s <- matrix(c(
+#'   rep(c(1, -1), each = 4),
+#'   rep(c(4, 4, -4, -4), 2),
+#'   rep(c(4, -4), 4)
+#' ), ncol = 3)
+#' 
+#' 
+#' # Now add some empty data
+#' s <- rbind(s, NA)
+#' 
+#' # Mirror the NA point (row 9) using its complimentary landmark, point 5.
+#' mirrorS <- mirrorfill1(s, l1 = 1:8, l2 = c(5, 9))
+
+
 
 
 mirrorfill1 <- function(s, l1, l2){
@@ -215,9 +228,8 @@ bestplane <- function(l){
 #@param d Length one vector giving coefficient d for a plane nx = d
 
 reflect <- function(p, n, d){
-   p - 2 * (n %*% p - d) * n/(n %*% n)
+  p - 2 * (n %*% p - d) * n/(n %*% n)
 }
-
 
 
 

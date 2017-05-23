@@ -89,6 +89,22 @@ test_that('Mirrorfill1 replaces points correctly.', {
 
   expect_equal(mirrorS[16, ], c(1, 2, -1))
 
+  
+  
+  
+  # Make an object that is in the horizontal, z = 0 plane.
+  s <- cbind(runif(14), runif(14), c(-0.1, 0.1))
+  sneg <- s
+  sneg[, 1:2] <- -sneg[, 1:2]
+  s <- rbind(s, sneg)
+  
+  # Now add a data point not on the z = 0 plane
+  s <- rbind(s, c(1, 2, 1), c(NA, NA, NA))
+  
+  mirrorS <- mirrorfill1(s, l1 = 1:28, l2 = c(29, 30))
+  
+  expect_equal(mirrorS[30, ], c(1, 2, -1))
+  
 })
 
 
@@ -124,18 +140,44 @@ test_that('Mirrorfill1 replaces points correctly in third plane.', {
 
 
 
+test_that('Mirrorfill1 replaces points approximately correctly', {
+  
+  
+  # Make an object that is in the horizontal, y = 0 plane.
+  s <- cbind(0.1, rnorm(30), rnorm(30))
+  s2 <- s
+  s2[, 1] <- - s2[, 1]
+  s <- rbind(s, s2)
+  
+  # Now add a data point not on the x = 0 plane
+  s <- rbind(s, c(1, 2, 1), c(NA, NA, NA))
+  
+  mirrorS <- mirrorfill1(s, l1 = 1:60, l2 = c(61, 62))
+  
+  expect_equal(mirrorS[62, ], c(-1, 2, 1))
+})
+
+
 test_that('Example from mirrorfill1 works correctly', {
   
   # Make data that is reflected in x plane
-  s <- matrix(rep(1:21, 2), byrow = TRUE, ncol = 3)
-  s[1:7, 1] <- -s[1:7, 1]
+  s <- matrix(c(
+    rep(c(1, -1), each = 4),
+    rep(c(4, 4, -4, -4), 2),
+    rep(c(4, -4), 4)
+  ), ncol = 3)
+
   
-  # Now remove some data
-  s[1, ] <- NA
+  # Now add some empty data
+  s <- rbind(s, NA)
+  
+  # We will pair the NA row with row 5, which mirrors row 1. Row 1 is our test row.
+  stest <- s[1, ]
+  
   
   # Mirror point 1 using it's complimentary landmark, point 8.
-  mirrorS <- mirrorfill1(s, l1 = c(2:7, 9:14), l2 = c(1, 8))
-  expect_equal(mirrorS[1, ], c(-1, 2, 3))
+  mirrorS <- mirrorfill1(s, l1 = 1:8, l2 = c(5, 9))
+  expect_equal(mirrorS[9, ], stest)
   
 })
 
@@ -328,3 +370,24 @@ test_that('mirror fill handles all missing vs not missing cases correctly.', {
 
 
 
+test_that('Mirrorfill example works', {
+  
+  
+  # Make objects that are in the z = 0 plane.
+  A <- array(rnorm(12 * 3 * 4), dim = c(12, 3, 4))
+  
+  # Make it symmetrical
+  A[, 3, ] <- 0.1
+  A2 <- A
+  A2[, 3, ] <- -0.1
+  A <- abind::abind(A, A2, along = 1)
+  
+  
+  # Add some missing data points
+  missinga <- A
+  missinga <- abind::abind(missinga, array(NA, dim = c(2, 3, 4)), along = 1)
+  
+  mirrorA <- mirrorfill(missinga, l1 = c(1:24), l2 = c(23, 25, 24, 26))
+  expect_equal(as.vector(A[23:24, 1:2,]),  as.vector(mirrorA[25:26, 1:2,]))
+  expect_true(all(mirrorA[25:26, 3,] == 0.1))
+})
